@@ -26,7 +26,7 @@ ROOT.gROOT.LoadMacro("Loader.h+")
 #inputfilename= 'FileList.txt' uncomment it for providing list of file
 outfilename= 'SkimmedTree.root'
 PUPPI = True
-CA15  = False
+CA15  = True
 
 ## When running on farmout
 #inputfilename = os.environ['INPUT']
@@ -156,6 +156,26 @@ def AnalyzeDataSet():
     st_AK4deepCSVjetCHadEF          = ROOT.std.vector('float')()
 
 
+
+#AK8Jets
+    st_AK8nthikJets               = array( 'L', [ 0 ] ) #ROOT.std.vector('int')()
+    st_AK8thikjetP4               = ROOT.std.vector('TLorentzVector')()
+    st_AK8thikjetNhadEF           = ROOT.std.vector('float')()
+    st_AK8thikjetChadEF           = ROOT.std.vector('float')()
+    st_AK8SDmass                  = ROOT.std.vector('float')()
+    st_AK8PuppisubjetCSV          = ROOT.std.vector(ROOT.std.vector('float'))()
+
+
+#CA15Jets
+    st_CA15njets                =array( 'L', [ 0 ] ) #ROOT.std.vector('int')()
+    st_CA15jetP4                = ROOT.std.vector('TLorentzVector')()
+    st_CA15jetNhadEF            = ROOT.std.vector('float')()
+    st_CA15jetChadEF            = ROOT.std.vector('float')()
+    st_CA15SDmass               = ROOT.std.vector('float')()
+    st_CA15PuppisubjetCSV       = ROOT.std.vector(ROOT.std.vector('float'))()
+
+
+
     st_nEle                = array( 'L', [ 0 ] ) #ROOT.std.vector('int')()
     st_eleP4               = ROOT.std.vector('TLorentzVector')()
     st_eleIsPassLoose      = ROOT.std.vector('bool')()
@@ -261,6 +281,33 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_AK4deepCSVjetHadronFlavor',st_AK4deepCSVjetHadronFlavor )
     outTree.Branch( 'st_AK4deepCSVjetNHadEF',st_AK4deepCSVjetNHadEF )
     outTree.Branch( 'st_AK4deepCSVjetCHadEF',st_AK4deepCSVjetCHadEF )
+
+
+#AK8 JETS BRANCHES
+    outTree.Branch( 'st_AK8nthikJets',st_AK8nthikJets,'st_AK8nthikJets/L' )
+    outTree.Branch( 'st_AK8thikjetP4',st_AK8thikjetP4)
+    outTree.Branch( 'st_AK8thikjetNhadEF',st_AK8thikjetNhadEF)
+    outTree.Branch( 'st_AK8thikjetChadEF',st_AK8thikjetChadEF)
+    outTree.Branch( 'st_AK8SDmass',st_AK8SDmass)
+    outTree.Branch( 'st_AK8PuppisubjetCSV',st_AK8PuppisubjetCSV)
+    #outTree.Branch( 'st_AK8THIKjetNPV',st_AK8THIKjetNPV)
+    #outTree.Branch( 'st_AK8thikJetLooseID',st_AK8thikJetLooseID)
+    #outTree.Branch( 'st_AK8thikjetTightID',st_AK8thikjetTightID)
+
+
+#CA15jets
+    outTree.Branch( 'st_CA15njets',st_CA15njets,'st_CA15njets/L')
+    outTree.Branch( 'st_CA15jetP4',st_CA15jetP4)
+    outTree.Branch( 'st_CA15jetNhadEF',st_CA15jetNhadEF)
+    outTree.Branch( 'st_CA15jetChadEF',st_CA15jetChadEF)
+    outTree.Branch( 'st_CA15SDmass',st_CA15SDmass)
+    outTree.Branch( 'st_CA15PuppisubjetCSV',st_CA15PuppisubjetCSV)
+    #outTree.Branch( 'st_CA15PassIDLoose',st_CA15PassIDLoose)
+    #outTree.Branch( 'st_CA15PassIDTight',st_CA15PassIDTight)
+
+
+
+
 
 
     outTree.Branch( 'st_nEle',st_nEle , 'st_nEle/L')
@@ -377,6 +424,42 @@ def AnalyzeDataSet():
         thindeepCSVjetNhadEF       = skimmedTree.__getattr__('AK4deepCSVjetNHadEF')
         thindeepCSVjetChadEF       = skimmedTree.__getattr__('AK4deepCSVjetCHadEF')
         THINdeepCSVjetNPV          = skimmedTree.__getattr__('AK4deepCSVjetNPV')
+
+
+
+        #AK8jets branches
+        AK8nthikJets               = skimmedTree.__getattr__('AK8PuppinJet')
+        AK8thikjetP4               = skimmedTree.__getattr__('AK8PuppijetP4')
+
+
+        AK8thikjetNhadEF           = skimmedTree.__getattr__('AK8PuppijetNHadEF')
+        AK8thikjetChadEF           = skimmedTree.__getattr__('AK8PuppijetCHadEF')
+        AK8THIKjetNPV              = skimmedTree.__getattr__('AK8PuppijetNPV')
+        AK8thikJetLooseID          = skimmedTree.__getattr__('AK8PuppijetPassIDLoose')
+        AK8thikjetTightID          = skimmedTree.__getattr__('AK8PuppijetPassIDTight')
+        AK8SDmass                  = skimmedTree.__getattr__('AK8PuppijetSDmass')
+        AK8PuppisubjetCSV          = skimmedTree.__getattr__('AK8PuppisubjetSDCSV')
+
+        #AK8subjet
+        #nAK8subjets               = skimmedTree.__getattr__('AK8PuppinSubSDJet')
+        #AK8subjetPx               = skimmedTree.__getattr__('AK8PuppisubjetSDPx')
+        #AK8subjetPy               = skimmedTree.__getattr__('AK8PuppisubjetSDPy')
+        #AK8subjetPz               = skimmedTree.__getattr__('AK8PuppisubjetSDPz')
+        #AK8subjetCSV              = skimmedTree.__getattr__('AK8PuppisubjetSDCSV')
+
+
+        #CA15jets
+        CA15njets                 = skimmedTree.__getattr__('CA15PuppinJet')
+        CA15jetP4                 = skimmedTree.__getattr__('CA15PuppijetP4')
+        CA15SDmass                = skimmedTree.__getattr__('CA15PuppijetSDmass')
+        CA15jetNhadEF             = skimmedTree.__getattr__('CA15PuppijetNHadEF')
+        CA15jetChadEF             = skimmedTree.__getattr__('CA15PuppijetCHadEF')
+        CA15PassIDLoose           = skimmedTree.__getattr__('CA15PuppijetPassIDLoose')
+        CA15PassIDTight           = skimmedTree.__getattr__('CA15PuppijetPassIDTight')
+        CA15PuppisubjetCSV        = skimmedTree.__getattr__('CA15PuppisubjetSDCSV')
+
+
+
 
         try:
             thindeepCSVJetLooseID      = skimmedTree.__getattr__('AK4deepCSVjetPassIDLoose')
@@ -555,6 +638,42 @@ def AnalyzeDataSet():
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
+
+
+        #-------------------------------------------------
+        #AK8Jets collections
+        AK8jetspassindex=[]
+        for iak8jet in range(AK8nthikJets):
+            j1 = AK8thikjetP4[iak8jet]
+
+            if AK8thikJetLooseID==None:
+                ak8looseid=True
+            else:
+                ak8looseid=bool(AK8thikJetLooseID[iak8jet])
+            if (j1.Pt() > 200.0)&(abs(j1.Eta())<2.5) and ak8looseid: #  &(bool(passThinJetLooseID[jthinjet])==True):
+                AK8jetspassindex.append(iak8jet)
+
+
+
+
+#  CA15jets collections
+        CA15jetspassindex=[]
+        for ica15jet in range(CA15njets):
+            j1 = CA15jetP4[ica15jet]
+
+            if CA15PassIDLoose==None:
+                ca15looseid=True
+            else:
+                ca15looseid=bool(CA15PassIDLoose[ica15jet])
+            if (j1.Pt() > 200.0)&(abs(j1.Eta())<2.5) and ca15looseid: #  &(bool(passThinJetLooseID[jthinjet])==True):
+                CA15jetspassindex.append(ica15jet)
+
+
+
+
+#----------------------------------------------------------------------------------
+
+
         thinjetpassindex=[]
         nBjets=0
         for ithinjet in range(nTHINJets):
@@ -672,6 +791,22 @@ def AnalyzeDataSet():
         st_AK4deepCSVjetHadronFlavor.clear()
         st_AK4deepCSVjetNHadEF.clear()
         st_AK4deepCSVjetCHadEF.clear()
+
+
+        st_CA15jetP4.clear()
+        st_CA15SDmass.clear()
+        st_CA15jetNhadEF.clear()
+        st_CA15jetChadEF.clear()
+        st_CA15PuppisubjetCSV.clear()
+
+
+        st_AK8thikjetP4.clear()
+        st_AK8thikjetNhadEF.clear()
+        st_AK8thikjetChadEF.clear()
+        st_AK8SDmass.clear()
+        st_AK8PuppisubjetCSV.clear()
+
+
 
         st_eleP4.clear()
         st_muP4.clear()
@@ -883,6 +1018,25 @@ def AnalyzeDataSet():
             st_AK4deepCSVjetCHadEF.push_back(thindeepCSVjetChadEF[ithinjet])
 #        except:
 #            pass
+
+
+        st_CA15njets[0]=len(CA15jetspassindex)
+        for ica15 in CA15jetspassindex:
+            st_CA15jetP4.push_back(CA15jetP4[ica15])
+            st_CA15SDmass.push_back(CA15SDmass[ica15])
+            st_CA15jetNhadEF.push_back(CA15jetNhadEF[ica15])
+            st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
+            st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
+            
+        st_AK8nthikJets[0]=len(AK8jetspassindex)
+        for iak8jet in AK8jetspassindex:
+            st_AK8thikjetP4.push_back(AK8thikjetP4[iak8jet])
+            st_AK8thikjetNhadEF.push_back(AK8thikjetNhadEF[iak8jet])
+            st_AK8thikjetChadEF.push_back(AK8thikjetChadEF[iak8jet])
+            st_AK8SDmass.push_back(AK8SDmass[iak8jet])
+            st_AK8PuppisubjetCSV.push_back(AK8PuppisubjetCSV[iak8jet])
+
+
 
         st_nEle[0] = len(myEles)
         for iele in myEles:

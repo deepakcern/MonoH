@@ -142,7 +142,7 @@ def AnalyzeDataSet():
     st_THINjetHadronFlavor          = ROOT.std.vector('int')()
     st_THINjetNHadEF                = ROOT.std.vector('float')()
     st_THINjetCHadEF                = ROOT.std.vector('float')()
-    
+
     st_THINjetCEmEF                 = ROOT.std.vector('float')()
     st_THINjetPhoEF                 = ROOT.std.vector('float')()
     st_THINjetEleEF                 = ROOT.std.vector('float')()
@@ -204,14 +204,14 @@ def AnalyzeDataSet():
 
     st_HPSTau_n= array( 'L', [ 0 ] ) #ROOT.std.vector('int')()
     st_HPSTau_4Momentum= ROOT.std.vector('TLorentzVector')()
-    
+
     st_disc_againstElectronLoose    =    ROOT.std.vector('bool')()
     st_disc_againstElectronMedium   =    ROOT.std.vector('bool')()
     st_disc_againstElectronTight    =    ROOT.std.vector('bool')()
     st_disc_againstMuonLoose        =    ROOT.std.vector('bool')()
 #    st_disc_againstMuonMedium       =    ROOT.std.vector('bool')()
     st_disc_againstMuonTight        =    ROOT.std.vector('bool')()
-    
+
 
     mcweight = array( 'f', [ 0 ] )
     st_pu_nTrueInt= array( 'f', [ 0 ] ) #ROOT.std.vector('std::vector<float>')()
@@ -269,7 +269,7 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_THINjetHadronFlavor',st_THINjetHadronFlavor )
     outTree.Branch( 'st_THINjetNHadEF',st_THINjetNHadEF )
     outTree.Branch( 'st_THINjetCHadEF',st_THINjetCHadEF )
-    
+
     outTree.Branch( 'st_THINjetCEmEF',st_THINjetCEmEF )
     outTree.Branch( 'st_THINjetPhoEF',st_THINjetPhoEF )
     outTree.Branch( 'st_THINjetEleEF',st_THINjetEleEF )
@@ -338,7 +338,7 @@ def AnalyzeDataSet():
 
     outTree.Branch( 'st_HPSTau_n', st_HPSTau_n, 'st_HPSTau_n/L')
     outTree.Branch( 'st_HPSTau_4Momentum', st_HPSTau_4Momentum)
-    
+
     outTree.Branch( 'st_disc_againstElectronLoose', st_disc_againstElectronLoose)
     outTree.Branch( 'st_disc_againstElectronMedium', st_disc_againstElectronMedium)
     outTree.Branch( 'st_disc_againstElectronTight', st_disc_againstElectronTight)
@@ -407,7 +407,7 @@ def AnalyzeDataSet():
         nTHINJets                  = skimmedTree.__getattr__('THINnJet')
         thinjetP4                  = skimmedTree.__getattr__('THINjetP4')
         thinJetCSV                 = skimmedTree.__getattr__('THINjetCISVV2')
-        passThinJetLooseID         = skimmedTree.__getattr__('THINjetPassIDLoose')        
+        passThinJetLooseID         = skimmedTree.__getattr__('THINjetPassIDLoose')
         THINjetHadronFlavor        = skimmedTree.__getattr__('THINjetHadronFlavor')
         THINjetNPV                 = skimmedTree.__getattr__('THINjetNPV')         #int()
         thinjetNhadEF              = skimmedTree.__getattr__('THINjetNHadEF')
@@ -416,7 +416,7 @@ def AnalyzeDataSet():
         thinjetPhoEF               = skimmedTree.__getattr__('THINjetPhoEF')
         thinjetEleEF               = skimmedTree.__getattr__('THINjetEleEF')
         thinjetMuoEF               = skimmedTree.__getattr__('THINjetMuoEF')
-        
+
         nTHINdeepCSVJets           = skimmedTree.__getattr__('AK4deepCSVnJet')
         thindeepCSVjetP4           = skimmedTree.__getattr__('AK4deepCSVjetP4')
         thinJetdeepCSV             = skimmedTree.__getattr__('AK4deepCSVjetDeepCSV_b')
@@ -489,13 +489,13 @@ def AnalyzeDataSet():
         tauP4                      = skimmedTree.__getattr__('HPSTau_4Momentum')
         isDecayModeFinding         = skimmedTree.__getattr__('disc_decayModeFinding')
         passLooseTauIso            = skimmedTree.__getattr__('disc_byLooseIsolationMVA3oldDMwLT')
-        
+
         disc_againstElectronLoose  = skimmedTree.__getattr__('disc_againstElectronLooseMVA5')
         disc_againstElectronMedium = skimmedTree.__getattr__('disc_againstElectronMediumMVA5')
         disc_againstElectronTight  = skimmedTree.__getattr__('disc_againstElectronTightMVA5')
         disc_againstMuonLoose      = skimmedTree.__getattr__('disc_againstMuonLoose3')
         disc_againstMuonTight      = skimmedTree.__getattr__('disc_againstMuonTight3')
-        
+
         isData                     = skimmedTree.__getattr__('isData')
         mcWeight                   = skimmedTree.__getattr__('mcWeight')
         pu_nTrueInt                = skimmedTree.__getattr__('pu_nTrueInt')         #int()
@@ -559,20 +559,20 @@ def AnalyzeDataSet():
 #        if ievent==0:
 #            for i in sorted(trigName):
 #            # if i.find('PFMETNoMu')>-1:
-#                print i        
-        
+#                print i
+
         trigstatus=False
         for itrig in range(len(triglist)):
             exec(triglist[itrig]+" = CheckFilter(trigName, trigResult, " + "'" + triglist[itrig] + "')")        #Runs the above commented-off code dynamically.
             exec("if "+triglist[itrig]+": trigstatus=True")                                                     #If any of the trigs is true, the event is kept.
 #            exec("trig"+str(itrig+1)+"="+triglist[itrig])                                                       #Saves them as trig1, trig2, etc. #Deprecated
             exec("st_"+triglist[itrig]+"[0]="+triglist[itrig])                                                  #Adds to SkimmedTree output.
-        
+
         if not isData: trigstatus=True
 
-        if not trigstatus: continue  
-        
-        
+        if not trigstatus: continue
+
+
         # PD-wise triggers. Simply saves one boolean signifying whether at least one of the trigger paths of each PD was passed.
 
 #        METtrigstatus=False
@@ -685,26 +685,26 @@ def AnalyzeDataSet():
 
         thindCSVjetpassindex=[]
         ndBjets=0
-   
-                
+
+
         for jthinjet in range(nTHINdeepCSVJets):
             j1 = thindeepCSVjetP4[jthinjet]
-            
+
             if thindeepCSVJetLooseID==None:
                 deepCSVJetLooseID=True
             else:
                 deepCSVJetLooseID=bool(passThinJetLooseID[jthinjet])
-            
+
             if (j1.Pt() > 30.0)&(abs(j1.Eta())<4.5) and deepCSVJetLooseID: #  &(bool(passThinJetLooseID[jthinjet])==True):
                 thindCSVjetpassindex.append(jthinjet)
             if thinJetdeepCSV[jthinjet] > DCSVMWP and abs(j1.Eta())<2.4 : ndBjets += 1
-            
-            
+
+
         if len(thinjetpassindex) < 1 and len(thindCSVjetpassindex) < 1 : continue
 
 #        except:
 #            if len(thinjetpassindex) < 1: continue
-            
+
 #        print ('njet: ',len(thinjetpassindex))
 #        if len(thindCSVjetpassindex) < 1 : continue
 #        print nBjets
@@ -728,7 +728,7 @@ def AnalyzeDataSet():
         myEles=[]
         for iele in range(nEle):
             if (eleP4[iele].Pt() > 10. ) & (abs(eleP4[iele].Eta()) <2.5) & (bool(eleIsPassLoose[iele]) == True) :
-                
+
 #                # Clean eles against jets: if ele in jet coll, remove ele. Currently only for CSV coll
 #                isClean=True
 #                for ithinjet in thinjetpassindex:
@@ -737,7 +737,7 @@ def AnalyzeDataSet():
 #                        break
 #                        #print DeltaR(thinjetP4[ithinjet],eleP4[iele])
 #                if isClean:
-                    
+
                 myEles.append(iele)
 
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -780,7 +780,7 @@ def AnalyzeDataSet():
         st_THINjetHadronFlavor.clear()
         st_THINjetNHadEF.clear()
         st_THINjetCHadEF.clear()
-        
+
         st_THINjetCEmEF.clear()
         st_THINjetPhoEF.clear()
         st_THINjetEleEF.clear()
@@ -815,7 +815,7 @@ def AnalyzeDataSet():
         st_muGamIso.clear()
         st_muNeHadIso.clear()
         st_HPSTau_4Momentum.clear()
-        
+
         st_disc_againstElectronLoose.clear()
         st_disc_againstElectronMedium.clear()
         st_disc_againstElectronTight.clear()
@@ -828,7 +828,98 @@ def AnalyzeDataSet():
         st_genParSt.clear()
         st_genParP4.clear()
 
-        
+
+        st_THINnJet[0] = len(thinjetpassindex)
+        for ithinjet in thinjetpassindex:
+            st_THINjetP4.push_back(thinjetP4[ithinjet])
+            st_THINjetCISVV2.push_back(thinJetCSV[ithinjet])
+            st_THINjetHadronFlavor.push_back(THINjetHadronFlavor[ithinjet])
+            st_THINjetNHadEF.push_back(thinjetNhadEF[ithinjet])
+            st_THINjetCHadEF.push_back(thinjetChadEF[ithinjet])
+
+            st_THINjetCEmEF.push_back(thinjetCEmEF[ithinjet])
+            st_THINjetPhoEF.push_back(thinjetPhoEF[ithinjet])
+            st_THINjetEleEF.push_back(thinjetEleEF[ithinjet])
+            st_THINjetMuoEF.push_back(thinjetMuoEF[ithinjet])
+
+#        try:
+        st_AK4deepCSVnJet[0] = len(thindCSVjetpassindex)
+        for ithinjet in thindCSVjetpassindex:
+            st_AK4deepCSVjetP4.push_back(thindeepCSVjetP4[ithinjet])
+            st_AK4deepCSVjetDeepCSV_b.push_back(thinJetdeepCSV[ithinjet])
+            st_AK4deepCSVjetHadronFlavor.push_back(THINdeepCSVjetHadronFlavor[ithinjet])
+            st_AK4deepCSVjetNHadEF.push_back(thindeepCSVjetNhadEF[ithinjet])
+            st_AK4deepCSVjetCHadEF.push_back(thindeepCSVjetChadEF[ithinjet])
+#        except:
+#            pass
+
+
+        st_CA15njets[0]=len(CA15jetspassindex)
+        for ica15 in CA15jetspassindex:
+            st_CA15jetP4.push_back(CA15jetP4[ica15])
+            st_CA15SDmass.push_back(CA15SDmass[ica15])
+            st_CA15jetNhadEF.push_back(CA15jetNhadEF[ica15])
+            st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
+            st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
+
+        st_AK8nthikJets[0]=len(AK8jetspassindex)
+        for iak8jet in AK8jetspassindex:
+            st_AK8thikjetP4.push_back(AK8thikjetP4[iak8jet])
+            st_AK8thikjetNhadEF.push_back(AK8thikjetNhadEF[iak8jet])
+            st_AK8thikjetChadEF.push_back(AK8thikjetChadEF[iak8jet])
+            st_AK8SDmass.push_back(AK8SDmass[iak8jet])
+            st_AK8PuppisubjetCSV.push_back(AK8PuppisubjetCSV[iak8jet])
+
+        st_nEle[0] = len(myEles)
+        for iele in myEles:
+            st_eleP4.push_back(eleP4[iele])
+            st_eleIsPassLoose.push_back(bool(eleIsPassLoose[iele]))
+            st_eleIsPassMedium.push_back(bool(eleIsPassMedium[iele]))
+            st_eleIsPassTight.push_back(bool(eleIsPassTight[iele]))
+
+        st_nMu[0] = len(myMuos)
+        for imu in myMuos:
+            st_muP4.push_back(muP4[imu])
+            st_isLooseMuon.push_back(bool(isLooseMuon[imu]))
+            st_isTightMuon.push_back(bool(isTightMuon[imu]))
+            st_isMediumMuon.push_back(bool(isMediumMuon[imu]))
+            st_muChHadIso.push_back(muChHadIso[imu])
+            st_muNeHadIso.push_back(muNeHadIso[imu])
+            st_muGamIso.push_back(muGamIso[imu])
+            st_muPUPt.push_back(muPUPt[imu])
+
+        st_HPSTau_n[0] = len(myTaus)
+        for itau in myTaus:
+            st_HPSTau_4Momentum.push_back(tauP4[itau])
+            st_disc_againstElectronLoose.push_back(bool(disc_againstElectronLoose[itau]))
+            st_disc_againstElectronMedium.push_back(bool(disc_againstElectronMedium[itau]))
+            st_disc_againstElectronTight.push_back(bool(disc_againstElectronTight[itau]))
+            st_disc_againstMuonLoose.push_back(bool(disc_againstMuonLoose[itau]))
+            st_disc_againstMuonTight.push_back(bool(disc_againstMuonTight[itau]))
+
+        st_nPho[0]=nPho
+        for ipho in range(nPho):
+            st_phoP4.push_back(phoP4[ipho])
+            st_phoIsPassLoose.push_back(bool(phoIsPassLoose[ipho]))
+            st_phoIsPassMedium.push_back(bool(phoIsPassMedium[ipho]))
+            st_phoIsPassTight.push_back(bool(phoIsPassTight[ipho]))
+
+        st_pu_nTrueInt[0] = pu_nTrueInt
+        st_pu_nPUVert[0] = pu_nPUVert
+        st_THINjetNPV[0] = THINjetNPV
+#        try:
+        st_AK4deepCSVjetNPV[0] = THINdeepCSVjetNPV
+#        except:
+#            pass
+#        print pu_nTrueInt
+#        print st_pu_nTrueInt[0]
+        st_nGenPar[0] =  nGenPar
+        for igp in range(nGenPar):
+            st_genParId.push_back(genParId[igp])
+            st_genMomParId.push_back(genMomParId[igp])
+            st_genParSt.push_back(genParSt[igp])
+            st_genParP4.push_back(genParP4[igp])
+
 
         ## Fill variables for the CRs.
         WenuRecoil[0] = -1.0
@@ -974,7 +1065,7 @@ def AnalyzeDataSet():
 # ------------------
         ## for Single photon
         if len(myPhos) >= 1:
-           myPhosP4=[phoP4[myPhos[i]] for i in range(len(myPhos))]           
+           myPhosP4=[phoP4[myPhos[i]] for i in range(len(myPhos))]
            p4_pho1 = sorted(myPhosP4,key=getPT,reverse=True)[0]
 #           if len(myPhos) > 1:
 #              print [i.Pt() for i in myPhosP4]
@@ -994,100 +1085,6 @@ def AnalyzeDataSet():
         if pfmetstatus==False and ZRecoilstatus==False and WRecoilstatus==False and TOPRecoilstatus==False and GammaRecoilStatus==False:
             continue
             
-        #Fill other variables
-        st_THINnJet[0] = len(thinjetpassindex)
-        for ithinjet in thinjetpassindex:
-            st_THINjetP4.push_back(thinjetP4[ithinjet])
-            st_THINjetCISVV2.push_back(thinJetCSV[ithinjet])
-            st_THINjetHadronFlavor.push_back(THINjetHadronFlavor[ithinjet])
-            st_THINjetNHadEF.push_back(thinjetNhadEF[ithinjet])
-            st_THINjetCHadEF.push_back(thinjetChadEF[ithinjet])
-            
-            st_THINjetCEmEF.push_back(thinjetCEmEF[ithinjet])
-            st_THINjetPhoEF.push_back(thinjetPhoEF[ithinjet])
-            st_THINjetEleEF.push_back(thinjetEleEF[ithinjet])
-            st_THINjetMuoEF.push_back(thinjetMuoEF[ithinjet])
-
-#        try:
-        st_AK4deepCSVnJet[0] = len(thindCSVjetpassindex)
-        for ithinjet in thindCSVjetpassindex:
-            st_AK4deepCSVjetP4.push_back(thindeepCSVjetP4[ithinjet])
-            st_AK4deepCSVjetDeepCSV_b.push_back(thinJetdeepCSV[ithinjet])
-            st_AK4deepCSVjetHadronFlavor.push_back(THINdeepCSVjetHadronFlavor[ithinjet])
-            st_AK4deepCSVjetNHadEF.push_back(thindeepCSVjetNhadEF[ithinjet])
-            st_AK4deepCSVjetCHadEF.push_back(thindeepCSVjetChadEF[ithinjet])
-#        except:
-#            pass
-
-
-        st_CA15njets[0]=len(CA15jetspassindex)
-        for ica15 in CA15jetspassindex:
-            st_CA15jetP4.push_back(CA15jetP4[ica15])
-            st_CA15SDmass.push_back(CA15SDmass[ica15])
-            st_CA15jetNhadEF.push_back(CA15jetNhadEF[ica15])
-            st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
-            st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
-            
-        st_AK8nthikJets[0]=len(AK8jetspassindex)
-        for iak8jet in AK8jetspassindex:
-            st_AK8thikjetP4.push_back(AK8thikjetP4[iak8jet])
-            st_AK8thikjetNhadEF.push_back(AK8thikjetNhadEF[iak8jet])
-            st_AK8thikjetChadEF.push_back(AK8thikjetChadEF[iak8jet])
-            st_AK8SDmass.push_back(AK8SDmass[iak8jet])
-            st_AK8PuppisubjetCSV.push_back(AK8PuppisubjetCSV[iak8jet])
-
-
-
-        st_nEle[0] = len(myEles)
-        for iele in myEles:
-            st_eleP4.push_back(eleP4[iele])
-            st_eleIsPassLoose.push_back(bool(eleIsPassLoose[iele]))
-            st_eleIsPassMedium.push_back(bool(eleIsPassMedium[iele]))
-            st_eleIsPassTight.push_back(bool(eleIsPassTight[iele]))
-
-        st_nMu[0] = len(myMuos)
-        for imu in myMuos:
-            st_muP4.push_back(muP4[imu])
-            st_isLooseMuon.push_back(bool(isLooseMuon[imu]))
-            st_isTightMuon.push_back(bool(isTightMuon[imu]))
-            st_isMediumMuon.push_back(bool(isMediumMuon[imu]))
-            st_muChHadIso.push_back(muChHadIso[imu])
-            st_muNeHadIso.push_back(muNeHadIso[imu])
-            st_muGamIso.push_back(muGamIso[imu])
-            st_muPUPt.push_back(muPUPt[imu])
-
-        st_HPSTau_n[0] = len(myTaus)
-        for itau in myTaus:
-            st_HPSTau_4Momentum.push_back(tauP4[itau])
-            st_disc_againstElectronLoose.push_back(bool(disc_againstElectronLoose[itau]))
-            st_disc_againstElectronMedium.push_back(bool(disc_againstElectronMedium[itau]))
-            st_disc_againstElectronTight.push_back(bool(disc_againstElectronTight[itau]))
-            st_disc_againstMuonLoose.push_back(bool(disc_againstMuonLoose[itau]))
-            st_disc_againstMuonTight.push_back(bool(disc_againstMuonTight[itau]))
-
-        st_nPho[0]=nPho
-        for ipho in range(nPho):
-            st_phoP4.push_back(phoP4[ipho])
-            st_phoIsPassLoose.push_back(bool(phoIsPassLoose[ipho]))
-            st_phoIsPassMedium.push_back(bool(phoIsPassMedium[ipho]))
-            st_phoIsPassTight.push_back(bool(phoIsPassTight[ipho]))
-
-        st_pu_nTrueInt[0] = pu_nTrueInt
-        st_pu_nPUVert[0] = pu_nPUVert
-        st_THINjetNPV[0] = THINjetNPV
-#        try:
-        st_AK4deepCSVjetNPV[0] = THINdeepCSVjetNPV
-#        except:
-#            pass
-#        print pu_nTrueInt
-#        print st_pu_nTrueInt[0]
-        st_nGenPar[0] =  nGenPar
-        for igp in range(nGenPar):
-            st_genParId.push_back(genParId[igp])
-            st_genMomParId.push_back(genMomParId[igp])
-            st_genParSt.push_back(genParSt[igp])
-            st_genParP4.push_back(genParP4[igp])
-
 
         outTree.Fill()
 

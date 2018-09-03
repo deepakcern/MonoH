@@ -125,7 +125,12 @@ def AnalyzeDataSet():
     st_eventId          = array( 'L', [ 0 ] )
     st_pfMetCorrPt      = array( 'f', [ 0. ] )
     st_pfMetCorrPhi     = array( 'f', [ 0. ] )
+    st_pfMetUncJetResUp       = ROOT.std.vector('float')()
+    st_pfMetUncJetResDown     = ROOT.std.vector('float')()
+    st_pfMetUncJetEnUp        = ROOT.std.vector('float')()
+    st_pfMetUncJetEnDown      = ROOT.std.vector('float')()
     st_isData           = array( 'b', [ 0 ] )
+
     for trigs in triglist:
         exec("st_"+trigs+"  = array( 'b', [ 0 ] )")
 #    st_HLT_IsoMu20      = array( 'b', [ 0 ] )
@@ -147,6 +152,7 @@ def AnalyzeDataSet():
     st_THINjetPhoEF                 = ROOT.std.vector('float')()
     st_THINjetEleEF                 = ROOT.std.vector('float')()
     st_THINjetMuoEF                 = ROOT.std.vector('float')()
+    st_THINjetCorrUnc               = ROOT.std.vector('float')()
 
     st_AK4deepCSVnJet               = array( 'L', [ 0 ] ) #ROOT.std.vector('int')()
     st_AK4deepCSVjetP4              = ROOT.std.vector('TLorentzVector')()
@@ -154,6 +160,7 @@ def AnalyzeDataSet():
     st_AK4deepCSVjetHadronFlavor    = ROOT.std.vector('int')()
     st_AK4deepCSVjetNHadEF          = ROOT.std.vector('float')()
     st_AK4deepCSVjetCHadEF          = ROOT.std.vector('float')()
+    st_AK4deepCSVjetCorrUnc         = ROOT.std.vector('float')()
 
 
 
@@ -172,6 +179,7 @@ def AnalyzeDataSet():
     st_CA15jetNhadEF            = ROOT.std.vector('float')()
     st_CA15jetChadEF            = ROOT.std.vector('float')()
     st_CA15SDmass               = ROOT.std.vector('float')()
+    st_CA15Puppi_doublebtag     = ROOT.std.vector('float')()
     st_CA15PuppisubjetCSV       = ROOT.std.vector(ROOT.std.vector('float'))()
 
 
@@ -252,6 +260,10 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_eventId',  st_eventId, 'st_eventId/L')
     outTree.Branch( 'st_pfMetCorrPt', st_pfMetCorrPt , 'st_pfMetCorrPt/F')
     outTree.Branch( 'st_pfMetCorrPhi', st_pfMetCorrPhi , 'st_pfMetCorrPhi/F')
+    outTree.Branch( 'st_pfMetUncJetResUp', st_pfMetUncJetResUp)
+    outTree.Branch( 'st_pfMetUncJetResDown', st_pfMetUncJetResDown)
+    outTree.Branch( 'st_pfMetUncJetEnUp', st_pfMetUncJetEnUp )
+    outTree.Branch( 'st_pfMetUncJetEnDown', st_pfMetUncJetEnDown)
     outTree.Branch( 'st_isData', st_isData , 'st_isData/O')
 
     for trigs in triglist:
@@ -274,6 +286,7 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_THINjetPhoEF',st_THINjetPhoEF )
     outTree.Branch( 'st_THINjetEleEF',st_THINjetEleEF )
     outTree.Branch( 'st_THINjetMuoEF',st_THINjetMuoEF )
+    outTree.Branch('st_THINjetCorrUnc', st_THINjetCorrUnc)
 
     outTree.Branch( 'st_AK4deepCSVnJet',st_AK4deepCSVnJet, 'st_AK4deepCSVnJet/L' )
     outTree.Branch( 'st_AK4deepCSVjetP4',st_AK4deepCSVjetP4 )
@@ -302,6 +315,7 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_CA15jetChadEF',st_CA15jetChadEF)
     outTree.Branch( 'st_CA15SDmass',st_CA15SDmass)
     outTree.Branch( 'st_CA15PuppisubjetCSV',st_CA15PuppisubjetCSV)
+    outTree.Branch( 'st_CA15Puppi_doublebtag',st_CA15Puppi_doublebtag)
     #outTree.Branch( 'st_CA15PassIDLoose',st_CA15PassIDLoose)
     #outTree.Branch( 'st_CA15PassIDTight',st_CA15PassIDTight)
 
@@ -402,6 +416,7 @@ def AnalyzeDataSet():
 
         pfMet                      = skimmedTree.__getattr__('pfMetCorrPt')
         pfMetPhi                   = skimmedTree.__getattr__('pfMetCorrPhi')
+        pfMetJetUnc                = skimmedTree.__getattr__('pfMetCorrUnc')
 
 
         nTHINJets                  = skimmedTree.__getattr__('THINnJet')
@@ -416,6 +431,7 @@ def AnalyzeDataSet():
         thinjetPhoEF               = skimmedTree.__getattr__('THINjetPhoEF')
         thinjetEleEF               = skimmedTree.__getattr__('THINjetEleEF')
         thinjetMuoEF               = skimmedTree.__getattr__('THINjetMuoEF')
+        thinjetCorrUnc             = skimmedTree.__getattr__('THINjetCorrUncUp')
 
         nTHINdeepCSVJets           = skimmedTree.__getattr__('AK4deepCSVnJet')
         thindeepCSVjetP4           = skimmedTree.__getattr__('AK4deepCSVjetP4')
@@ -456,9 +472,14 @@ def AnalyzeDataSet():
         CA15jetChadEF             = skimmedTree.__getattr__('CA15PuppijetCHadEF')
         CA15PassIDLoose           = skimmedTree.__getattr__('CA15PuppijetPassIDLoose')
         CA15PassIDTight           = skimmedTree.__getattr__('CA15PuppijetPassIDTight')
+        CA15Puppi_doublebtag      = skimmedTree.__getattr__('CA15Puppi_doublebtag')
         CA15PuppisubjetCSV        = skimmedTree.__getattr__('CA15PuppisubjetSDCSV')
 
-
+        try:
+            thindeepCSVjetCorrUnc      = skimmedTree.__getattr__('AK4deepCSVjetCorrUncUp')
+        except:
+            if ievent==0: print "\n**********WARNING: Looks like the ntuple is from an older version, as DeepCSV jet correction Unc is missing. DeepCSV jet correction Unc will NOT be stored.**********\n"
+            thindeepCSVjetCorrUnc = 1.
 
 
         try:
@@ -700,7 +721,7 @@ def AnalyzeDataSet():
             if thinJetdeepCSV[jthinjet] > DCSVMWP and abs(j1.Eta())<2.4 : ndBjets += 1
 
 
-        if len(thinjetpassindex) < 1 and len(thindCSVjetpassindex) < 1 : continue
+        # if len(thinjetpassindex) < 1 and len(thindCSVjetpassindex) < 1 : continue
 
 #        except:
 #            if len(thinjetpassindex) < 1: continue
@@ -775,6 +796,12 @@ def AnalyzeDataSet():
         st_pfMetCorrPhi[0]      = pfMetPhi
         st_isData[0]            = isData
 
+        st_pfMetUncJetResUp.clear()
+        st_pfMetUncJetResDown.clear()
+
+        st_pfMetUncJetEnUp.clear()
+        st_pfMetUncJetEnDown.clear()
+
         st_THINjetP4.clear()
         st_THINjetCISVV2.clear()
         st_THINjetHadronFlavor.clear()
@@ -785,18 +812,21 @@ def AnalyzeDataSet():
         st_THINjetPhoEF.clear()
         st_THINjetEleEF.clear()
         st_THINjetMuoEF.clear()
+        st_THINjetCorrUnc.clear()
 
         st_AK4deepCSVjetP4.clear()
         st_AK4deepCSVjetDeepCSV_b.clear()
         st_AK4deepCSVjetHadronFlavor.clear()
         st_AK4deepCSVjetNHadEF.clear()
         st_AK4deepCSVjetCHadEF.clear()
+        st_AK4deepCSVjetCorrUnc.clear()
 
 
         st_CA15jetP4.clear()
         st_CA15SDmass.clear()
         st_CA15jetNhadEF.clear()
         st_CA15jetChadEF.clear()
+        st_CA15Puppi_doublebtag.clear()
         st_CA15PuppisubjetCSV.clear()
 
 
@@ -841,6 +871,7 @@ def AnalyzeDataSet():
             st_THINjetPhoEF.push_back(thinjetPhoEF[ithinjet])
             st_THINjetEleEF.push_back(thinjetEleEF[ithinjet])
             st_THINjetMuoEF.push_back(thinjetMuoEF[ithinjet])
+            st_THINjetCorrUnc.push_back(thinjetCorrUnc[ithinjet])
 
 #        try:
         st_AK4deepCSVnJet[0] = len(thindCSVjetpassindex)
@@ -850,6 +881,7 @@ def AnalyzeDataSet():
             st_AK4deepCSVjetHadronFlavor.push_back(THINdeepCSVjetHadronFlavor[ithinjet])
             st_AK4deepCSVjetNHadEF.push_back(thindeepCSVjetNhadEF[ithinjet])
             st_AK4deepCSVjetCHadEF.push_back(thindeepCSVjetChadEF[ithinjet])
+            st_AK4deepCSVjetCorrUnc.push_back(thindeepCSVjetCorrUnc[ithinjet])
 #        except:
 #            pass
 
@@ -860,6 +892,7 @@ def AnalyzeDataSet():
             st_CA15SDmass.push_back(CA15SDmass[ica15])
             st_CA15jetNhadEF.push_back(CA15jetNhadEF[ica15])
             st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
+            st_CA15Puppi_doublebtag.push_back(CA15Puppi_doublebtag[ica15])
             st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
 
         st_AK8nthikJets[0]=len(AK8jetspassindex)
@@ -904,6 +937,7 @@ def AnalyzeDataSet():
             st_phoIsPassMedium.push_back(bool(phoIsPassMedium[ipho]))
             st_phoIsPassTight.push_back(bool(phoIsPassTight[ipho]))
 
+
         st_pu_nTrueInt[0] = pu_nTrueInt
         st_pu_nPUVert[0] = pu_nPUVert
         st_THINjetNPV[0] = THINjetNPV
@@ -920,6 +954,11 @@ def AnalyzeDataSet():
             st_genParSt.push_back(genParSt[igp])
             st_genParP4.push_back(genParP4[igp])
 
+        st_pfMetUncJetResUp.push_back(pfMetJetUnc[0])
+        st_pfMetUncJetResDown.push_back(pfMetJetUnc[1])
+
+        st_pfMetUncJetEnUp.push_back(pfMetJetUnc[2])
+        st_pfMetUncJetEnDown.push_back(pfMetJetUnc[3])
 
         ## Fill variables for the CRs.
         WenuRecoil[0] = -1.0
@@ -949,7 +988,7 @@ def AnalyzeDataSet():
 # ------------------
 
         ## for dielectron
-        if len(myEles) == 2 and len(myMuos) == 0:
+        if len(myEles) == 2:
 
             iele1=myEles[0]
             iele2=myEles[1]
@@ -966,7 +1005,7 @@ def AnalyzeDataSet():
                     ZeePhi[0] = arctan(zeeRecoilPx,zeeRecoilPy)
 
         ## for dimu
-        if len(myMuos) == 2 and len(myEles) == 0:
+        if len(myMuos) == 2:
             imu1=myMuos[0]
             imu2=myMuos[1]
             p4_mu1 = muP4[imu1]
@@ -981,9 +1020,9 @@ def AnalyzeDataSet():
                     ZmumuMass[0] = mumu_mass
                     ZmumuPhi[0] = arctan(zmumuRecoilPx,zmumuRecoilPy)
 
-        if len(myEles) == 2 and len(myMuos) == 0:
+        if len(myEles) == 2:
             ZRecoilstatus =(ZeeRecoil[0] > 200)
-        elif len(myMuos) == 2 and len(myEles) == 0:
+        elif len(myMuos) == 2:
             ZRecoilstatus =(ZmumuRecoil[0] > 200)
         else:
             ZRecoilstatus=False
@@ -994,7 +1033,7 @@ def AnalyzeDataSet():
 # ------------------
 
         ## for Single electron
-        if len(myEles) == 1 and len(myMuos) == 0:
+        if len(myEles) == 1:
            ele1 = myEles[0]
            p4_ele1 = eleP4[ele1]
 
@@ -1009,7 +1048,7 @@ def AnalyzeDataSet():
                WenuPhi[0] = arctan(WenuRecoilPx,WenuRecoilPy)
 
         ## for Single muon
-        if len(myMuos) == 1 and len(myEles) == 0:
+        if len(myMuos) == 1:
            mu1 = myMuos[0]
            p4_mu1 = muP4[mu1]
 
@@ -1024,9 +1063,9 @@ def AnalyzeDataSet():
                WmunuPhi[0] = arctan(WmunuRecoilPx,WmunuRecoilPy)
 
 
-        if len(myEles) == 1 and len(myMuos) == 0:
+        if len(myEles) == 1:
             WRecoilstatus =(WenuRecoil[0] > 200)
-        elif len(myMuos) == 1 and len(myEles) == 0:
+        elif len(myMuos) == 1:
             WRecoilstatus =(WmunuRecoil[0] > 200)
         else:
             WRecoilstatus=False
@@ -1084,7 +1123,7 @@ def AnalyzeDataSet():
 
         if pfmetstatus==False and ZRecoilstatus==False and WRecoilstatus==False and TOPRecoilstatus==False and GammaRecoilStatus==False:
             continue
-            
+
 
         outTree.Fill()
 

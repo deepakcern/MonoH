@@ -161,10 +161,10 @@ class MonoHbbQuantities:
                 bins='8'
                 low='0.'
                 high='400.'
-            elif 'met' in quant:
-                bins='40'
-                low='0.'
-                high='2000.'
+            #elif 'met' in quant:
+            #    bins='40'
+            #    low='0.'
+            #    high='2000.'
             elif 'nca15jet' in quant:
                 bins='5'
                 low='0'
@@ -193,10 +193,10 @@ class MonoHbbQuantities:
                 bins='6'
                 low='0'
                 high='6'
-            elif 'recoil' in quant:
-                bins='40'
-                low='0.'
-                high='2000.'
+            #elif 'recoil' in quant:
+            #    bins='40'
+            #    low='0.'
+            #    high='2000.'
             elif '_dR_' in quant:
                 bins='20'
                 low='0.'
@@ -221,10 +221,10 @@ class MonoHbbQuantities:
                 bins='100'
                 low='0.'
                 high='100.'
-            elif 'syst' in quant:
-                bins='40'
-                low='0.'
-                high='2000.'
+            #elif 'syst' in quant:
+             #   bins='40'
+             #   low='0.'
+             #   high='2000.'
             else:                   # for pT, mass, etc.
                 bins='10'
                 low='0.'

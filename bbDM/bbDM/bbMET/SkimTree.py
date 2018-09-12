@@ -180,6 +180,8 @@ def AnalyzeDataSet():
     st_CA15jetChadEF            = ROOT.std.vector('float')()
     st_CA15SDmass               = ROOT.std.vector('float')()
     st_CA15Puppi_doublebtag     = ROOT.std.vector('float')()
+    st_CA15PuppiECF_2_3_10      = ROOT.std.vector('float')()
+    st_CA15PuppiECF_1_2_10      = ROOT.std.vector('float')()
     st_CA15PuppisubjetCSV       = ROOT.std.vector(ROOT.std.vector('float'))()
 
 
@@ -316,6 +318,8 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_CA15SDmass',st_CA15SDmass)
     outTree.Branch( 'st_CA15PuppisubjetCSV',st_CA15PuppisubjetCSV)
     outTree.Branch( 'st_CA15Puppi_doublebtag',st_CA15Puppi_doublebtag)
+    outTree.Branch( 'st_CA15PuppiECF_2_3_10',st_CA15PuppiECF_2_3_10)
+    outTree.Branch( 'st_CA15PuppiECF_1_2_10',st_CA15PuppiECF_1_2_10)
     #outTree.Branch( 'st_CA15PassIDLoose',st_CA15PassIDLoose)
     #outTree.Branch( 'st_CA15PassIDTight',st_CA15PassIDTight)
 
@@ -473,6 +477,8 @@ def AnalyzeDataSet():
         CA15PassIDLoose           = skimmedTree.__getattr__('CA15PuppijetPassIDLoose')
         CA15PassIDTight           = skimmedTree.__getattr__('CA15PuppijetPassIDTight')
         CA15Puppi_doublebtag      = skimmedTree.__getattr__('CA15Puppi_doublebtag')
+        CA15PuppiECF_1_2_10       = skimmedTree.__getattr__('CA15PuppiECF_1_2_10')
+        CA15PuppiECF_2_3_10       = skimmedTree.__getattr__('CA15PuppiECF_2_3_10')
         CA15PuppisubjetCSV        = skimmedTree.__getattr__('CA15PuppisubjetSDCSV')
 
         try:
@@ -827,6 +833,8 @@ def AnalyzeDataSet():
         st_CA15jetNhadEF.clear()
         st_CA15jetChadEF.clear()
         st_CA15Puppi_doublebtag.clear()
+        st_CA15PuppiECF_1_2_10.clear()
+        st_CA15PuppiECF_2_3_10.clear()
         st_CA15PuppisubjetCSV.clear()
 
 
@@ -893,6 +901,8 @@ def AnalyzeDataSet():
             st_CA15jetNhadEF.push_back(CA15jetNhadEF[ica15])
             st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
             st_CA15Puppi_doublebtag.push_back(CA15Puppi_doublebtag[ica15])
+            st_CA15PuppiECF_2_3_10.push_back(CA15PuppiECF_2_3_10[ica15])
+            st_CA15PuppiECF_1_2_10.push_back(CA15PuppiECF_1_2_10[ica15])
             st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
 
         st_AK8nthikJets[0]=len(AK8jetspassindex)

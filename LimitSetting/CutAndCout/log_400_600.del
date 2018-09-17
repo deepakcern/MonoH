@@ -1,0 +1,16 @@
+ <<< Combine >>> 
+ WARNING --  From combine v7, method Asymptotic has been renamed to AsymptoticLimits
+>>> including systematics
+>>> method used is Asymptotic
+>>> random number generator seed is 123456
+Computing results starting from expected outcome (a-priori)
+
+ -- AsymptoticLimits ( CLs ) --
+Observed Limit: r < 20.3710
+Expected  2.5%: r < 10.8076
+Expected 16.0%: r < 14.4582
+Expected 50.0%: r < 20.3438
+Expected 84.0%: r < 29.0205
+Expected 97.5%: r < 40.1816
+
+Done in 0.00 min (cpu), 0.00 min (real)

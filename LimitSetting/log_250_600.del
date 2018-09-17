@@ -14,3 +14,41 @@ Expected 84.0%: r < 2.4407
 Expected 97.5%: r < 3.3577
 
 Done in 0.00 min (cpu), 0.00 min (real)
+ <<< Combine >>> 
+ WARNING --  From combine v7, method Asymptotic has been renamed to AsymptoticLimits
+>>> including systematics
+>>> method used is Asymptotic
+>>> random number generator seed is 123456
+Computing results starting from expected outcome (a-priori)
+Constraints of type SimpleGaussianConstraint: 9
+Constraints of type SimpleGaussianConstraint: 9
+Constraints of type SimpleGaussianConstraint: 9
+
+ -- AsymptoticLimits ( CLs ) --
+Observed Limit: r < 1.2308
+Expected  2.5%: r < 0.6297
+Expected 16.0%: r < 0.8550
+Expected 50.0%: r < 1.2305
+Expected 84.0%: r < 1.7945
+Expected 97.5%: r < 2.5323
+
+Done in 0.00 min (cpu), 0.00 min (real)
+ <<< Combine >>> 
+ WARNING --  From combine v7, method Asymptotic has been renamed to AsymptoticLimits
+>>> including systematics
+>>> method used is Asymptotic
+>>> random number generator seed is 123456
+Computing results starting from expected outcome (a-priori)
+Constraints of type SimpleGaussianConstraint: 9
+Constraints of type SimpleGaussianConstraint: 9
+Constraints of type SimpleGaussianConstraint: 9
+
+ -- AsymptoticLimits ( CLs ) --
+Observed Limit: r < 1.2308
+Expected  2.5%: r < 0.6297
+Expected 16.0%: r < 0.8550
+Expected 50.0%: r < 1.2305
+Expected 84.0%: r < 1.7945
+Expected 97.5%: r < 2.5323
+
+Done in 0.00 min (cpu), 0.00 min (real)

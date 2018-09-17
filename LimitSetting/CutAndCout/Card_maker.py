@@ -1,7 +1,7 @@
 import os
 from ROOT import TFile, kGreen,TLatex, TGraph, TTree, TH1F, TH2F, TCanvas, TChain, TMath, TLorentzVector, AddressOf, gROOT, TNamed, gStyle, TLegend
 import glob
-import matplotlib.pyplot as plt
+
 
 def getEvents(file,hist):
     f=TFile.Open(file,'read')
@@ -23,8 +23,6 @@ def getCross(file):
 
 bkg=False
 
-mass=[]
-myeff=[]
 
 path='/Users/dekumar/cernbox/Limit_work/Files/*.root'
 files=sorted(glob.glob(path))
@@ -63,8 +61,6 @@ for file in files:
         eff=(float (selEvents))/(float (TotalEvents))
         print ("sel",eff)
         XSec,MH4 = getCross(file)
-	mass.append(MH4)
-        myeff.append(eff)
         ggHDM=getExpectedEvents(eff,XSec,lumi)
         print ('%.4f' % ggHDM)
 
@@ -77,16 +73,3 @@ for file in files:
 
         fout.close()
         tempfile.close()
-
-
-plt.plot(mass,myeff,'-o',color='red',linewidth=2)
-
-plt.xlabel(r'$\mathbf{M_{a}[GeV]}$')
-plt.ylabel("Efficiency",fontweight="bold")
-plt.legend()#ncol=3,title=r"tan$\beta$")
-plt.title(r"2HDM+a , h$\mathbf{\rightarrow b\bar{b}}$"+"        $\mathbf{M_{A}}$=600 GeV ",fontweight="bold")
-plt.savefig('1D_eff.pdf')
-plt.savefig('1D_eff.png')
-plt.clf()
-plt.cla()
-plt.close('all')

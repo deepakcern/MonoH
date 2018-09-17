@@ -29,7 +29,6 @@ errx=array('f')
 for line in f:
     # if line.rstrip().split()[0]=='400': continue
     masspointstr = 'monoH_MH4_'+line.rstrip().split()[0]+'_MH3_'+line.rstrip().split()[1]
-    print masspointstr
 #        masspointstr = 'NLO_pseudo_mphi_'+line.rstrip().split()[0]+'_mchi_'+line.rstrip().split()[1]
     xsec_ = float(xsec_dict[masspointstr] )
 

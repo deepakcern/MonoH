@@ -339,7 +339,7 @@ def AnalyzeDataSet():
     cutStatusSR1={'preselection':NEntries}
     cutStatusSR2={'preselection':NEntries}
 
-    cutflownames=['trig','MET','CA15conds','MbbCond','dPhicond','njets','nbjets','jet1','jet2/3','nlep']
+    cutflownames=['trig','MET','CA15conds','dPhicond','njets','nbjets','MbbCond','jet1','jet2/3','nlep']
     for SRname in cutflownames:
         cutStatus[SRname] = 0
 
@@ -347,7 +347,7 @@ def AnalyzeDataSet():
     for SRname in cutflownamesSR1:
         cutStatusSR1[SRname] = 0
 
-    cutflownamesSR2=['trig','MET','CA15conds','MbbCond','dPhicond','njets','nbjets','jet1','jet2','jet3','nlep']
+    cutflownamesSR2=['trig','MET','CA15conds','dPhicond','njets','nbjets','MbbCond','jet1','jet2','jet3','nlep']
     for SRname in cutflownamesSR2:
         cutStatusSR2[SRname] = 0
 
@@ -372,7 +372,7 @@ def AnalyzeDataSet():
 #    CRCutFlow['ZdPhi']=0
 
 
-    CRcutnames=['datatrig','trig','recoil','realMET','mass','CA15conds','MbbCond','dPhicond','njets','nbjets','jetconds','nlep/npho','lepconds']
+    CRcutnames=['datatrig','trig','recoil','realMET','mass','CA15conds','dPhicond','njets','nbjets','MbbCond','jetconds','nlep/npho','lepconds']
     regionnames=['2e1b','2mu1b','2e2b','2mu2b','1e1b','1mu1b','1e2bW','1mu2bW','1e2bT','1mu2bT','1mu1e1b','1mu1e2b','1gamma1b','1gamma2b','QCD1b','QCD2b']
     for CRreg in regionnames:
         exec("CR"+CRreg+"CutFlow={'preselection':NEntries}")
@@ -971,7 +971,7 @@ def AnalyzeDataSet():
             higgspt=(bj1+bj2).Pt()
             ifirstbjet=sortedbindex[0]
             isecondbjet=sortedbindex[1]
-      
+
 
         ##
 # --------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1163,6 +1163,9 @@ def AnalyzeDataSet():
         SR2_Cut7_dPhi_jet_MET   =   min_dPhi_jet_MET > 0.5
         SR2_Cut8_nLep           =   nEle+nMu+nTauLooseEleMu == 0
         SR2_Cut9_pfMET          =   pfmetstatus
+
+        if SR2_Cut1_nJets and SR2_Cut2_nBjets and SR2_Cut3_trigstatus and SR2_Cut4_jet1 and SR2_Cut5_jet2 and SR2_Cut6_jet3 and SR2_Cut7_dPhi_jet_MET and SR2_Cut8_nLep and SR2_Cut9_pfMET and keepevent:
+                allquantities.nca15jet_sr2 = mynCA15
 
         if SR2_Cut_CA15 and SR2_Cut1_nJets and SR2_Cut2_nBjets and SR2_Cut3_trigstatus and SR2_Cut4_jet1 and SR2_Cut5_jet2 and SR2_Cut6_jet3 and SR2_Cut7_dPhi_jet_MET and SR2_Cut8_nLep and SR2_Cut9_pfMET and keepevent:
 
@@ -4094,32 +4097,35 @@ def AnalyzeDataSet():
                     cutStatus['MET']+=allweights
                     cutStatusSR2['MET']+=allweights
 
-                    if SR2_Cut7_dPhi_jet_MET:
-                        cutStatus['dPhicond']+=allweights
-                        cutStatusSR2['dPhicond']+=allweights
+                    if SR2ca15cond:
+                        CR2e2bCutFlow['CA15conds']+=allweights
 
-                        if SR2_Cut1_nJets:
-                            cutStatus['njets']+=allweights
-                            cutStatusSR2['njets']+=allweights
+                        if SR2_Cut7_dPhi_jet_MET:
+                            cutStatus['dPhicond']+=allweights
+                            cutStatusSR2['dPhicond']+=allweights
 
-                            if SR2_Cut2_nBjets:
-                                cutStatus['nbjets']+=allweights
-                                cutStatusSR2['nbjets']+=allweights
+                            if SR2_Cut1_nJets:
+                                cutStatus['njets']+=allweights
+                                cutStatusSR2['njets']+=allweights
 
-                                if SR2_Cut4_jet1:
-                                    cutStatus['jet1']+=allweights
-                                    cutStatusSR2['jet1']+=allweights
+                                if SR2_Cut2_nBjets:
+                                    cutStatus['nbjets']+=allweights
+                                    cutStatusSR2['nbjets']+=allweights
 
-                                    if SR2_Cut5_jet2:
-                                        cutStatusSR2['jet2']+=allweights
+                                    if SR2_Cut4_jet1:
+                                        cutStatus['jet1']+=allweights
+                                        cutStatusSR2['jet1']+=allweights
 
-                                        if SR2_Cut6_jet3:
-                                            cutStatus['jet2/3']+=allweights
-                                            cutStatusSR2['jet3']+=allweights
+                                        if SR2_Cut5_jet2:
+                                            cutStatusSR2['jet2']+=allweights
 
-                                            if SR2_Cut8_nLep:
-                                                cutStatus['nlep']+=allweights
-                                                cutStatusSR2['nlep']+=allweights
+                                            if SR2_Cut6_jet3:
+                                                cutStatus['jet2/3']+=allweights
+                                                cutStatusSR2['jet3']+=allweights
+
+                                                if SR2_Cut8_nLep:
+                                                    cutStatus['nlep']+=allweights
+                                                    cutStatusSR2['nlep']+=allweights
 
 
         # 2e cutflow
@@ -4146,7 +4152,7 @@ def AnalyzeDataSet():
 
                         if SR2ca15cond:
                             CR2e2bCutFlow['CA15conds']+=allweights
-                        
+
 
                             if ZdPhicond:
                                 CR2e1bCutFlow['dPhicond']+=allweights
@@ -4178,23 +4184,23 @@ def AnalyzeDataSet():
 
                                     if nBjets==2:
                                         CR2e2bCutFlow['nbjets']+=allweights
-                                        if Higgsmass > 100 and Higgsmass < 150:
-                                            CR2e2bCutFlow['MbbCond']+=allweights
+                                        # if Higgsmass > 100 and Higgsmass < 150:
+                                        #     CR2e2bCutFlow['MbbCond']+=allweights
 
-                                            if jetcond and SR2jet2:
-                                                CR2e2bCutFlow['jetconds']+=allweights
+                                        if jetcond and SR2jet2:
+                                            CR2e2bCutFlow['jetconds']+=allweights
 
-                                                if nEle==2 and nMu==0:
-                                                    CR2e2bCutFlow['nlep/npho']+=allweights
-                                                    if myEles[0].Pt()>myEles[1].Pt():
-                                                        iLeadLep=0
-                                                        iSecondLep=1
-                                                    else:
-                                                        iLeadLep=1
-                                                        iSecondLep=0
+                                            if nEle==2 and nMu==0:
+                                                CR2e2bCutFlow['nlep/npho']+=allweights
+                                                if myEles[0].Pt()>myEles[1].Pt():
+                                                    iLeadLep=0
+                                                    iSecondLep=1
+                                                else:
+                                                    iLeadLep=1
+                                                    iSecondLep=0
 
-                                                    if myEles[iLeadLep].Pt() > 30. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and myEleLooseID[iSecondLep]:
-                                                            CR2e2bCutFlow['lepconds']+=allweights
+                                                if myEles[iLeadLep].Pt() > 30. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and myEleLooseID[iSecondLep]:
+                                                        CR2e2bCutFlow['lepconds']+=allweights
 
 
 
@@ -4214,12 +4220,12 @@ def AnalyzeDataSet():
                         CR2mu1bCutFlow['mass']+=allweights
                         CR2mu2bCutFlow['mass']+=allweights
 
-                        if ZdPhicond:
-                            CR2mu1bCutFlow['dPhicond']+=allweights
-                            CR2mu2bCutFlow['dPhicond']+=allweights
+                        if SR2ca15cond:
+                            CR2mu2bCutFlow['CA15conds']+=allweights
 
-                            if SR2ca15cond:
-                                CR2mu2bCutFlow['CA15conds']+=allweights
+                            if ZdPhicond:
+                                CR2mu1bCutFlow['dPhicond']+=allweights
+                                CR2mu2bCutFlow['dPhicond']+=allweights
 
 
                                 if nJets==1 or nJets==2:
@@ -4248,23 +4254,23 @@ def AnalyzeDataSet():
 
                                     if nBjets==2:
                                         CR2mu2bCutFlow['nbjets']+=allweights
-                                        if Higgsmass > 100 and Higgsmass < 150:
-                                            CR2mu2bCutFlow['MbbCond']+=allweights
+                                        # if Higgsmass > 100 and Higgsmass < 150:
+                                        #     CR2mu2bCutFlow['MbbCond']+=allweights
 
-                                            if jetcond and SR2jet2:
-                                                CR2mu2bCutFlow['jetconds']+=allweights
+                                        if jetcond and SR2jet2:
+                                            CR2mu2bCutFlow['jetconds']+=allweights
 
-                                                if nMu==2 and nEle==0:
-                                                    CR2mu2bCutFlow['nlep/npho']+=allweights
-                                                    if myMuos[0].Pt()>myMuos[1].Pt():
-                                                        iLeadLep=0
-                                                        iSecondLep=1
-                                                    else:
-                                                        iLeadLep=1
-                                                        iSecondLep=0
+                                            if nMu==2 and nEle==0:
+                                                CR2mu2bCutFlow['nlep/npho']+=allweights
+                                                if myMuos[0].Pt()>myMuos[1].Pt():
+                                                    iLeadLep=0
+                                                    iSecondLep=1
+                                                else:
+                                                    iLeadLep=1
+                                                    iSecondLep=0
 
-                                                    if myMuos[iLeadLep].Pt() > 30. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
-                                                        CR2mu2bCutFlow['lepconds']+=allweights
+                                                if myMuos[iLeadLep].Pt() > 30. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
+                                                    CR2mu2bCutFlow['lepconds']+=allweights
 #WCR cutflow
 
         if EleCRtrigstatus:
@@ -4287,7 +4293,7 @@ def AnalyzeDataSet():
 
                         if SR2ca15cond:
                             CR1e2bWCutFlow['CA15conds']+=allweights
-                                    
+
 
                             if WdPhicond:
                                 #CR1e1bCutFlow['dPhicond']+=allweights
@@ -4313,18 +4319,18 @@ def AnalyzeDataSet():
 
                                     if nBjets==2:
                                         CR1e2bWCutFlow['nbjets']+=allweights
+                                        #
+                                        # if Higgsmass > 100 and Higgsmass < 150:
+                                        #     CR1e2bWCutFlow['MbbCond']+=allweights
 
-                                        if Higgsmass > 100 and Higgsmass < 150:
-                                            CR1e2bWCutFlow['MbbCond']+=allweights
+                                        if jetcond and SR2jet2:
+                                            CR1e2bWCutFlow['jetconds']+=allweights
 
-                                            if jetcond and SR2jet2:
-                                                CR1e2bWCutFlow['jetconds']+=allweights
+                                            if nEle==1 and nMu==0:
+                                                CR1e2bWCutFlow['nlep/npho']+=allweights
 
-                                                if nEle==1 and nMu==0:
-                                                    CR1e2bWCutFlow['nlep/npho']+=allweights
-
-                                                    if myEles[0].Pt() > 30. and myEleTightID[0]:
-                                                        CR1e2bWCutFlow['lepconds']+=allweights
+                                                if myEles[0].Pt() > 30. and myEleTightID[0]:
+                                                    CR1e2bWCutFlow['lepconds']+=allweights
 
 
 
@@ -4348,7 +4354,7 @@ def AnalyzeDataSet():
 
                         if SR2ca15cond:
                             CR1mu2bWCutFlow['CA15conds']+=allweights
-                            
+
 
                             if WdPhicond:
                                 #CR1mu1bCutFlow['dPhicond']+=allweights
@@ -4374,17 +4380,17 @@ def AnalyzeDataSet():
 
                                     if nBjets==2:
                                         CR1mu2bWCutFlow['nbjets']+=allweights
-                                        if Higgsmass > 100 and Higgsmass < 150:
-                                            CR1mu2bWCutFlow['MbbCond']+=allweights
+                                        # if Higgsmass > 100 and Higgsmass < 150:
+                                        #     CR1mu2bWCutFlow['MbbCond']+=allweights
 
-                                            if jetcond and SR2jet2:
-                                                CR1mu2bWCutFlow['jetconds']+=allweights
+                                        if jetcond and SR2jet2:
+                                            CR1mu2bWCutFlow['jetconds']+=allweights
 
-                                                if nEle==0 and nMu==1:
-                                                    CR1mu2bWCutFlow['nlep/npho']+=allweights
+                                            if nEle==0 and nMu==1:
+                                                CR1mu2bWCutFlow['nlep/npho']+=allweights
 
-                                                    if myMuos[0].Pt() > 30. and myMuTightID[0]:
-                                                        CR1mu2bWCutFlow['lepconds']+=allweights
+                                                if myMuos[0].Pt() > 30. and myMuTightID[0]:
+                                                    CR1mu2bWCutFlow['lepconds']+=allweights
 
 
 #TOPCR
@@ -4438,7 +4444,6 @@ def AnalyzeDataSet():
                                         if Higgsmass > 100 and Higgsmass < 150:
                                             CR1e2bTCutFlow['MbbCond']+=allweights
 
-
                                             if jetcond and SR2jet2:
                                                 CR1e2bTCutFlow['jetconds']+=allweights
 
@@ -4470,7 +4475,7 @@ def AnalyzeDataSet():
 
                         if SR2ca15cond:
                             CR1mu2bTCutFlow['CA15conds']+=allweights
-                            
+
 
                             if WdPhicond:
                                 #CR1mu1bCutFlow['dPhicond']+=allweights

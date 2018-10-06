@@ -2904,7 +2904,7 @@ def AnalyzeDataSet():
 
         #This top CR
         TopCond=False
-        if nJets >= 2 and nBjets==2:
+        if nJets > 2 and nBjets==2:
             TopCond=True
 
         WdPhicond=True
@@ -4436,7 +4436,7 @@ def AnalyzeDataSet():
                                 #                 if myEles[0].Pt() > 30. and myEleTightID[0]:
                                 #                     CR1e1bCutFlow['lepconds']+=allweights
 
-                                if nJets >=2:
+                                if nJets >2:
                                     CR1e2bTCutFlow['njets']+=allweights
 
                                     if nBjets==2:
@@ -4496,7 +4496,7 @@ def AnalyzeDataSet():
                                 #                 if myMuos[0].Pt() > 30. and myMuTightID[0]:
                                 #                     CR1mu1bCutFlow['lepconds']+=allweights
 
-                                if nJets>=2:
+                                if nJets>2:
                                     CR1mu2bTCutFlow['njets']+=allweights
 
                                     if nBjets==2:

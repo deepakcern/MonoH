@@ -170,6 +170,7 @@ def AnalyzeDataSet():
     st_AK8thikjetNhadEF           = ROOT.std.vector('float')()
     st_AK8thikjetChadEF           = ROOT.std.vector('float')()
     st_AK8SDmass                  = ROOT.std.vector('float')()
+    st_AK8Puppijet_DoubleSV       = ROOT.std.vector('float')()
     st_AK8PuppisubjetCSV          = ROOT.std.vector(ROOT.std.vector('float'))()
 
 
@@ -179,6 +180,9 @@ def AnalyzeDataSet():
     st_CA15jetNhadEF            = ROOT.std.vector('float')()
     st_CA15jetChadEF            = ROOT.std.vector('float')()
     st_CA15SDmass               = ROOT.std.vector('float')()
+    st_CA15Puppi_doublebtag     = ROOT.std.vector('float')()
+    st_CA15PuppiECF_2_3_10      = ROOT.std.vector('float')()
+    st_CA15PuppiECF_1_2_10      = ROOT.std.vector('float')()
     st_CA15PuppisubjetCSV       = ROOT.std.vector(ROOT.std.vector('float'))()
 
 
@@ -302,6 +306,8 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_AK8thikjetChadEF',st_AK8thikjetChadEF)
     outTree.Branch( 'st_AK8SDmass',st_AK8SDmass)
     outTree.Branch( 'st_AK8PuppisubjetCSV',st_AK8PuppisubjetCSV)
+    outTree.Branch( 'st_AK8Puppijet_DoubleSV',st_AK8Puppijet_DoubleSV)
+
     #outTree.Branch( 'st_AK8THIKjetNPV',st_AK8THIKjetNPV)
     #outTree.Branch( 'st_AK8thikJetLooseID',st_AK8thikJetLooseID)
     #outTree.Branch( 'st_AK8thikjetTightID',st_AK8thikjetTightID)
@@ -314,6 +320,9 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_CA15jetChadEF',st_CA15jetChadEF)
     outTree.Branch( 'st_CA15SDmass',st_CA15SDmass)
     outTree.Branch( 'st_CA15PuppisubjetCSV',st_CA15PuppisubjetCSV)
+    outTree.Branch( 'st_CA15Puppi_doublebtag',st_CA15Puppi_doublebtag)
+    outTree.Branch( 'st_CA15PuppiECF_2_3_10',st_CA15PuppiECF_2_3_10)
+    outTree.Branch( 'st_CA15PuppiECF_1_2_10',st_CA15PuppiECF_1_2_10)
     #outTree.Branch( 'st_CA15PassIDLoose',st_CA15PassIDLoose)
     #outTree.Branch( 'st_CA15PassIDTight',st_CA15PassIDTight)
 
@@ -453,6 +462,7 @@ def AnalyzeDataSet():
         AK8thikjetTightID          = skimmedTree.__getattr__('AK8PuppijetPassIDTight')
         AK8SDmass                  = skimmedTree.__getattr__('AK8PuppijetSDmass')
         AK8PuppisubjetCSV          = skimmedTree.__getattr__('AK8PuppisubjetSDCSV')
+        AK8Puppijet_DoubleSV       = skimmedTree.__getattr__('AK8Puppijet_DoubleSV')
 
         #AK8subjet
         #nAK8subjets               = skimmedTree.__getattr__('AK8PuppinSubSDJet')
@@ -470,6 +480,9 @@ def AnalyzeDataSet():
         CA15jetChadEF             = skimmedTree.__getattr__('CA15PuppijetCHadEF')
         CA15PassIDLoose           = skimmedTree.__getattr__('CA15PuppijetPassIDLoose')
         CA15PassIDTight           = skimmedTree.__getattr__('CA15PuppijetPassIDTight')
+        CA15Puppi_doublebtag      = skimmedTree.__getattr__('CA15Puppi_doublebtag')
+        CA15PuppiECF_1_2_10       = skimmedTree.__getattr__('CA15PuppiECF_1_2_10')
+        CA15PuppiECF_2_3_10       = skimmedTree.__getattr__('CA15PuppiECF_2_3_10')
         CA15PuppisubjetCSV        = skimmedTree.__getattr__('CA15PuppisubjetSDCSV')
 
         try:
@@ -718,7 +731,7 @@ def AnalyzeDataSet():
             if thinJetdeepCSV[jthinjet] > DCSVMWP and abs(j1.Eta())<2.4 : ndBjets += 1
 
 
-        if len(thinjetpassindex) < 1 and len(thindCSVjetpassindex) < 1 : continue
+        # if len(thinjetpassindex) < 1 and len(thindCSVjetpassindex) < 1 : continue
 
 #        except:
 #            if len(thinjetpassindex) < 1: continue
@@ -823,6 +836,9 @@ def AnalyzeDataSet():
         st_CA15SDmass.clear()
         st_CA15jetNhadEF.clear()
         st_CA15jetChadEF.clear()
+        st_CA15Puppi_doublebtag.clear()
+        st_CA15PuppiECF_1_2_10.clear()
+        st_CA15PuppiECF_2_3_10.clear()
         st_CA15PuppisubjetCSV.clear()
 
 
@@ -831,6 +847,7 @@ def AnalyzeDataSet():
         st_AK8thikjetChadEF.clear()
         st_AK8SDmass.clear()
         st_AK8PuppisubjetCSV.clear()
+        st_AK8Puppijet_DoubleSV.clear()
 
 
 
@@ -888,6 +905,9 @@ def AnalyzeDataSet():
             st_CA15SDmass.push_back(CA15SDmass[ica15])
             st_CA15jetNhadEF.push_back(CA15jetNhadEF[ica15])
             st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
+            st_CA15Puppi_doublebtag.push_back(CA15Puppi_doublebtag[ica15])
+            st_CA15PuppiECF_2_3_10.push_back(CA15PuppiECF_2_3_10[ica15])
+            st_CA15PuppiECF_1_2_10.push_back(CA15PuppiECF_1_2_10[ica15])
             st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
 
         st_AK8nthikJets[0]=len(AK8jetspassindex)
@@ -897,6 +917,7 @@ def AnalyzeDataSet():
             st_AK8thikjetChadEF.push_back(AK8thikjetChadEF[iak8jet])
             st_AK8SDmass.push_back(AK8SDmass[iak8jet])
             st_AK8PuppisubjetCSV.push_back(AK8PuppisubjetCSV[iak8jet])
+            st_AK8Puppijet_DoubleSV.push_back(AK8Puppijet_DoubleSV[iak8jet])
 
         st_nEle[0] = len(myEles)
         for iele in myEles:

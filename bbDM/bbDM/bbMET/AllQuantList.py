@@ -69,7 +69,7 @@ def getRegionQuants():
             regquants.append("reg_"+reg+"_"+var)
 
     #W CR
-    regions=['1e1b','1mu1b','1e2b','1mu2b']
+    regions=['1e2bT','1mu2bT','1e2bW','1mu2bW']
     varlist=['Wmass','WpT','ca15jet_pT','hadrecoil','MET','bb_Mass','lep1_pT','lep1_iso','jet1_pT','jet2_pT','jet1_eta','jet2_eta','jet1_csv','jet2_csv','jet1_deepcsv','jet2_deepcsv','njet','ntau','nele','nmu','nUncleanEle','nUncleanMu','nUncleanTau','min_dR_jet_ele_preclean','min_dR_jet_ele_postclean','njet_n_minus_1','unclean_njet_n_minus_1','min_dPhi_jet_Recoil','min_dPhi_CAjet_MET','min_dPhi_jet_MET','min_dPhi_jet_Recoil_n_minus_1','jet1_NHadEF','jet1_CHadEF','jet1_CEmEF','jet1_PhoEF','jet1_EleEF','jet1_MuoEF']
 
     for reg in regions:

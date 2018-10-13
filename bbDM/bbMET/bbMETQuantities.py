@@ -1,6 +1,7 @@
 from ROOT import TFile, TTree, TH1F, TH1D, TH1, TCanvas, TChain,TGraphAsymmErrors, TMath, TH2D, TH2F
 import ROOT as ROOT
 import AllQuantList
+from array import array
 
 class MonoHbbQuantities:
 
@@ -85,6 +86,11 @@ class MonoHbbQuantities:
         self.weight_ewkW_down = 1.0
         self.weight_ewkTop_up = 1.0
         self.weight_ewkTop_down = 1.0
+        self.weight_pho_up = 1.0
+        self.weight_pho_down = 1.0
+        self.weight_jec_up = 1.0
+        self.weight_jec_down = 1.0
+
 
         self.weight_pdf   = []
         self.weight_muR   = []
@@ -128,35 +134,35 @@ class MonoHbbQuantities:
 
         def getBins(quant):
             if 'eta' in quant:
-                bins='30'
+                bins='10'
                 low='-3'
                 high='3'
             elif 'dPhi' in quant:
-                bins='32'
+                bins='16'
                 low='0'
                 high='3.2'
             elif 'phi' in quant:
-                bins='64'
+                bins='32'
                 low='-3.2'
                 high='3.2'
             elif 'csv' in quant:
-                bins='50'
+                bins='20'
                 low='0.'
                 high='1.'
             elif 'iso' in quant:
-                bins='50'
+                bins='20'
                 low='0.'
                 high='0.25'
             elif 'Zmass' in quant:
-                bins='60'
+                bins='8'
                 low='70.'
                 high='110.'
             elif 'Wmass' in quant:
-                bins='80'
+                bins='8'
                 low='0.'
                 high='400.'
             elif 'met' in quant:
-                bins='40'
+                bins='20'
                 low='0.'
                 high='2000.'
             elif 'nca15jet' in quant:
@@ -169,14 +175,14 @@ class MonoHbbQuantities:
                 low='0'
                 high='5'
 
-            elif  'bb_Mass' in quant:
-                bins='25'
+            elif  'bb_Mass' in quant or 'MT' in quant:
+                bins='60'
                 low='0.0'
                 high='250.'
 
 
             elif 'chf' in quant or 'nhf' in quant or 'EF' in quant:
-                bins='40'
+                bins='15'
                 low='0.'
                 high='1.'
             elif 'njet' in quant:
@@ -192,19 +198,19 @@ class MonoHbbQuantities:
                 low='0.'
                 high='2000.'
             elif '_dR_' in quant:
-                bins='60'
+                bins='20'
                 low='0.'
                 high='6.'
-            elif 'lep1_pT' in quant or 'jet2_pT' in quant:
-                bins='100'
+            elif 'lep1_pT' in quant or 'jet1_pT' in quant:
+                bins='10'
                 low='0.'
                 high='1000.'
-            elif 'lep2_pT' in quant:
-                bins='200'
+            elif 'lep2_pT' in quant or 'jet2_pT' in quant:
+                bins='10'
                 low='0.'
                 high='1000.'
             elif 'dr_jet_sr2' in quant or 'dr_jet_sr1' in quant:
-                bins='400'
+                bins='50'
                 low='0.'
                 high='4.'
             elif 'PV' in quant:
@@ -216,23 +222,34 @@ class MonoHbbQuantities:
                 low='0.'
                 high='2000.'
             else:                   # for pT, mass, etc.
-                bins='50'
+                bins='20'
                 low='0.'
                 high='1000.'
 
             return bins,low,high
 
         for quant in allquantlist:
-            bins,low,high=getBins(quant)
-            exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+bins+","+low+","+high+"))")
+            #print (quant)
+            if 'met_duhv' in  quant or 'syst_jdhv' in quant:
+                xbinnum='[200,270,345,480,1000]'
+                xbins='4'
+                exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+xbins+",array('d',"+xbinnum+")))")
+            else:
+                bins,low,high=getBins(quant)
+                exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+bins+","+low+","+high+"))")
 
         for quant in preselquantlist:
             bins,low,high=getBins(quant)
             exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+bins+","+low+","+high+"))")
 
         for quant in regquants:
-            bins,low,high=getBins(quant)
-            exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+bins+","+low+","+high+"))")
+            if 'hadrecoil' in quant or 'syst' in quant:
+                xbinnum='[200,270,345,480,1000]'
+                xbins='4'
+                exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+xbins+",array('d',"+xbinnum+")))")
+            else:
+                bins,low,high=getBins(quant)
+                exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+bins+","+low+","+high+"))")
 
 
         def getBins2D(quant):
@@ -324,6 +341,19 @@ class MonoHbbQuantities:
         WF_ewkTop_down = self.weight_ewkTop_down
         if WF_ewkTop_down == 1.0:
             WF_ewkTop_down = WF
+        WF_pho_up = self.weight_pho_up
+        if WF_pho_up == 1.0:
+            WF_pho_up = WF
+        WF_pho_down = self.weight_pho_down
+        if WF_pho_down == 1.0:
+            WF_pho_down = WF
+        WF_jec_up = self.weight_jec_up
+        if WF_jec_up == 1.0:
+            WF_jec_up = WF
+        WF_jec_down = self.weight_jec_down
+        if WF_jec_down == 1.0:
+            WF_jec_down = WF
+
         #print "WF = ", WF
         self.h_met[0]        .Fill(self.met,       WF)
 
@@ -382,6 +412,17 @@ class MonoHbbQuantities:
                 exec("if self."+quant+" is not None: self.h_"+quant+"[0] .Fill(self."+quant+", WF_ewkTop_up)")
             elif 'syst' in quant and 'down' in quant and 'ewkTop' in quant:
                 exec("if self."+quant+" is not None: self.h_"+quant+"[0] .Fill(self."+quant+", WF_ewkTop_down)")
+
+            elif 'syst' in quant and 'up' in quant and 'pho' in quant:
+                exec("if self."+quant+" is not None: self.h_"+quant+"[0] .Fill(self."+quant+", WF_pho_up)")
+            elif 'syst' in quant and 'down' in quant and 'pho' in quant:
+                exec("if self."+quant+" is not None: self.h_"+quant+"[0] .Fill(self."+quant+", WF_pho_down)")
+
+            elif 'syst' in quant and 'up' in quant and 'jec' in quant:
+                exec("if self."+quant+" is not None: self.h_"+quant+"[0] .Fill(self."+quant+", WF_jec_up)")
+            elif 'syst' in quant and 'down' in quant and 'jec' in quant:
+                exec("if self."+quant+" is not None: self.h_"+quant+"[0] .Fill(self."+quant+", WF_jec_down)")
+
             else:
                 exec("if self."+quant+" is not None: self.h_"+quant+"[0] .Fill(self."+quant+", WF)")
 

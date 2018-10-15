@@ -162,7 +162,7 @@ class MonoHbbQuantities:
                 low='0.'
                 high='400.'
             elif 'met' in quant:
-                bins='20'
+                bins='2000'
                 low='0.'
                 high='2000.'
             elif 'nca15jet' in quant:
@@ -176,9 +176,14 @@ class MonoHbbQuantities:
                 high='5'
 
             elif  'bb_Mass' in quant:
-                bins='25'
+                bins='60'
                 low='0.0'
                 high='250.'
+
+            elif  'MT' in quant:
+                bins='100'
+                low='0.0'
+                high='2000.'
 
 
             elif 'chf' in quant or 'nhf' in quant or 'EF' in quant:
@@ -194,7 +199,7 @@ class MonoHbbQuantities:
                 low='0'
                 high='6'
             elif 'recoil' in quant:
-                bins='40'
+                bins='2000'
                 low='0.'
                 high='2000.'
             elif '_dR_' in quant:
@@ -218,11 +223,11 @@ class MonoHbbQuantities:
                 low='0.'
                 high='100.'
             elif 'syst' in quant:
-                bins='40'
+                bins='2000'
                 low='0.'
                 high='2000.'
             else:                   # for pT, mass, etc.
-                bins='20'
+                bins='100'
                 low='0.'
                 high='1000.'
 
@@ -230,7 +235,7 @@ class MonoHbbQuantities:
 
         for quant in allquantlist:
             #print (quant)
-            if 'met_duhv' in  quant or 'syst_jdhv' in quant:
+            if 'met_dfgduhv' in  quant or 'syst_fghjdhv' in quant:
                 xbinnum='[200,270,345,480,1000]'
                 xbins='4'
                 exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+xbins+",array('d',"+xbinnum+")))")
@@ -243,7 +248,7 @@ class MonoHbbQuantities:
             exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+bins+","+low+","+high+"))")
 
         for quant in regquants:
-            if 'hadrecoil' in quant or 'syst' in quant:
+            if 'hadrecoil_hjdfbhjb' in quant or 'syst_jhdfbhj' in quant:
                 xbinnum='[200,270,345,480,1000]'
                 xbins='4'
                 exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+xbins+",array('d',"+xbinnum+")))")

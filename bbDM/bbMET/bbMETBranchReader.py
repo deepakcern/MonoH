@@ -484,6 +484,7 @@ def AnalyzeDataSet():
             AK8thikjetP4               = skimmedTree.__getattr__('st_AK8thikjetP4')
             AK8SDmass                  = skimmedTree.__getattr__('st_AK8SDmass')
             AK8PuppisubjetCSV          = skimmedTree.__getattr__('st_AK8PuppisubjetCSV')
+            CA15Puppi_doublebtag        = skimmedTree.__getattr__('st_CA15PuppisubjetCSV')
 
             #CA15jets
             CA15njets                 = skimmedTree.__getattr__('st_CA15njets')
@@ -936,15 +937,24 @@ def AnalyzeDataSet():
         hasca15twobjets=False
 
 
-        for ca15jet in range(CA15njets):
-            if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4:
-                if CA15SDmass[ca15jet] > 100. and CA15SDmass[ca15jet] < 150.:
-                    for i in range(len(CA15PuppisubjetCSV[ca15jet])):
-                        if (CA15PuppisubjetCSV[ca15jet])[i] > 0.5426:
-                            CA15cvs.append(i)
-                    if len(CA15cvs) >=2:
-                        hasca15twobjets = True
-                        myca15jetsP4.append(CA15jetP4[ca15jet])
+
+        doubleB=True
+
+        if doubleB:
+            for ca15jet in range(CA15njets):
+                if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4 and CA15SDmass[ca15jet] > 100. and CA15SDmass[ca15jet] < 150. and CA15Puppi_doublebtag[ca15jet] > 0.75:
+                            myca15jetsP4.append(CA15jetP4[ca15jet])
+        if not doubleB:
+            for ca15jet in range(CA15njets):
+                if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4:
+                    if CA15SDmass[ca15jet] > 100. and CA15SDmass[ca15jet] < 150.:
+                        for i in range(len(CA15PuppisubjetCSV[ca15jet])):
+                            if (CA15PuppisubjetCSV[ca15jet])[i] > 0.5426:
+                                CA15cvs.append(i)
+                        if len(CA15cvs) >=2:
+                            hasca15twobjets = True
+                            myca15jetsP4.append(CA15jetP4[ca15jet])
+
         mynCA15=len(myca15jetsP4)
 
 

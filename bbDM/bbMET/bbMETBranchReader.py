@@ -1303,7 +1303,7 @@ def AnalyzeDataSet():
         if myJetChadEF[ifirstjet]< 0.1: jetcond=False
 
         if nJets>=2:
-            if j2.Pt() < 30.0: jetcond=False
+            if j2.Pt() < 50.0: jetcond=False
 
             if j2.Pt() > 50.0:
                 SR2jet2=True
@@ -3404,7 +3404,7 @@ def AnalyzeDataSet():
         # ----to be added in future---------------------------------------------------------------------------------------------------------------------------------------
 
 
-        if pfmetstatus and SRlepcond and (SR1jetcond or SR2jetcond): npass = npass + 1
+        if pfmetstatus and SRlepcond and SR2njetcond and SR2ca15cond: npass = npass + 1
 
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -3757,7 +3757,8 @@ def AnalyzeDataSet():
                     sf_resolved2[0]=1.0
                 allweights = allweights * sf_resolved2[0]
 
-        if (SR2njetcond or TopCond or WCond):
+
+        if (SR2njetcond or WCond):
             if sf_resolved1[0]==0.0:
                 sf_resolved1[0]=1.0
             if sf_resolved2[0]==0.0:
@@ -3767,6 +3768,19 @@ def AnalyzeDataSet():
                 if sf_resolved3[0]==0.0:
                     sf_resolved3[0]=1.0
                 allweights = allweights * sf_resolved3[0]
+
+
+
+        if TopCond:
+            if sf_resolved1[0]==0.0:
+                sf_resolved1[0]=1.0
+            if sf_resolved2[0]==0.0:
+                sf_resolved2[0]=1.0
+            allweights = allweights * sf_resolved1[0] * sf_resolved2[0]
+            if nJets>2:
+                if sf_resolved3[0]==0.0:
+                    sf_resolved3[0]=1.0
+                allweights = allweights * sf_resolved3[0] *(nJets-2)
 
 
         temp_original_weight  = allweights
@@ -3857,7 +3871,7 @@ def AnalyzeDataSet():
                     cutStatusSR2['MET']+=allweights
 
                     if SR2ca15cond:
-                        CR2e2bCutFlow['CA15conds']+=allweights
+                        cutStatusSR2['CA15conds']+=allweights
 
                         if SR2_Cut7_dPhi_jet_MET:
                             cutStatus['dPhicond']+=allweights

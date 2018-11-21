@@ -63,10 +63,28 @@ print "Input:",options.inputfile, "; Output:", outfilename
 
 
 #outfilename= 'SkimmedTree.root'
-
 skimmedTree = TChain("tree/treeMaker")
 
-skimmedTree.Add(sys.argv[1])
+if isfarmout:
+    infile = open(inputfilename)
+    failcount=0
+    for ifile in infile:
+        try:
+            f_tmp = TFile.Open(ifile.rstrip(),'READ')
+            if f_tmp.IsZombie():            # or fileIsCorr(ifile.rstrip()):
+                failcount += 1
+                continue
+            skimmedTree.Add(ifile.rstrip())
+        except:
+            failcount += 1
+    if failcount>0: print "Could not read %d files. Skipping them." %failcount
+
+if not isfarmout:
+    skimmedTree.Add(inputfilename)
+
+
+#
+# skimmedTree.Add(sys.argv[1])
 
 def arctan(x,y):
     corr=0

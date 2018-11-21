@@ -14,7 +14,7 @@ ROOT.gROOT.SetBatch(True)
 
 ROOT.gROOT.LoadMacro("Loader.h+")
 
-
+usage = "usage: %prog [options] arg1 arg2"
 parser = optparse.OptionParser(usage)
 
 

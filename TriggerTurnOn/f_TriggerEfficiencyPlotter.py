@@ -110,6 +110,7 @@ def AnalyzeDataSet():
     allquantities.defineHisto()
 
     triglist=['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60_v','HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v','HLT_PFMETNoMu140_PFMHTNoMu140_IDTight_v']
+    triglist_mu=['HLT_IsoMu27_v']
 
     outfile = TFile(outfilename,'RECREATE')
     #
@@ -193,23 +194,15 @@ def AnalyzeDataSet():
         pu_nTrueInt                = skimmedTree.__getattr__('pu_nTrueInt')         #int()
         pu_nPUVert                 = skimmedTree.__getattr__('pu_nPUVert')
 
-        nPho                       = skimmedTree.__getattr__('nPho')
-        phoP4                      = skimmedTree.__getattr__('phoP4')
-        phoIsPassLoose             = skimmedTree.__getattr__('phoIsPassLoose')
-        phoIsPassMedium            = skimmedTree.__getattr__('phoIsPassMedium')
-        phoIsPassTight             = skimmedTree.__getattr__('phoIsPassTight')
 
-#        print skimmedTree.__getattr__('pu_nTrueInt')
-#        print pu_nTrueInt
-#        print
-
-        nGenPar                    = skimmedTree.__getattr__('nGenPar')
-        genParId                   = skimmedTree.__getattr__('genParId')
-        genMomParId                = skimmedTree.__getattr__('genMomParId')
-        genParSt                   = skimmedTree.__getattr__('genParSt')
-        genParP4                   = skimmedTree.__getattr__('genParP4')
 
         trigstatus=False
+        trigstatus_mu=False
+
+        for itrig in range(len(triglist_mu)):
+            exec(triglist_mu[itrig]+" = CheckFilter(trigName, trigResult, " + "'" + triglist_mu[itrig] + "')")        #Runs the above commented-off code dynamically.
+            exec("if "+triglist_mu[itrig]+": trigstatus_mu=True")
+
         for itrig in range(len(triglist)):
             exec(triglist[itrig]+" = CheckFilter(trigName, trigResult, " + "'" + triglist[itrig] + "')")        #Runs the above commented-off code dynamically.
             exec("if "+triglist[itrig]+": trigstatus=True")
@@ -218,7 +211,7 @@ def AnalyzeDataSet():
         filter1 = False; filter2 = False;filter3 = False;filter4 = False; filter5 = False; filter6 = False
         ifilter_=0
         filter1 = CheckFilter(filterName, filterResult, 'Flag_HBHENoiseFilter')
-        filter2 = CheckFilter(filterName, filterResult, 'Flag_globalTightHalo2016Filter')
+        filter2 = CheckFilter(filterName, filterResult, 'Flag_globalSuperTightHalo2016Filter')
         filter3 = CheckFilter(filterName, filterResult, 'Flag_eeBadScFilter')
         filter4 = CheckFilter(filterName, filterResult, 'Flag_goodVertices')
         filter5 = CheckFilter(filterName, filterResult, 'Flag_EcalDeadCellTriggerPrimitiveFilter')
@@ -340,10 +333,10 @@ def AnalyzeDataSet():
         for quant in regquants:
             exec("allquantities."+quant+" = None")
 
-        if trigstatus and jetCond and muonCond and len(myMuos) ==1:
+        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1:
            allquantities.frac_recoil = WmunuRecoilPt
 
-        if jetCond and muonCond and len(myMuos) ==1:
+        if jetCond and trigstatus_mu and muonCond and len(myMuos) ==1:
            allquantities.full_recoil = WmunuRecoilPt
 
 

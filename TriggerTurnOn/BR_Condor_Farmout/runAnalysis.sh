@@ -17,7 +17,7 @@ cd $CMSSW_BASE
 cmsenv
 cd ../../
 
-python TriggerEfficiencyPlotter.py -F -i "$1" -D . -o BROutput.root
+python f_TriggerEfficiencyPlotter.py -F -i "$1" -D . -o BROutput.root
 
 exitcode=$?
 

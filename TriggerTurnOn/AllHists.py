@@ -22,17 +22,17 @@ class trigeerTurnOn:
 
         def getBins(quant):
             if 'full' in quant:
-                bins='1000'
+                bins='2000'
                 low='0'
-                high='1000'
+                high='2000'
             elif 'fract' in quant:
-                bins='1000'
+                bins='2000'
                 low='0'
-                high='1000'
+                high='2000'
             else:                   # for pT, mass, etc.
-                bins='1000'
+                bins='2000'
                 low='0.'
-                high='1000.'
+                high='2000.'
 
             return bins,low,high
 

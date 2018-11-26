@@ -338,10 +338,10 @@ def AnalyzeDataSet():
         for quant in regquants:
             exec("allquantities."+quant+" = None")
 
-        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1:
+        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1 and len(myEles)==0:
            allquantities.frac_recoil = WmunuRecoilPt
 
-        if jetCond and trigstatus_mu and muonCond and len(myMuos) ==1:
+        if jetCond and trigstatus_mu and muonCond and len(myMuos) ==1 and len(myEles)==0:
            allquantities.full_recoil = WmunuRecoilPt
 
 

@@ -14,12 +14,77 @@ ROOT.gROOT.SetBatch(True)
 
 ROOT.gROOT.LoadMacro("Loader.h+")
 
+usage = "usage: %prog [options] arg1 arg2"
+parser = optparse.OptionParser(usage)
 
-outfilename= 'SkimmedTree.root'
 
+parser.add_option("-i", "--inputfile",  dest="inputfile")
+parser.add_option("-o", "--outputfile", dest="outputfile")
+parser.add_option("-D", "--outputdir", dest="outputdir")
+parser.add_option("-F", "--farmout", action="store_true",  dest="farmout")
+
+(options, args) = parser.parse_args()
+
+
+if options.farmout==None:
+    isfarmout = False
+else:
+    isfarmout = options.farmout
+
+
+inputfilename = options.inputfile
+outputdir = options.outputdir
+
+
+pathlist = inputfilename.split("/")
+sizeoflist = len(pathlist)
+#print ('sizeoflist = ',sizeoflist)
+rootfile='tmphist'
+rootfile = pathlist[sizeoflist-1]
+textfile = rootfile+".txt"
+
+if outputdir!='.': os.system('mkdir -p '+outputdir)
+
+if options.outputfile is None or options.outputfile==rootfile:
+    if not isfarmout:
+        outputfilename = "/Output_"+rootfile
+    else:
+        outputfilename = "/Output_"+rootfile.split('.')[0]+".root"
+else:
+    outputfilename = "/"+options.outputfile
+
+
+
+outfilename = outputdir + outputfilename
+#else:
+#    outfilename = options.outputfile
+
+print "Input:",options.inputfile, "; Output:", outfilename
+
+
+#outfilename= 'SkimmedTree.root'
 skimmedTree = TChain("tree/treeMaker")
 
-skimmedTree.Add(sys.argv[1])
+if isfarmout:
+    infile = open(inputfilename)
+    failcount=0
+    for ifile in infile:
+        try:
+            f_tmp = TFile.Open(ifile.rstrip(),'READ')
+            if f_tmp.IsZombie():            # or fileIsCorr(ifile.rstrip()):
+                failcount += 1
+                continue
+            skimmedTree.Add(ifile.rstrip())
+        except:
+            failcount += 1
+    if failcount>0: print "Could not read %d files. Skipping them." %failcount
+
+if not isfarmout:
+    skimmedTree.Add(inputfilename)
+
+
+#
+# skimmedTree.Add(sys.argv[1])
 
 def arctan(x,y):
     corr=0
@@ -45,6 +110,7 @@ def AnalyzeDataSet():
     allquantities.defineHisto()
 
     triglist=['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60_v','HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v','HLT_PFMETNoMu140_PFMHTNoMu140_IDTight_v']
+    triglist_mu=['HLT_IsoMu27_v']
 
     outfile = TFile(outfilename,'RECREATE')
     #
@@ -63,88 +129,85 @@ def AnalyzeDataSet():
         if ievent%100==0: print "Processed "+str(ievent)+" of "+str(NEntries)+" events."
         skimmedTree.GetEntry(ievent)
         ## Get all relevant branches
-        run                        = skimmedTree.__getattr__('runId')
-        lumi                       = skimmedTree.__getattr__('lumiSection')
-        event                      = skimmedTree.__getattr__('eventId')
-#        print "Run:"+str(run)+"; Lumi:"+str(lumi)+"; Event:"+str(event)
-        trigName                   = skimmedTree.__getattr__('hlt_trigName')
-        trigResult                 = skimmedTree.__getattr__('hlt_trigResult')
-        filterName                 = skimmedTree.__getattr__('hlt_filterName')
-        filterResult               = skimmedTree.__getattr__('hlt_filterResult')
+        try:
+
+            run                        = skimmedTree.__getattr__('runId')
+            lumi                       = skimmedTree.__getattr__('lumiSection')
+            event                      = skimmedTree.__getattr__('eventId')
+    #        print "Run:"+str(run)+"; Lumi:"+str(lumi)+"; Event:"+str(event)
+            trigName                   = skimmedTree.__getattr__('hlt_trigName')
+            trigResult                 = skimmedTree.__getattr__('hlt_trigResult')
+            filterName                 = skimmedTree.__getattr__('hlt_filterName')
+            filterResult               = skimmedTree.__getattr__('hlt_filterResult')
 
 
-        pfMet                      = skimmedTree.__getattr__('pfMetCorrPt')
-        pfMetPhi                   = skimmedTree.__getattr__('pfMetCorrPhi')
-        pfMetJetUnc                = skimmedTree.__getattr__('pfMetCorrUnc')
+            pfMet                      = skimmedTree.__getattr__('pfMetCorrPt')
+            pfMetPhi                   = skimmedTree.__getattr__('pfMetCorrPhi')
+            pfMetJetUnc                = skimmedTree.__getattr__('pfMetCorrUnc')
 
 
-        nTHINJets                  = skimmedTree.__getattr__('THINnJet')
-        thinjetP4                  = skimmedTree.__getattr__('THINjetP4')
-        thinJetCSV                 = skimmedTree.__getattr__('THINjetCISVV2')
-        thinJetdeepCSV             = skimmedTree.__getattr__('THINjetDeepCSV_b')
-        passThinJetTightID         = skimmedTree.__getattr__('THINjetPassIDTight')
-        THINjetHadronFlavor        = skimmedTree.__getattr__('THINjetHadronFlavor')
-        THINjetNPV                 = skimmedTree.__getattr__('THINjetNPV')         #int()
-        thinjetNhadEF              = skimmedTree.__getattr__('THINjetNHadEF')
-        thinjetChadEF              = skimmedTree.__getattr__('THINjetCHadEF')
-        thinjetCEmEF               = skimmedTree.__getattr__('THINjetCEmEF')
-        thinjetPhoEF               = skimmedTree.__getattr__('THINjetPhoEF')
-        thinjetEleEF               = skimmedTree.__getattr__('THINjetEleEF')
-        thinjetMuoEF               = skimmedTree.__getattr__('THINjetMuoEF')
-        thinjetCorrUnc             = skimmedTree.__getattr__('THINjetCorrUncUp')
+            nTHINJets                  = skimmedTree.__getattr__('THINnJet')
+            thinjetP4                  = skimmedTree.__getattr__('THINjetP4')
+            thinJetCSV                 = skimmedTree.__getattr__('THINjetCISVV2')
+            thinJetdeepCSV             = skimmedTree.__getattr__('THINjetDeepCSV_b')
+            passThinJetTightID         = skimmedTree.__getattr__('THINjetPassIDTight')
+            THINjetHadronFlavor        = skimmedTree.__getattr__('THINjetHadronFlavor')
+            THINjetNPV                 = skimmedTree.__getattr__('THINjetNPV')         #int()
+            thinjetNhadEF              = skimmedTree.__getattr__('THINjetNHadEF')
+            thinjetChadEF              = skimmedTree.__getattr__('THINjetCHadEF')
+            thinjetCEmEF               = skimmedTree.__getattr__('THINjetCEmEF')
+            thinjetPhoEF               = skimmedTree.__getattr__('THINjetPhoEF')
+            thinjetEleEF               = skimmedTree.__getattr__('THINjetEleEF')
+            thinjetMuoEF               = skimmedTree.__getattr__('THINjetMuoEF')
+            thinjetCorrUnc             = skimmedTree.__getattr__('THINjetCorrUncUp')
 
 
-        nEle                       = skimmedTree.__getattr__('nEle')
-        eleP4                      = skimmedTree.__getattr__('eleP4')
-        eleIsPassLoose             = skimmedTree.__getattr__('eleIsPassLoose')
-        eleIsPassMedium            = skimmedTree.__getattr__('eleIsPassMedium')
-        eleIsPassTight             = skimmedTree.__getattr__('eleIsPassTight')
-        eleCharge                  = skimmedTree.__getattr__('eleCharge')
+            nEle                       = skimmedTree.__getattr__('nEle')
+            eleP4                      = skimmedTree.__getattr__('eleP4')
+            eleIsPassLoose             = skimmedTree.__getattr__('eleIsPassLoose')
+            eleIsPassMedium            = skimmedTree.__getattr__('eleIsPassMedium')
+            eleIsPassTight             = skimmedTree.__getattr__('eleIsPassTight')
+            eleCharge                  = skimmedTree.__getattr__('eleCharge')
 
-        nMu                        = skimmedTree.__getattr__('nMu')
-        muP4                       = skimmedTree.__getattr__('muP4')
-        isLooseMuon                = skimmedTree.__getattr__('isLooseMuon')
-        isMediumMuon               = skimmedTree.__getattr__('isMediumMuon')
-        isTightMuon                = skimmedTree.__getattr__('isTightMuon')
-        muChHadIso                 = skimmedTree.__getattr__('muChHadIso')
-        muNeHadIso                 = skimmedTree.__getattr__('muNeHadIso')
-        muGamIso                   = skimmedTree.__getattr__('muGamIso')
-        muPUPt                     = skimmedTree.__getattr__('muPUPt')
-        muCharge                   = skimmedTree.__getattr__('muCharge')
+            nMu                        = skimmedTree.__getattr__('nMu')
+            muP4                       = skimmedTree.__getattr__('muP4')
+            isLooseMuon                = skimmedTree.__getattr__('isLooseMuon')
+            isMediumMuon               = skimmedTree.__getattr__('isMediumMuon')
+            isTightMuon                = skimmedTree.__getattr__('isTightMuon')
+            muChHadIso                 = skimmedTree.__getattr__('muChHadIso')
+            muNeHadIso                 = skimmedTree.__getattr__('muNeHadIso')
+            muGamIso                   = skimmedTree.__getattr__('muGamIso')
+            muPUPt                     = skimmedTree.__getattr__('muPUPt')
+            muCharge                   = skimmedTree.__getattr__('muCharge')
 
-        nTau                       = skimmedTree.__getattr__('HPSTau_n')
-        tauP4                      = skimmedTree.__getattr__('HPSTau_4Momentum')
-        isDecayModeFinding         = skimmedTree.__getattr__('disc_decayModeFinding')
-        passLooseTauIso            = skimmedTree.__getattr__('disc_byLooseIsolationMVArun2017v2DBoldDMwLT2017')
+            nTau                       = skimmedTree.__getattr__('HPSTau_n')
+            tauP4                      = skimmedTree.__getattr__('HPSTau_4Momentum')
+            isDecayModeFinding         = skimmedTree.__getattr__('disc_decayModeFinding')
+            passLooseTauIso            = skimmedTree.__getattr__('disc_byLooseIsolationMVArun2017v2DBoldDMwLT2017')
 
-        disc_againstElectronLoose  = skimmedTree.__getattr__('disc_againstElectronLooseMVA6')
-        disc_againstElectronMedium = skimmedTree.__getattr__('disc_againstElectronMediumMVA6')
-        disc_againstElectronTight  = skimmedTree.__getattr__('disc_againstElectronTightMVA6')
-        disc_againstMuonLoose      = skimmedTree.__getattr__('disc_againstMuonLoose3')
-        disc_againstMuonTight      = skimmedTree.__getattr__('disc_againstMuonTight3')
+            disc_againstElectronLoose  = skimmedTree.__getattr__('disc_againstElectronLooseMVA6')
+            disc_againstElectronMedium = skimmedTree.__getattr__('disc_againstElectronMediumMVA6')
+            disc_againstElectronTight  = skimmedTree.__getattr__('disc_againstElectronTightMVA6')
+            disc_againstMuonLoose      = skimmedTree.__getattr__('disc_againstMuonLoose3')
+            disc_againstMuonTight      = skimmedTree.__getattr__('disc_againstMuonTight3')
 
-        isData                     = skimmedTree.__getattr__('isData')
-        mcWeight                   = skimmedTree.__getattr__('mcWeight')
-        pu_nTrueInt                = skimmedTree.__getattr__('pu_nTrueInt')         #int()
-        pu_nPUVert                 = skimmedTree.__getattr__('pu_nPUVert')
+            isData                     = skimmedTree.__getattr__('isData')
+            mcWeight                   = skimmedTree.__getattr__('mcWeight')
+            pu_nTrueInt                = skimmedTree.__getattr__('pu_nTrueInt')         #int()
+            pu_nPUVert                 = skimmedTree.__getattr__('pu_nPUVert')
 
-        nPho                       = skimmedTree.__getattr__('nPho')
-        phoP4                      = skimmedTree.__getattr__('phoP4')
-        phoIsPassLoose             = skimmedTree.__getattr__('phoIsPassLoose')
-        phoIsPassMedium            = skimmedTree.__getattr__('phoIsPassMedium')
-        phoIsPassTight             = skimmedTree.__getattr__('phoIsPassTight')
-
-#        print skimmedTree.__getattr__('pu_nTrueInt')
-#        print pu_nTrueInt
-#        print
-
-        nGenPar                    = skimmedTree.__getattr__('nGenPar')
-        genParId                   = skimmedTree.__getattr__('genParId')
-        genMomParId                = skimmedTree.__getattr__('genMomParId')
-        genParSt                   = skimmedTree.__getattr__('genParSt')
-        genParP4                   = skimmedTree.__getattr__('genParP4')
+        except Exception as e:
+            print e
+            print "Corrupt file detected! Skipping 1 event."
+            continue
 
         trigstatus=False
+        trigstatus_mu=False
+
+        for itrig in range(len(triglist_mu)):
+            exec(triglist_mu[itrig]+" = CheckFilter(trigName, trigResult, " + "'" + triglist_mu[itrig] + "')")        #Runs the above commented-off code dynamically.
+            exec("if "+triglist_mu[itrig]+": trigstatus_mu=True")
+
         for itrig in range(len(triglist)):
             exec(triglist[itrig]+" = CheckFilter(trigName, trigResult, " + "'" + triglist[itrig] + "')")        #Runs the above commented-off code dynamically.
             exec("if "+triglist[itrig]+": trigstatus=True")
@@ -153,7 +216,7 @@ def AnalyzeDataSet():
         filter1 = False; filter2 = False;filter3 = False;filter4 = False; filter5 = False; filter6 = False
         ifilter_=0
         filter1 = CheckFilter(filterName, filterResult, 'Flag_HBHENoiseFilter')
-        filter2 = CheckFilter(filterName, filterResult, 'Flag_globalTightHalo2016Filter')
+        filter2 = CheckFilter(filterName, filterResult, 'Flag_globalSuperTightHalo2016Filter')
         filter3 = CheckFilter(filterName, filterResult, 'Flag_eeBadScFilter')
         filter4 = CheckFilter(filterName, filterResult, 'Flag_goodVertices')
         filter5 = CheckFilter(filterName, filterResult, 'Flag_EcalDeadCellTriggerPrimitiveFilter')
@@ -275,10 +338,10 @@ def AnalyzeDataSet():
         for quant in regquants:
             exec("allquantities."+quant+" = None")
 
-        if trigstatus and jetCond and muonCond and len(myMuos) ==1:
+        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1:
            allquantities.frac_recoil = WmunuRecoilPt
 
-        if jetCond and muonCond and len(myMuos) ==1:
+        if jetCond and trigstatus_mu and muonCond and len(myMuos) ==1:
            allquantities.full_recoil = WmunuRecoilPt
 
 

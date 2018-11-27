@@ -227,7 +227,7 @@ def AnalyzeDataSet():
             filterstatus = True
         if isData:
             filterstatus =  filter1 & filter2 & filter3 & filter4 & filter5 & filter6
-
+        if filterstatus == False: continue
 
 
 #thin jet selection
@@ -338,10 +338,10 @@ def AnalyzeDataSet():
         for quant in regquants:
             exec("allquantities."+quant+" = None")
 
-        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1:
+        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1 and len(myEles)==0:
            allquantities.frac_recoil = WmunuRecoilPt
 
-        if jetCond and trigstatus_mu and muonCond and len(myMuos) ==1:
+        if jetCond and trigstatus_mu and muonCond and len(myMuos) ==1 and len(myEles)==0:
            allquantities.full_recoil = WmunuRecoilPt
 
 

@@ -1,4 +1,4 @@
-MA=MH2=MH	ma	mchi	tanbeta	sintheta	process
+mA	ma	mchi	tanbeta	sintheta	process
 200	100	10	1	0.35	gg
 200	150	10	1	0.35	gg
 300	100	10	1	0.35	gg

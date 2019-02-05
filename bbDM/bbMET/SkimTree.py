@@ -91,6 +91,17 @@ def AnalyzeDataSet():
     st_CA15PuppisubjetCSV       = ROOT.std.vector(ROOT.std.vector('float'))()
 
 
+#ak8 jet
+    st_FATnJet                =array( 'L', [ 0 ] ) #ROOT.std.vector('int')()
+    st_FATjetP4                = ROOT.std.vector('TLorentzVector')()
+    st_FATjetTau2              = ROOT.std.vector('float')()
+    st_FATjetTau1              = ROOT.std.vector('float')()
+    st_FATjetTau21             = ROOT.std.vector('float')()
+    st_FATjetSDmass            = ROOT.std.vector('float')()
+    st_FATjet_DoubleSV         = ROOT.std.vector('float')()
+    st_FATunCorrJetP4          = ROOT.std.vector('TLorentzVector')()
+
+
     st_nEle                = array( 'L', [ 0 ] ) #ROOT.std.vector('int')()
     st_eleP4               = ROOT.std.vector('TLorentzVector')()
     st_eleIsPassLoose      = ROOT.std.vector('bool')()
@@ -189,6 +200,16 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_THINjetMuoEF',st_THINjetMuoEF )
     outTree.Branch('st_THINjetCorrUnc', st_THINjetCorrUnc)
 
+
+#AK8 jet which is Fatjet by default
+    outTree.Branch( 'st_FATnJet',st_FATnJet,'st_FATnJet/L')
+    outTree.Branch( 'st_FATjetTau2',st_FATjetTau2)
+    outTree.Branch( 'st_FATjetTau1',st_FATjetTau1)
+    outTree.Branch( 'st_FATjetTau21',st_FATjetTau21)
+    outTree.Branch( 'st_FATunCorrJetP4',st_FATunCorrJetP4)
+    outTree.Branch( 'st_FATjetP4',st_FATjetP4)
+    outTree.Branch( 'st_FATjetSDmass',st_FATjetSDmass)
+    outTree.Branch( 'st_FATjet_DoubleSV',st_FATjet_DoubleSV)
 
 
 #CA15jets
@@ -317,10 +338,29 @@ def AnalyzeDataSet():
         CA15SDmass                = skimmedTree.__getattr__('CA15PuppijetSDmass')
         CA15jetNhadEF             = skimmedTree.__getattr__('CA15PuppijetNHadEF')
         CA15jetChadEF             = skimmedTree.__getattr__('CA15PuppijetCHadEF')
-        CA15PassIDLoose           = skimmedTree.__getattr__('CA15PuppijetPassIDLoose')
+        #CA15PassIDLoose           = skimmedTree.__getattr__('CA15PuppijetPassIDLoose')
         CA15PassIDTight           = skimmedTree.__getattr__('CA15PuppijetPassIDTight')
         CA15PuppisubjetCSV        = skimmedTree.__getattr__('CA15PuppisubjetSDCSV')
         CA15Puppi_doublebtag      = skimmedTree.__getattr__('CA15Puppi_doublebtag')
+        CA15PuppiECF_2_3_10       = skimmedTree.__getattr__('CA15PuppiECF_2_3_10')
+        CA15PuppiECF_2_3_10       = skimmedTree.__getattr__('CA15PuppiECF_1_2_10')
+
+
+
+#ak8 jet
+
+        FATjetTau2         = skimmedTree.__getattr__('FATjetTau2')
+        FATjetTau1         = skimmedTree.__getattr__('FATjetTau1')
+        FATjetTau21        = skimmedTree.__getattr__('FATjetTau21')
+        FATjetPassIDTight  = skimmedTree.__getattr__('FATjetPassIDTight')
+        FATunCorrJetP4     = skimmedTree.__getattr__('FATunCorrJetP4')
+        FATjetP4           = skimmedTree.__getattr__('FATjetP4')
+        FATnJet            = skimmedTree.__getattr__('FATnJet')
+        FATjetSDmass       = skimmedTree.__getattr__('FATjetSDmass')
+        FATjet_DoubleSV    = skimmedTree.__getattr__('FATjet_DoubleSV')
+
+
+
 
 
         nEle                       = skimmedTree.__getattr__('nEle')
@@ -476,12 +516,23 @@ def AnalyzeDataSet():
         for ica15jet in range(CA15njets):
             j1 = CA15jetP4[ica15jet]
 
-            if CA15PassIDLoose==None:
-                ca15looseid=True
+            if CA15PassIDTight==None:
+                ca15tightid=True
             else:
-                ca15looseid=bool(CA15PassIDLoose[ica15jet])
-            if (j1.Pt() > 200.0)&(abs(j1.Eta())<2.5) and ca15looseid: #  &(bool(passThinJetLooseID[jthinjet])==True):
+                ca15tightid=bool(CA15PassIDTight[ica15jet])
+            if (j1.Pt() > 200.0)&(abs(j1.Eta())<2.5) and ca15tightid: #  &(bool(passThinJetLooseID[jthinjet])==True):
                 CA15jetspassindex.append(ica15jet)
+
+        Fatjetspassindex=[]
+        for ifat in range(FATnJet):
+            j1 = FATjetP4[ifat]
+            if FATjetPassIDTight==None:
+                fatTightId=True
+            else:
+                 fatTightId=bool(FATjetPassIDTight[ifat])
+            if (j1.Pt() > 200.0) & (abs(j1.Eta()) < 2.5 ) and fatTightId:
+                Fatjetspassindex.append(ifat)
+
 
 
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -580,6 +631,14 @@ def AnalyzeDataSet():
         st_ca15doublebtag.clear()
         st_CA15PuppisubjetCSV.clear()
 
+        st_FATjetTau2.clear()
+        st_FATjetTau1.clear()
+        st_FATjetTau21.clear()
+        st_FATjetP4.clear()
+        st_FATjetSDmass.clear()
+        st_FATjet_DoubleSV.clear()
+        st_FATunCorrJetP4.clear()
+
         st_eleP4.clear()
         st_muP4.clear()
         st_phoP4.clear()
@@ -626,6 +685,19 @@ def AnalyzeDataSet():
             st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
             st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
             st_ca15doublebtag.push_back(CA15Puppi_doublebtag[ica15])
+
+        st_FATnJet = len(Fatjetspassindex)
+        for ifat in Fatjetspassindex:
+            st_FATjetTau2.push_back(FATjetTau2[ifat])
+            st_FATjetTau1.push_back(FATjetTau1[ifat])
+            st_FATjetTau21.push_back(FATjetTau21[ifat])
+            st_FATjetP4.push_back(FATjetP4[ifat])
+            st_FATjetSDmass.push_back(FATjetSDmass[ifat])
+            st_FATjet_DoubleSV.push_back(FATjet_DoubleSV[ifat])
+            st_FATunCorrJetP4.push_back(FATunCorrJetP4[ifat])
+
+
+
 
         st_nEle[0] = len(myEles)
         for iele in myEles:

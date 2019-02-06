@@ -118,6 +118,7 @@ def AnalyzeDataSet():
     # samplepath = TNamed('samplepath', str(sys.argv[1]))
 
     NEntries = skimmedTree.GetEntries()
+    #NEntries = 1000
     print 'NEntries = '+str(NEntries)
     npass = 0
 
@@ -229,25 +230,9 @@ def AnalyzeDataSet():
             filterstatus =  filter1 & filter2 & filter3 & filter4 & filter5 & filter6
         if filterstatus == False: continue
 
-
-#thin jet selection
-
         jetCond=False
         muonCond=False
         eleCond=False
-
-        thinjetpassindex=[]
-        nBjets=0
-        ndBjets=0
-        for ithinjet in range(nTHINJets):
-            j1 = thinjetP4[ithinjet]
-            if (j1.Pt() > 50.0) and (abs(j1.Eta())<2.5) and (bool(passThinJetTightID[ithinjet])==True) and (thinjetNhadEF[ithinjet] < 0.8) and (thinjetChadEF[ithinjet] > 0.1):
-                thinjetpassindex.append(ithinjet)
-                jetCond=True
-
-
-
-
         ## Electron selection
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -269,6 +254,48 @@ def AnalyzeDataSet():
                     muonCond=True
 
 
+#thin jet selection
+
+        thinjetpassindex=[]
+        nBjets=0
+        ndBjets=0
+        myJetP4 = []
+        myJetHadronFlavor=[]
+        myJetNhadEF=[]
+        myJetChadEF=[]
+        myJetCorrUnc=[]
+        myJetCEmEF=[]
+        myJetPhoEF=[]
+        myJetEleEF=[]
+        myJetMuoEF=[]
+        for nb in range(nTHINJets):
+        #---Fake jet cleaner, wrt electrons and muons----
+            isClean=True
+            for imu in myMuos:
+                if DeltaR(muP4[imu],thinjetP4[nb]) < 0.5 and (bool(passThinJetTightID[nb])==True):
+                    isClean=False
+                    break
+            if not isClean: continue
+            myJetP4.append(thinjetP4[nb])
+            myJetHadronFlavor.append(THINjetHadronFlavor[nb])
+            myJetNhadEF.append(thinjetNhadEF[nb])
+            myJetChadEF.append(thinjetChadEF[nb])
+
+        alljetPT=[jet.Pt() for jet in myJetP4]
+        jetindex=[i for i in range(len(alljetPT))]
+        sortedjets=[jet for pt,jet in sorted(zip(alljetPT,myJetP4), reverse=True)]      # This gives a list of jets with their pTs in descending order
+        sortedindex=[jetindex for pt,jetindex in sorted(zip(alljetPT,jetindex), reverse=True)] # Indices of jets in myJetP4 in decscending order of jetPT
+
+#        for ithinjet in myJetP4:
+        try:
+            j1=sortedjets[0]
+            first_jet = sortedindex[0]
+            if (j1.Pt() > 100.0) and (abs(j1.Eta())<2.5) and (myJetNhadEF[first_jet] < 0.8) and (myJetChadEF[first_jet] > 0.1):
+#               thinjetpassindex.append(ithinjet)
+                jetCond=True
+        except Exception as e:
+            print e
+            pass
 
 
 # ------------------
@@ -338,11 +365,11 @@ def AnalyzeDataSet():
         for quant in regquants:
             exec("allquantities."+quant+" = None")
 
-        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1 and len(myEles)==0:
-           allquantities.frac_recoil = WmunuRecoilPt
+        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1 :
+            allquantities.frac_recoil = WmunuRecoilPt
 
-        if jetCond and trigstatus_mu and muonCond and len(myMuos) ==1 and len(myEles)==0:
-           allquantities.full_recoil = WmunuRecoilPt
+        if jetCond and trigstatus_mu and muonCond and len(myMuos) == 1:
+            allquantities.full_recoil = WmunuRecoilPt
 
 
 

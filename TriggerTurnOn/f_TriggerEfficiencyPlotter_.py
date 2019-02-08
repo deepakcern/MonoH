@@ -227,9 +227,9 @@ def AnalyzeDataSet():
         filter8 = CheckFilter(filterName, filterResult, 'Flag_HBHENoiseIsoFilter')
 
         if not isData:
-        filterstatus = True
+	        filterstatus = True
         if isData:
-        filterstatus = filter1 & filter2 & filter3 & filter4 & filter5 & filter6 & filter7 & filter8
+        	filterstatus = filter1 & filter2 & filter3 & filter4 & filter5 & filter6 & filter7 & filter8
         if filterstatus == False: continue
 
         jetCond=False

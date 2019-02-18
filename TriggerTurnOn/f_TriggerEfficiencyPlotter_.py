@@ -110,7 +110,7 @@ def AnalyzeDataSet():
     allquantities.defineHisto()
 
     triglist=['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60_v','HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v','HLT_PFMETNoMu140_PFMHTNoMu140_IDTight_v']
-    triglist_mu=['HLT_IsoMu24_v']
+    triglist_mu=['HLT_IsoMu27_v']
 
     outfile = TFile(outfilename,'RECREATE')
     #

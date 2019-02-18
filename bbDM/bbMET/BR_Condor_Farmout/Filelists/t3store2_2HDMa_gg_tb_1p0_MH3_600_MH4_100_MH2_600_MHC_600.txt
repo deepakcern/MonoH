@@ -1,0 +1,1 @@
+root://se01.indiacms.res.in:1094//dpm/indiacms.res.in/home/cms/store/user/dekumar/t3store2/monoH_2016_SkimmedTrees_met_150_14022019/Filelist_20180620_2HDMa_ntuple/t3store2_2HDMa_gg_tb_1p0_MH3_600_MH4_100_MH2_600_MHC_600/SkimmedTree_0.root

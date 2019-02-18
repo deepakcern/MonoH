@@ -16,7 +16,7 @@ cd $CMSSW_BASE
 cmsenv
 cd ../../
 python SkimTree.py "$1"
-until xrdcp -f SkimmedTree.root root://se01.indiacms.res.in//dpm/indiacms.res.in/home/cms/store/user/spmondal/t3store2/bbDM_SkimmedTrees_test/"$2"/SkimmedTree_"$3".root; do
+until xrdcp -f SkimmedTree.root root://se01.indiacms.res.in//dpm/indiacms.res.in/home/cms/store/user/dekumar/t3store2/bbDM_SkimmedTrees_test/"$2"/SkimmedTree_"$3".root; do
   sleep 60
 done
 python bbMETBranchReader.py -a -i SkimmedTree.root -D . --csv --met

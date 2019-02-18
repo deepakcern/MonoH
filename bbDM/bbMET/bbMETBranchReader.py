@@ -214,7 +214,7 @@ def IsoMu20isUnPrescaled(filename):
     else:
         return True
 
-def TheaCorrection(puppipt=200.0,  puppieta=0.0):
+def TheaCorrection(puppipt=170.0,  puppieta=0.0):
     puppisd_corrGEN      = TF1("puppisd_corrGEN","[0]+[1]*pow(x*[2],-[3])");
     puppisd_corrGEN.SetParameters(
         1.00626,
@@ -683,7 +683,7 @@ def AnalyzeDataSet():
         ## PFMET Selection
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-        pfmetstatus = ( pfMet > 200.0 )
+        pfmetstatus = ( pfMet > 170.0 )
         #----------------------------------------------------------------------------------------------------------------------------------------------------------------
         ##Calculate Muon Relative PF isolation:
         MuIso = [((muChHadIso[imu]+ max(0., muNeHadIso[imu] + muGamIso[imu] - 0.5*muPUPt[imu]))/muP4[imu].Pt()) for imu in range(nMu)]
@@ -960,7 +960,7 @@ def AnalyzeDataSet():
                             hasca15twobjets = True
                             myca15jetsP4.append(CA15jetP4[ca15jet])
 
-        useFatJet=False
+        useFatJet=True
         if useFatJet:
             nFatJet=len(myak8jetP4)
         if not useFatJet:
@@ -1379,7 +1379,7 @@ def AnalyzeDataSet():
 
          #2e, 1 b-tagged
 
-        if nEle==2 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and ZeeMass>70. and ZeeMass<110. and ZeeRecoil>200. and jetcond and pfMet > 0.:
+        if nEle==2 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and ZeeMass>70. and ZeeMass<110. and ZeeRecoil>170. and jetcond and pfMet > 0.:
 #            CRCutFlow['nlepcond']+=1
             alllepPT=[lep.Pt() for lep in myEles]
             lepindex=[i for i in range(len(myEles))]
@@ -1522,7 +1522,7 @@ def AnalyzeDataSet():
 
 
         #2mu, 1 b-tagged
-        if nMu==2 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and ZmumuMass>70. and ZmumuMass<110. and ZmumuRecoil>200. and jetcond and pfMet > 0.:
+        if nMu==2 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and ZmumuMass>70. and ZmumuMass<110. and ZmumuRecoil>170. and jetcond and pfMet > 0.:
 
 #            CRCutFlow['nlepcond']+=1
             alllepPT=[lep.Pt() for lep in myMuos]
@@ -1713,7 +1713,7 @@ def AnalyzeDataSet():
 
 
         #1e, 1 b-tagged
-        if nEle==1 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and Wenumass>50. and Wenumass<160. and pfMet > 50.:
+        if nEle==1 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and WenuRecoil>170. and jetcond and Wenumass>50. and Wenumass<160. and pfMet > 50.:
 
             iLeadLep=0
 
@@ -1864,7 +1864,7 @@ def AnalyzeDataSet():
 
 
         #1mu, 1 b-tagged
-        if nMu==1 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and Wmunumass>50. and Wmunumass<160. and pfMet > 50.:
+        if nMu==1 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and WmunuRecoil>170. and jetcond and Wmunumass>50. and Wmunumass<160. and pfMet > 50.:
             iLeadLep=0
 
             if myMuos[iLeadLep].Pt() > 30. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
@@ -2039,7 +2039,7 @@ def AnalyzeDataSet():
 
 
         #1e, 1 b-tagged
-        if nEle==1 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and Wenumass>50. and Wenumass<160. and pfMet > 50.:
+        if nEle==1 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and WenuRecoil>170. and jetcond and Wenumass>50. and Wenumass<160. and pfMet > 50.:
 
             iLeadLep=0
 
@@ -2190,7 +2190,7 @@ def AnalyzeDataSet():
 
 
         #1mu, 1 b-tagged
-        if nMu==1 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and Wmunumass>50. and Wmunumass<160. and pfMet > 50.:
+        if nMu==1 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and WmunuRecoil>170. and jetcond and Wmunumass>50. and Wmunumass<160. and pfMet > 50.:
             iLeadLep=0
 
             if myMuos[iLeadLep].Pt() > 30. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
@@ -2798,42 +2798,42 @@ def AnalyzeDataSet():
             metTrig_secondmethodReweight = metTrig_secondmethod.GetBinContent(xbin2)
             metTrig_firstmethodReweight_up = metTrig_firstmethodReweight + (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
             metTrig_firstmethodReweight_down = metTrig_firstmethodReweight - (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        if ZmumuRecoil > 200:
+        if ZmumuRecoil > 170:
             xbin1 = metTrig_firstmethod.GetXaxis().FindBin(ZmumuRecoil)
             xbin2 = metTrig_secondmethod.GetXaxis().FindBin(ZmumuRecoil)
             metTrig_firstmethodReweight = metTrig_firstmethod.GetBinContent(xbin1)
             metTrig_secondmethodReweight = metTrig_secondmethod.GetBinContent(xbin2)
             metTrig_firstmethodReweight_up = metTrig_firstmethodReweight + (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
             metTrig_firstmethodReweight_down = metTrig_firstmethodReweight - (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        elif ZeeRecoil > 200:
+        elif ZeeRecoil > 170:
             xbin1 = metTrig_firstmethod.GetXaxis().FindBin(ZeeRecoil)
             xbin2 = metTrig_secondmethod.GetXaxis().FindBin(ZeeRecoil)
             metTrig_firstmethodReweight = metTrig_firstmethod.GetBinContent(xbin1)
             metTrig_secondmethodReweight = metTrig_secondmethod.GetBinContent(xbin2)
             metTrig_firstmethodReweight_up = metTrig_firstmethodReweight + (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
             metTrig_firstmethodReweight_down = metTrig_firstmethodReweight - (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        elif WmunuRecoil > 200:
+        elif WmunuRecoil > 170:
             xbin1 = metTrig_firstmethod.GetXaxis().FindBin(WmunuRecoil)
             xbin2 = metTrig_secondmethod.GetXaxis().FindBin(WmunuRecoil)
             metTrig_firstmethodReweight = metTrig_firstmethod.GetBinContent(xbin1)
             metTrig_secondmethodReweight = metTrig_secondmethod.GetBinContent(xbin2)
             metTrig_firstmethodReweight_up = metTrig_firstmethodReweight + (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
             metTrig_firstmethodReweight_down = metTrig_firstmethodReweight - (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        elif WenuRecoil > 200:
+        elif WenuRecoil > 170:
             xbin1 = metTrig_firstmethod.GetXaxis().FindBin(WenuRecoil)
             xbin2 = metTrig_secondmethod.GetXaxis().FindBin(WenuRecoil)
             metTrig_firstmethodReweight = metTrig_firstmethod.GetBinContent(xbin1)
             metTrig_secondmethodReweight = metTrig_secondmethod.GetBinContent(xbin2)
             metTrig_firstmethodReweight_up = metTrig_firstmethodReweight + (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
             metTrig_firstmethodReweight_down = metTrig_firstmethodReweight - (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        elif TOPRecoil > 200:
+        elif TOPRecoil > 170:
             xbin1 = metTrig_firstmethod.GetXaxis().FindBin(TOPRecoil)
             xbin2 = metTrig_secondmethod.GetXaxis().FindBin(TOPRecoil)
             metTrig_firstmethodReweight = metTrig_firstmethod.GetBinContent(xbin1)
             metTrig_secondmethodReweight = metTrig_secondmethod.GetBinContent(xbin2)
             metTrig_firstmethodReweight_up = metTrig_firstmethodReweight + (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
             metTrig_firstmethodReweight_down = metTrig_firstmethodReweight - (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        elif GammaRecoil > 200:
+        elif GammaRecoil > 170:
             xbin1 = metTrig_firstmethod.GetXaxis().FindBin(GammaRecoil)
             xbin2 = metTrig_secondmethod.GetXaxis().FindBin(GammaRecoil)
             metTrig_firstmethodReweight = metTrig_firstmethod.GetBinContent(xbin1)
@@ -3263,7 +3263,7 @@ def AnalyzeDataSet():
             CR2e1bCutFlow['trig']+=allweights
             CR2e2bCutFlow['trig']+=allweights
 
-            if ZeeRecoil>200.:
+            if ZeeRecoil>170.:
                 CR2e1bCutFlow['recoil']+=allweights
                 CR2e2bCutFlow['recoil']+=allweights
 
@@ -3333,7 +3333,7 @@ def AnalyzeDataSet():
             CR2mu1bCutFlow['trig']+=allweights
             CR2mu2bCutFlow['trig']+=allweights
 
-            if ZmumuRecoil>200.:
+            if ZmumuRecoil>170.:
                 CR2mu1bCutFlow['recoil']+=allweights
                 CR2mu2bCutFlow['recoil']+=allweights
 
@@ -3402,7 +3402,7 @@ def AnalyzeDataSet():
             #CR1e1bCutFlow['trig']+=allweights
             CR1e2bWCutFlow['trig']+=allweights
 
-            if WenuRecoil>200.:
+            if WenuRecoil>170.:
                 #CR1e1bCutFlow['recoil']+=allweights
                 CR1e2bWCutFlow['recoil']+=allweights
 
@@ -3464,7 +3464,7 @@ def AnalyzeDataSet():
             # CR1mu1bCutFlow['trig']+=allweights
             CR1mu2bWCutFlow['trig']+=allweights
 
-            if WmunuRecoil>200.:
+            if WmunuRecoil>170.:
                 #CR1mu1bCutFlow['recoil']+=allweights
                 CR1mu2bWCutFlow['recoil']+=allweights
 
@@ -3525,7 +3525,7 @@ def AnalyzeDataSet():
             #CR1e1bCutFlow['trig']+=allweights
             CR1e2bTCutFlow['trig']+=allweights
 
-            if WenuRecoil>200.:
+            if WenuRecoil>170.:
                 #CR1e1bCutFlow['recoil']+=allweights
                 CR1e2bTCutFlow['recoil']+=allweights
 
@@ -3585,7 +3585,7 @@ def AnalyzeDataSet():
             # CR1mu1bCutFlow['trig']+=allweights
             CR1mu2bTCutFlow['trig']+=allweights
 
-            if WmunuRecoil>200.:
+            if WmunuRecoil>170.:
                 #CR1mu1bCutFlow['recoil']+=allweights
                 CR1mu2bTCutFlow['recoil']+=allweights
 

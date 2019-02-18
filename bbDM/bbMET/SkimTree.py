@@ -170,6 +170,7 @@ def AnalyzeDataSet():
     st_AK8thikjetNhadEF           = ROOT.std.vector('float')()
     st_AK8thikjetChadEF           = ROOT.std.vector('float')()
     st_AK8SDmass                  = ROOT.std.vector('float')()
+    st_AK8Puppijet_DoubleSV       = ROOT.std.vector('float')()
     st_AK8PuppisubjetCSV          = ROOT.std.vector(ROOT.std.vector('float'))()
 
 
@@ -179,6 +180,9 @@ def AnalyzeDataSet():
     st_CA15jetNhadEF            = ROOT.std.vector('float')()
     st_CA15jetChadEF            = ROOT.std.vector('float')()
     st_CA15SDmass               = ROOT.std.vector('float')()
+    st_CA15Puppi_doublebtag     = ROOT.std.vector('float')()
+    st_CA15PuppiECF_2_3_10      = ROOT.std.vector('float')()
+    st_CA15PuppiECF_1_2_10      = ROOT.std.vector('float')()
     st_CA15PuppisubjetCSV       = ROOT.std.vector(ROOT.std.vector('float'))()
 
 
@@ -302,6 +306,8 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_AK8thikjetChadEF',st_AK8thikjetChadEF)
     outTree.Branch( 'st_AK8SDmass',st_AK8SDmass)
     outTree.Branch( 'st_AK8PuppisubjetCSV',st_AK8PuppisubjetCSV)
+    outTree.Branch( 'st_AK8Puppijet_DoubleSV',st_AK8Puppijet_DoubleSV)
+
     #outTree.Branch( 'st_AK8THIKjetNPV',st_AK8THIKjetNPV)
     #outTree.Branch( 'st_AK8thikJetLooseID',st_AK8thikJetLooseID)
     #outTree.Branch( 'st_AK8thikjetTightID',st_AK8thikjetTightID)
@@ -314,6 +320,9 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_CA15jetChadEF',st_CA15jetChadEF)
     outTree.Branch( 'st_CA15SDmass',st_CA15SDmass)
     outTree.Branch( 'st_CA15PuppisubjetCSV',st_CA15PuppisubjetCSV)
+    outTree.Branch( 'st_CA15Puppi_doublebtag',st_CA15Puppi_doublebtag)
+    outTree.Branch( 'st_CA15PuppiECF_2_3_10',st_CA15PuppiECF_2_3_10)
+    outTree.Branch( 'st_CA15PuppiECF_1_2_10',st_CA15PuppiECF_1_2_10)
     #outTree.Branch( 'st_CA15PassIDLoose',st_CA15PassIDLoose)
     #outTree.Branch( 'st_CA15PassIDTight',st_CA15PassIDTight)
 
@@ -453,6 +462,7 @@ def AnalyzeDataSet():
         AK8thikjetTightID          = skimmedTree.__getattr__('AK8PuppijetPassIDTight')
         AK8SDmass                  = skimmedTree.__getattr__('AK8PuppijetSDmass')
         AK8PuppisubjetCSV          = skimmedTree.__getattr__('AK8PuppisubjetSDCSV')
+        AK8Puppijet_DoubleSV       = skimmedTree.__getattr__('AK8Puppijet_DoubleSV')
 
         #AK8subjet
         #nAK8subjets               = skimmedTree.__getattr__('AK8PuppinSubSDJet')
@@ -470,6 +480,9 @@ def AnalyzeDataSet():
         CA15jetChadEF             = skimmedTree.__getattr__('CA15PuppijetCHadEF')
         CA15PassIDLoose           = skimmedTree.__getattr__('CA15PuppijetPassIDLoose')
         CA15PassIDTight           = skimmedTree.__getattr__('CA15PuppijetPassIDTight')
+        CA15Puppi_doublebtag      = skimmedTree.__getattr__('CA15Puppi_doublebtag')
+        CA15PuppiECF_1_2_10       = skimmedTree.__getattr__('CA15PuppiECF_1_2_10')
+        CA15PuppiECF_2_3_10       = skimmedTree.__getattr__('CA15PuppiECF_2_3_10')
         CA15PuppisubjetCSV        = skimmedTree.__getattr__('CA15PuppisubjetSDCSV')
 
         try:
@@ -650,7 +663,7 @@ def AnalyzeDataSet():
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 #        if samplename=="all":
-        pfmetstatus = ( pfMet > 200.0 )
+        pfmetstatus = ( pfMet > 150.0 )
 #           if pfmetstatus == False : continue
 
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -668,7 +681,7 @@ def AnalyzeDataSet():
                 ak8looseid=True
             else:
                 ak8looseid=bool(AK8thikJetLooseID[iak8jet])
-            if (j1.Pt() > 200.0)&(abs(j1.Eta())<2.5) and ak8looseid: #  &(bool(passThinJetLooseID[jthinjet])==True):
+            if (j1.Pt() > 150.0)&(abs(j1.Eta())<2.5) and ak8looseid: #  &(bool(passThinJetLooseID[jthinjet])==True):
                 AK8jetspassindex.append(iak8jet)
 
 
@@ -683,7 +696,7 @@ def AnalyzeDataSet():
                 ca15looseid=True
             else:
                 ca15looseid=bool(CA15PassIDLoose[ica15jet])
-            if (j1.Pt() > 200.0)&(abs(j1.Eta())<2.5) and ca15looseid: #  &(bool(passThinJetLooseID[jthinjet])==True):
+            if (j1.Pt() > 150.0)&(abs(j1.Eta())<2.5) and ca15looseid: #  &(bool(passThinJetLooseID[jthinjet])==True):
                 CA15jetspassindex.append(ica15jet)
 
 
@@ -718,7 +731,7 @@ def AnalyzeDataSet():
             if thinJetdeepCSV[jthinjet] > DCSVMWP and abs(j1.Eta())<2.4 : ndBjets += 1
 
 
-        if len(thinjetpassindex) < 1 and len(thindCSVjetpassindex) < 1 : continue
+        # if len(thinjetpassindex) < 1 and len(thindCSVjetpassindex) < 1 : continue
 
 #        except:
 #            if len(thinjetpassindex) < 1: continue
@@ -823,6 +836,9 @@ def AnalyzeDataSet():
         st_CA15SDmass.clear()
         st_CA15jetNhadEF.clear()
         st_CA15jetChadEF.clear()
+        st_CA15Puppi_doublebtag.clear()
+        st_CA15PuppiECF_1_2_10.clear()
+        st_CA15PuppiECF_2_3_10.clear()
         st_CA15PuppisubjetCSV.clear()
 
 
@@ -831,6 +847,7 @@ def AnalyzeDataSet():
         st_AK8thikjetChadEF.clear()
         st_AK8SDmass.clear()
         st_AK8PuppisubjetCSV.clear()
+        st_AK8Puppijet_DoubleSV.clear()
 
 
 
@@ -888,6 +905,9 @@ def AnalyzeDataSet():
             st_CA15SDmass.push_back(CA15SDmass[ica15])
             st_CA15jetNhadEF.push_back(CA15jetNhadEF[ica15])
             st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
+            st_CA15Puppi_doublebtag.push_back(CA15Puppi_doublebtag[ica15])
+            st_CA15PuppiECF_2_3_10.push_back(CA15PuppiECF_2_3_10[ica15])
+            st_CA15PuppiECF_1_2_10.push_back(CA15PuppiECF_1_2_10[ica15])
             st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
 
         st_AK8nthikJets[0]=len(AK8jetspassindex)
@@ -897,6 +917,7 @@ def AnalyzeDataSet():
             st_AK8thikjetChadEF.push_back(AK8thikjetChadEF[iak8jet])
             st_AK8SDmass.push_back(AK8SDmass[iak8jet])
             st_AK8PuppisubjetCSV.push_back(AK8PuppisubjetCSV[iak8jet])
+            st_AK8Puppijet_DoubleSV.push_back(AK8Puppijet_DoubleSV[iak8jet])
 
         st_nEle[0] = len(myEles)
         for iele in myEles:
@@ -994,7 +1015,7 @@ def AnalyzeDataSet():
                 zeeRecoilPx = -( pfMet*math.cos(pfMetPhi) + p4_ele1.Px() + p4_ele2.Px())
                 zeeRecoilPy = -( pfMet*math.sin(pfMetPhi) + p4_ele1.Py() + p4_ele2.Py())
                 ZeeRecoilPt =  math.sqrt(zeeRecoilPx**2  +  zeeRecoilPy**2)
-                if ee_mass > 70.0 and ee_mass < 110.0 and ZeeRecoilPt > 200.:
+                if ee_mass > 70.0 and ee_mass < 110.0 and ZeeRecoilPt > 150.:
                     ZeeRecoil[0] = ZeeRecoilPt
                     ZeeMass[0] = ee_mass
                     ZeePhi[0] = arctan(zeeRecoilPx,zeeRecoilPy)
@@ -1010,15 +1031,15 @@ def AnalyzeDataSet():
                 zmumuRecoilPx = -( pfMet*math.cos(pfMetPhi) + p4_mu1.Px() + p4_mu2.Px())
                 zmumuRecoilPy = -( pfMet*math.sin(pfMetPhi) + p4_mu1.Py() + p4_mu2.Py())
                 ZmumuRecoilPt =  math.sqrt(zmumuRecoilPx**2  +  zmumuRecoilPy**2)
-                if mumu_mass > 70.0 and mumu_mass < 110.0 and ZmumuRecoilPt > 200.:
+                if mumu_mass > 70.0 and mumu_mass < 110.0 and ZmumuRecoilPt > 150.:
                     ZmumuRecoil[0] = ZmumuRecoilPt
                     ZmumuMass[0] = mumu_mass
                     ZmumuPhi[0] = arctan(zmumuRecoilPx,zmumuRecoilPy)
 
         if len(myEles) == 2:
-            ZRecoilstatus =(ZeeRecoil[0] > 200)
+            ZRecoilstatus =(ZeeRecoil[0] > 150)
         elif len(myMuos) == 2:
-            ZRecoilstatus =(ZmumuRecoil[0] > 200)
+            ZRecoilstatus =(ZmumuRecoil[0] > 150)
         else:
             ZRecoilstatus=False
 
@@ -1037,7 +1058,7 @@ def AnalyzeDataSet():
            WenuRecoilPx = -( pfMet*math.cos(pfMetPhi) + p4_ele1.Px())
            WenuRecoilPy = -( pfMet*math.sin(pfMetPhi) + p4_ele1.Py())
            WenuRecoilPt = math.sqrt(WenuRecoilPx**2  +  WenuRecoilPy**2)
-           if WenuRecoilPt > 200.:
+           if WenuRecoilPt > 150.:
                WenuRecoil[0] = WenuRecoilPt
                Wenumass[0] = e_mass
                WenuPhi[0] = arctan(WenuRecoilPx,WenuRecoilPy)
@@ -1052,16 +1073,16 @@ def AnalyzeDataSet():
            WmunuRecoilPx = -( pfMet*math.cos(pfMetPhi) + p4_mu1.Px())
            WmunuRecoilPy = -( pfMet*math.sin(pfMetPhi) + p4_mu1.Py())
            WmunuRecoilPt = math.sqrt(WmunuRecoilPx**2  +  WmunuRecoilPy**2)
-           if WmunuRecoilPt > 200.:
+           if WmunuRecoilPt > 150.:
                WmunuRecoil[0] = WmunuRecoilPt
                Wmunumass[0] = mu_mass
                WmunuPhi[0] = arctan(WmunuRecoilPx,WmunuRecoilPy)
 
 
         if len(myEles) == 1:
-            WRecoilstatus =(WenuRecoil[0] > 200)
+            WRecoilstatus =(WenuRecoil[0] > 150)
         elif len(myMuos) == 1:
-            WRecoilstatus =(WmunuRecoil[0] > 200)
+            WRecoilstatus =(WmunuRecoil[0] > 150)
         else:
             WRecoilstatus=False
 
@@ -1080,12 +1101,12 @@ def AnalyzeDataSet():
                 TOPenumunuRecoilPx = -( pfMet*math.cos(pfMetPhi) + p4_mu1.Px() + p4_ele1.Px())
                 TOPenumunuRecoilPy = -( pfMet*math.sin(pfMetPhi) + p4_mu1.Py() + p4_ele1.Py())
                 TOPenumunuRecoilPt =  math.sqrt(TOPenumunuRecoilPx**2 + TOPenumunuRecoilPy**2)
-                if TOPenumunuRecoilPt > 200:
+                if TOPenumunuRecoilPt > 150:
                     TOPRecoil[0] = TOPenumunuRecoilPt
                     TOPPhi[0] = arctan(TOPenumunuRecoilPx,TOPenumunuRecoilPy)
 
 
-        TOPRecoilstatus = (TOPRecoil[0] > 200.)
+        TOPRecoilstatus = (TOPRecoil[0] > 150.)
 
 
         #if ZRecoilstatus:
@@ -1109,11 +1130,11 @@ def AnalyzeDataSet():
            GammaRecoilPx = -( pfMet*math.cos(pfMetPhi) + p4_pho1.Px())
            GammaRecoilPy = -( pfMet*math.sin(pfMetPhi) + p4_pho1.Py())
            GammaRecoilPt = math.sqrt(GammaRecoilPx**2  +  GammaRecoilPy**2)
-           if GammaRecoilPt > 200.:
+           if GammaRecoilPt > 150.:
                GammaRecoil[0] = GammaRecoilPt
                GammaPhi[0] = arctan(GammaRecoilPx,GammaRecoilPy)
 
-        GammaRecoilStatus = (GammaRecoil[0] > 200)
+        GammaRecoilStatus = (GammaRecoil[0] > 150)
 
 
         if pfmetstatus==False and ZRecoilstatus==False and WRecoilstatus==False and TOPRecoilstatus==False and GammaRecoilStatus==False:

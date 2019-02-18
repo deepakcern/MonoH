@@ -13,7 +13,7 @@ def getAll():
     #for systematics
     for jetprop in ['btag','lep','metTrig','ewkZ','ewkW','ewkTop']:
         for syst in ['up','down']:
-            for reg in ['sr1','sr2','2e2b','2mu2b','1e1bT','1mu1bT','1e1bW','1mu1bW','1e2bT','1mu2bT','1e2bW','1mu2bW']:#,'1mu1e1b','1mu1e2b','1gamma1b','1gamma2b']:
+            for reg in ['sr2','2e2b','2mu2b','1e1bT','1mu1bT','1e1bW','1mu1bW','1e2bT','1mu2bT','1e2bW','1mu2bW']:#,'1mu1e1b','1mu1e2b','1gamma1b','1gamma2b']:
                 allquantlist.append(jetprop+'_syst_'+reg+'_'+syst)
 
     for dt in ['','mu_','ele_','pho_']:

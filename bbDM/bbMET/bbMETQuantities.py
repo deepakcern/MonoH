@@ -181,7 +181,7 @@ class MonoHbbQuantities:
                 high='250.'
 
             elif  'MT' in quant:
-                bins='100'
+                bins='1000'
                 low='0.0'
                 high='2000.'
 

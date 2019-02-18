@@ -110,7 +110,13 @@ def AnalyzeDataSet():
     allquantities.defineHisto()
 
     triglist=['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60_v','HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v','HLT_PFMETNoMu140_PFMHTNoMu140_IDTight_v']
+
+    trig_1=['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60_v']
+    trig_2=['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v']
+    trig_3=['HLT_PFMETNoMu140_PFMHTNoMu140_IDTight_v']
+
     triglist_mu=['HLT_IsoMu27_v']
+    triglist_e = ['HLT_Ele27_WPTight_Gsf']
 
     outfile = TFile(outfilename,'RECREATE')
     #
@@ -118,6 +124,7 @@ def AnalyzeDataSet():
     # samplepath = TNamed('samplepath', str(sys.argv[1]))
 
     NEntries = skimmedTree.GetEntries()
+    #NEntries = 1000
     print 'NEntries = '+str(NEntries)
     npass = 0
 
@@ -139,6 +146,12 @@ def AnalyzeDataSet():
             trigResult                 = skimmedTree.__getattr__('hlt_trigResult')
             filterName                 = skimmedTree.__getattr__('hlt_filterName')
             filterResult               = skimmedTree.__getattr__('hlt_filterResult')
+            hlt_filterbadChCandidate   = skimmedTree.__getattr__("hlt_filterbadChCandidate")
+            hlt_filterbadPFMuon        = skimmedTree.__getattr__("hlt_filterbadPFMuon")
+            hlt_filterbadGlobalMuon    = skimmedTree.__getattr__("hlt_filterbadGlobalMuon")
+            hlt_filtercloneGlobalMuon  = skimmedTree.__getattr__("hlt_filtercloneGlobalMuon")
+
+            
 
 
             pfMet                      = skimmedTree.__getattr__('pfMetCorrPt')
@@ -203,6 +216,12 @@ def AnalyzeDataSet():
 
         trigstatus=False
         trigstatus_mu=False
+        trigstatus_e =False
+
+        for itrig in range(len(triglist_e)):
+            exec(triglist_e[itrig]+" = CheckFilter(trigName, trigResult, " + "'" + triglist_e[itrig] + "')")        #Runs the above commented-off code dynamically.
+            exec("if "+triglist_e[itrig]+": trigstatus_e=True")                       
+
 
         for itrig in range(len(triglist_mu)):
             exec(triglist_mu[itrig]+" = CheckFilter(trigName, trigResult, " + "'" + triglist_mu[itrig] + "')")        #Runs the above commented-off code dynamically.
@@ -213,41 +232,33 @@ def AnalyzeDataSet():
             exec("if "+triglist[itrig]+": trigstatus=True")
 
         filterstatus = False
-        filter1 = False; filter2 = False;filter3 = False;filter4 = False; filter5 = False; filter6 = False
+        filter1 = False; filter2 = False;filter3 = False;filter4 = False; filter5 = False; filter6 = False; filter7 =False; filter8 = False
         ifilter_=0
         filter1 = CheckFilter(filterName, filterResult, 'Flag_HBHENoiseFilter')
         filter2 = CheckFilter(filterName, filterResult, 'Flag_globalSuperTightHalo2016Filter')
         filter3 = CheckFilter(filterName, filterResult, 'Flag_eeBadScFilter')
         filter4 = CheckFilter(filterName, filterResult, 'Flag_goodVertices')
         filter5 = CheckFilter(filterName, filterResult, 'Flag_EcalDeadCellTriggerPrimitiveFilter')
+        filter6 = CheckFilter(filterName, filterResult, 'Flag_BadPFMuonFilter')
+        filter7 = CheckFilter(filterName, filterResult, 'Flag_BadChargedCandidateFilter')
 
-        filter6 = True #Flag_HBHENoiseIsoFilter
+        filter8 = CheckFilter(filterName, filterResult, 'Flag_HBHENoiseIsoFilter')
+
+	filter9  =  hlt_filterbadChCandidate
+	filter10 =   hlt_filterbadPFMuon
+	filter11 =   hlt_filterbadGlobalMuon
+	filter12 =   hlt_filtercloneGlobalMuon
+
 
         if not isData:
-            filterstatus = True
+	        filterstatus = True
         if isData:
-            filterstatus =  filter1 & filter2 & filter3 & filter4 & filter5 & filter6
+        	filterstatus = filter1 & filter2 & filter3 & filter4 & filter5 & filter6 & filter7 & filter8 & filter9 & filter10 & filter11 & filter12
         if filterstatus == False: continue
-
-
-#thin jet selection
 
         jetCond=False
         muonCond=False
         eleCond=False
-
-        thinjetpassindex=[]
-        nBjets=0
-        ndBjets=0
-        for ithinjet in range(nTHINJets):
-            j1 = thinjetP4[ithinjet]
-            if (j1.Pt() > 50.0) and (abs(j1.Eta())<2.5) and (bool(passThinJetTightID[ithinjet])==True) and (thinjetNhadEF[ithinjet] < 0.8) and (thinjetChadEF[ithinjet] > 0.1):
-                thinjetpassindex.append(ithinjet)
-                jetCond=True
-
-
-
-
         ## Electron selection
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -261,15 +272,49 @@ def AnalyzeDataSet():
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         myMuos = []
+        muonpT=0
+        muonEta=0
+        muonPhi=0
         for imu in range(nMu):
             if (muP4[imu].Pt()>30.) & (abs(muP4[imu].Eta()) < 2.5) & (bool(isTightMuon[imu]) == True):
                 relPFIso = (muChHadIso[imu]+ max(0., muNeHadIso[imu] + muGamIso[imu] - 0.5*muPUPt[imu]))/muP4[imu].Pt()
                 if relPFIso<0.25 :
                     myMuos.append(imu)
                     muonCond=True
+                    muonpT=muP4[imu].Pt()
+                    muonEta=abs(muP4[imu].Eta())
+                    muonPhi=muP4[imu].Phi()
 
 
+#thin jet selection
 
+
+        thinjetpassindex=[]
+        myJets_ = []
+
+        for nb in range(nTHINJets):
+            #---Fake jet cleaner, wrt electrons and muons----
+            isClean=True
+            for imu in myMuos:
+                if DeltaR(muP4[imu],thinjetP4[nb]) < 0.5:
+                    isClean=False
+                    break
+            if not isClean: continue
+            myJets_.append(nb)
+        
+        testJetPt=0
+        testJetEta=0
+        testJetPhi=0
+        for ithinjet in myJets_:
+            j1 = thinjetP4[ithinjet]
+            #if (j1.Pt() > 100.0) and (abs(j1.Eta())<2.5) and (DeltaPhi(j1.Phi(),pfMetPhi) > 0.5) and (bool(passThinJetTightID[ithinjet])==True) and (thinjetNhadEF[ithinjet] < 0.8) and (thinjetChadEF[ithinjet] > 0.1):
+            if (j1.Pt() > 100.0) and (abs(j1.Eta())<2.5) and (thinjetNhadEF[ithinjet] < 0.8) and (thinjetChadEF[ithinjet] > 0.1):             
+                testJetPt=j1.Pt()
+                testJetEta=abs(j1.Eta())
+                testJetPhi=j1.Phi()
+   #thinjetpassindex.append(ithinjet)
+                jetCond=True
+                break
 
 # ------------------
 # Z CR
@@ -329,6 +374,10 @@ def AnalyzeDataSet():
            WmunuRecoilPy = -( pfMet*math.sin(pfMetPhi) + p4_mu1.Py())
            WmunuRecoilPt = math.sqrt(WmunuRecoilPx**2  +  WmunuRecoilPy**2)
 
+           #WmunuRecoilPx_sub = -( pfMet*math.cos(pfMetPhi) - p4_mu1.Px())
+           #WmunuRecoilPy_sub = -( pfMet*math.sin(pfMetPhi) - p4_mu1.Py())
+           #WmunuRecoilPt_sub = math.sqrt(WmunuRecoilPx_sub**2  +  WmunuRecoilPy_sub**2)
+
 
 
 # append variable to fill histograms
@@ -338,11 +387,35 @@ def AnalyzeDataSet():
         for quant in regquants:
             exec("allquantities."+quant+" = None")
 
-        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1 and len(myEles)==0:
-           allquantities.frac_recoil = WmunuRecoilPt
 
-        if jetCond and trigstatus_mu and muonCond and len(myMuos) ==1 and len(myEles)==0:
-           allquantities.full_recoil = WmunuRecoilPt
+# without any selections
+        if trigstatus:
+            allquantities.mu_frac_Omet = pfMet
+
+        if trigstatus or not trigstatus:
+            allquantities.mu_full_Omet = pfMet
+
+
+        if trigstatus and trigstatus_mu and jetCond and muonCond and len(myMuos) ==1 and len(myEles)==0:
+            allquantities.mu_frac_recoil = WmunuRecoilPt
+            allquantities.mu_frac_met        = pfMet
+            #if pfMet < 100:
+             #   print "met check at < 100: ", "event:  ",event ,"run:  ", run, " lumi:   ", lumi, "pfMet:  ", pfMet, "uncleaned jets :  ",nTHINJets, "  leading jet pT: ", testJetPt ,"  testJetEta:  ", testJetEta, "  no of muons : ", len(myMuos), " muon pT:  ", muonpT, " muonEta: ", muonEta   
+
+            if  WmunuRecoilPt < 100:
+                print "recoil check at < 100: " , "event : ",event ,"run:  ", run, " lumi:   ", lumi, "WmunuRecoilPt:  ", WmunuRecoilPt, " pfMet : ",pfMet, " pfMetPhi :",pfMetPhi ,"uncleaned jets :  ",nTHINJets, "leading jet pT: ", testJetPt ," leading JetEta: ", testJetEta, " leading JetPhi: ",testJetPhi, "  no of muons : ", len(myMuos), " muon pT: ", muonpT, " muonEta: ", muonEta, "muonPhi: ",muonPhi
+
+        if trigstatus_mu and jetCond and muonCond and len(myMuos) ==1 and len(myEles)==0:
+            allquantities.mu_full_recoil = WmunuRecoilPt
+            allquantities.mu_full_met        = pfMet
+
+#for single electron
+
+        if trigstatus and trigstatus_e and jetCond and eleCond and len(myEles) ==1 and len(myMuos)==0:
+            allquantities.ele_frac_recoil = pfMet
+
+        if trigstatus_e and jetCond and eleCond and len(myEles) == 1 and len(myMuos)==0:
+            allquantities.ele_full_recoil = pfMet
 
 
 

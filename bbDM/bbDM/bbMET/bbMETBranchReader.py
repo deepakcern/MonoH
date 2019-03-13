@@ -796,7 +796,7 @@ def AnalyzeDataSet():
             for ca15jet in range(CA15njets):
                 if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4 and CA15SDmass[ca15jet] > 100. and CA15SDmass[ca15jet] < 150. and CA15Puppi_doublebtag[ca15jet] > 0.75:
                             myca15jetsP4.append(CA15jetP4[ca15jet])
-                            FatjetIndex.append(i)
+                            FatjetIndex.append(ca15jet)
         else:
             for i in range(AK8nFatJets):
                 if AK8FatjetP4[i].Pt() > 200 and abs(AK8FatjetP4[i].Eta()) < 2.4 and AK8SDmass[i] > 100 and AK8SDmass[i] < 150 and AK8DoubleBtagger[i] > .6:
@@ -1075,7 +1075,7 @@ def AnalyzeDataSet():
                     # if nJets==1:
                     #     allquantities.reg_2e2b_min_dPhi_jet_Recoil = min( [DeltaPhi(ZeePhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                     #     allquantities.reg_2e2b_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_2e2b_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    #allquantities.reg_2e2b_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
                     allquantities.reg_2e2b_ntau = nTauTightElectron
                     allquantities.reg_2e2b_nele = nEle
                     allquantities.reg_2e2b_nmu = nMu
@@ -1117,7 +1117,7 @@ def AnalyzeDataSet():
                     # if nJets==1:
                     #     allquantities.reg_2mu2b_min_dPhi_jet_Recoil = min( [DeltaPhi(ZmumuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                     #     allquantities.reg_2mu2b_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_2mu2b_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    #allquantities.reg_2mu2b_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
                     allquantities.reg_2mu2b_ntau = nTauTightMuon
                     allquantities.reg_2mu2b_nele = nEle
                     allquantities.reg_2mu2b_nmu = nMu
@@ -1151,7 +1151,7 @@ def AnalyzeDataSet():
 
             if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep]:
 
-                #WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
+                WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
                 #
 
                 if  WePhicond and SRFatjetcond and WCond:
@@ -1169,7 +1169,7 @@ def AnalyzeDataSet():
                     if nJets==1:
                         allquantities.reg_1e2bW_min_dPhi_jet_Recoil = min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                         allquantities.reg_1e2bW_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_1e2bW_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    #allquantities.reg_1e2bW_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
                     allquantities.reg_1e2bW_ntau = nTauTightElectron
                     allquantities.reg_1e2bW_nele = nEle
                     allquantities.reg_1e2bW_nmu = nMu
@@ -1200,7 +1200,7 @@ def AnalyzeDataSet():
                     if nJets==1:
                         allquantities.reg_1mu2bW_min_dPhi_jet_Recoil = min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                         allquantities.reg_1mu2bW_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_1mu2bW_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    #allquantities.reg_1mu2bW_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
                     allquantities.reg_1mu2bW_ntau = nTauTightMuon
                     allquantities.reg_1mu2bW_nele = nEle
                     allquantities.reg_1mu2bW_nmu = nMu
@@ -1231,7 +1231,7 @@ def AnalyzeDataSet():
 
             if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep]:
 
-                #WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
+                WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
 
                 if WePhicond and SRFatjetcond and TopCond:
 
@@ -1248,7 +1248,7 @@ def AnalyzeDataSet():
                     if nJets==1:
                         allquantities.reg_1e2bT_min_dPhi_jet_Recoil = min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                         allquantities.reg_1e2bT_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_1e2bT_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    #allquantities.reg_1e2bT_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
                     allquantities.reg_1e2bT_ntau = nTauTightElectron
                     allquantities.reg_1e2bT_nele = nEle
                     allquantities.reg_1e2bT_nmu = nMu
@@ -1278,7 +1278,7 @@ def AnalyzeDataSet():
                     if nJets==1:
                         allquantities.reg_1mu2bT_min_dPhi_jet_Recoil = min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                         allquantities.reg_1mu2bT_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_1mu2bT_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    #allquantities.reg_1mu2bT_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
                     allquantities.reg_1mu2bT_ntau = nTauTightMuon
                     allquantities.reg_1mu2bT_nele = nEle
                     allquantities.reg_1mu2bT_nmu = nMu
@@ -1638,8 +1638,8 @@ def AnalyzeDataSet():
         if TopCond:
             if sf_resolved1[0]==0.0:
                 sf_resolved1[0]=1.0
-            if sf_resolved2[0]==0.0:
-                sf_resolved2[0]=1.0
+        #    if sf_resolved2[0]==0.0:
+        #        sf_resolved2[0]=1.0
             allweights = allweights * sf_resolved1[0]
 
 

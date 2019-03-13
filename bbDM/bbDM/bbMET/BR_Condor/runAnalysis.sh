@@ -18,7 +18,7 @@ cd ../../
 until xrdcp -f "$1" BRinput.root; do
   sleep 60
 done
-python bbMETBranchReader.py -a -i BRinput.root -D . -o BROutput.root --csv --met
+python bbMETBranchReader.py -a -i BRinput.root -D . -o BROutput.root --deepcsv --met
 
 exitcode=$?
 

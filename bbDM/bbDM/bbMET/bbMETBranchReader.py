@@ -752,6 +752,41 @@ def AnalyzeDataSet():
 
 
 
+#   do FATJet cleaning here
+
+        myCA15P4=[]
+        myCA15Mass=[]
+        myCA15Tagger=[]
+        myCA15_N2DDT=[]
+
+        #if CA15doubleB:
+        for ca15jet in range(CA15njets):
+            isClean=True
+            for iele in myEles:
+                if DeltaR(iele,CA15jetP4[ca15jet]) < 0.4:
+                    isClean=False
+                    break
+            for imu in myMuos:
+                if DeltaR(imu,CA15jetP4[ca15jet]) < 0.4:
+                    isClean=False
+                    break
+            if not isClean: continue
+            myCA15P4.append(CA15jetP4[ca15jet])
+            myCA15Mass.append(CA15SDmass[ca15jet])
+            myCA15Tagger.append(CA15Puppi_doublebtag[ca15jet])
+            if (CA15PuppiECF_1_2_10[ca15jet])**2 == 0 :
+                myCA15_N2DDT.append(99999)
+            else:
+                N2=(CA15PuppiECF_2_3_10[ca15jet])/((CA15PuppiECF_1_2_10[ca15jet])**2)
+                myCA15_N2DDT.append(N2-0.113)
+
+
+
+
+
+
+
+
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
         nUncleanEle=nEle
@@ -781,9 +816,8 @@ def AnalyzeDataSet():
         hastwobjets=False
         hasAKMass=False
 
-        CA15cvs=[]
-        myca15jetsP4=[]
-        myak8jetP4=[]
+        Selca15jetsP4=[]
+        SelN2DDT=[]
         FatjetIndex=[]
         myCleanFatjet=[]
 
@@ -792,93 +826,34 @@ def AnalyzeDataSet():
         CA15doubleB=True
 
 
-        if CA15doubleB:
-            for ca15jet in range(CA15njets):
-                if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4 and CA15SDmass[ca15jet] > 100. and CA15SDmass[ca15jet] < 150. and CA15Puppi_doublebtag[ca15jet] > 0.75:
-                            myca15jetsP4.append(CA15jetP4[ca15jet])
-                            FatjetIndex.append(ca15jet)
-        else:
-            for i in range(AK8nFatJets):
-                if AK8FatjetP4[i].Pt() > 200 and abs(AK8FatjetP4[i].Eta()) < 2.4 and AK8SDmass[i] > 100 and AK8SDmass[i] < 150 and AK8DoubleBtagger[i] > .6:
-                    myak8jetP4.append(AK8FatjetP4[i])
-                    FatjetIndex.append(i)
+
+        #if CA15doubleB:
+        for i in range(len(myCA15P4)):
+            if myCA15P4[i].Pt() > 200. and abs(myCA15P4[i].Eta()) < 2.4 and myCA15Mass[i] > 100. and myCA15Mass[i] < 150. and myCA15Tagger[i] > 0.75:
+                        Selca15jetsP4.append(myCA15P4[i])
+                        SelN2DDT.append(myCA15_N2DDT[i])
+                        #FatjetIndex.append(ca15jet)
 
 
 
-        # if not doubleB:
-        #     for ca15jet in range(CA15njets):
-        #         if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4:
-        #             if CA15SDmass[ca15jet] > 100. and CA15SDmass[ca15jet] < 150.:
-        #                 for i in range(len(CA15PuppisubjetCSV[ca15jet])):
-        #                     if (CA15PuppisubjetCSV[ca15jet])[i] > 0.5426:
-        #                         CA15cvs.append(i)
-        #                 if len(CA15cvs) >=2:
-        #                     hasca15twobjets = True
-        #                     myca15jetsP4.append(CA15jetP4[ca15jet])
-        #                     FatjetIndex.apped(i)
-
-#do fatjet cleaning w.r.t. jet, lepton
-        #UncleanedFatjet=[]
-        CleanFatjetIndex=[]
-        SDMass_=[]
-        useFatJet=False
-        if useFatJet:
-            myFATJET         = myak8jetP4
-            UncleanedFatjet  = AK8FatjetP4
-            SDMass           = AK8SDmass
-
-        else:
-            myFATJET        = myca15jetsP4
-            UncleanedFatjet = CA15jetP4
-            SDMass          = CA15SDmass
+        # else:
+        #     for i in range(AK8nFatJets):
+        #         if AK8FatjetP4[i].Pt() > 200 and abs(AK8FatjetP4[i].Eta()) < 2.4 and AK8SDmass[i] > 100 and AK8SDmass[i] < 150 and AK8DoubleBtagger[i] > .6:
+        #             myak8jetP4.append(AK8FatjetP4[i])
+        #             FatjetIndex.append(i)
 
 
 
-        for fatj in range(len(myFATJET)):
-                isClean=True
-                for iele in myEles:
-                    if DeltaR(iele,myFATJET[fatj]) < 1.5:
-                        isClean=False
-                        break
-
-                for imu in myMuos:
-                    if DeltaR(imu,myFATJET[fatj]) < 1.5:
-                        isClean=False
-                        break
-
-                # for ipho in range(nPho):
-                #     # if phoP4[ipho].Pt() < 175 : continue
-                #     # isClean=True
-                #     for ijet in myJetP4:
-                #         if DeltaR(phoP4[ipho],myFATJET[fatj]) < 1.5:   # math.sqrt(  (  ijet.Eta()-phoP4[ipho].Eta() )**2  + (  DeltaPhi(ijet.Phi(),phoP4[ipho].Phi()) )**2 )
-                #         #if pho_jet_dR < 1.5:
-                #         isClean=False
-                #         break
-
-                if not isClean: continue
-                CleanFatjetIndex.append(FatjetIndex[fatj])
-                myCleanFatjet.append(myFATJET[fatj])
-
-        nFatJet=len(myCleanFatjet)
+        nFatJet=len(Selca15jetsP4)
+        N2DDT=9999
+        N2DDTCond=False
         if nFatJet==1:
+            N2DDT = SelN2DDT[0]
+            N2DDTCond = N2DDT < 0
+            # if N2DDTCond:
+            #     print "yes"
             #selFatjet=myCleanFatjet[0]
-            selFatjet=CleanFatjetIndex[0]
-            # print ("FATjet index", selFatjet)
-            # print ("SDMass",SDMass[selFatjet])
-
-
- #    define N2 and N2DDT variable here
-        N2DDT=99999
-        for i in range(len(CA15PuppiECF_2_3_10)):
-                try:
-                    if (CA15PuppiECF_1_2_10[i])**2 == 0 : continue
-                    N2=(CA15PuppiECF_2_3_10[i])/((CA15PuppiECF_1_2_10[i])**2)
-                    N2DDT=N2-0.113
-                except Exception as e:
-                    N2DDT=99999
-                    continue
-
-        N2DDTCond = N2DDT < 0
+            #selFatjet=CleanFatjetIndex[0]
 
 
  #----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -887,8 +862,8 @@ def AnalyzeDataSet():
 
         if nFatJet==0: continue
         if nFatJet==1:
-            Fatjet1_pT=myCleanFatjet[0].Pt()
-            min_dPhi_Fatjet_MET=DeltaPhi(myCleanFatjet[0].Phi(),pfMetPhi)
+            Fatjet1_pT=Selca15jetsP4[0].Pt()
+            min_dPhi_Fatjet_MET=DeltaPhi(Selca15jetsP4[0].Phi(),pfMetPhi)
 
 
         ifirstjet=0
@@ -1134,7 +1109,7 @@ def AnalyzeDataSet():
         WmuPhicond=True
 
         WCond=False
-        if (nfailBjets==1 or nJets==0):
+        if ((nfailBjets==1 and nJets==1 ) or nJets==0):
             WCond=True
 
         if applydPhicut and nJets==1:

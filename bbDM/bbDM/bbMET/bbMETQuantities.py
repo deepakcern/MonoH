@@ -226,7 +226,7 @@ class MonoHbbQuantities:
                 low='0.'
                 high='2000.'
             else:                   # for pT, mass, etc.
-                bins='10'
+                bins='100'
                 low='0.'
                 high='1000.'
 

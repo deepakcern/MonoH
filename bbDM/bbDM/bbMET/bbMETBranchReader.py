@@ -960,7 +960,7 @@ def AnalyzeDataSet():
         if (nJets == 0 or nJets == 1):
             SRnjetcond    =    True
 
-        SR_Cut7_dPhi_jet_MET        =   min_dPhi_jet_MET > 0.4
+        SR_Cut7_dPhi_jet_MET        =   True #min_dPhi_jet_MET > 0.4
         SR_Cut_nFATJet              =   nFatJet == 1
         SR_Cut1_nJets               =   nJets == 0 or nJets == 1
         SR_Cut2_nBjets              =   True
@@ -971,7 +971,7 @@ def AnalyzeDataSet():
             #min_dPhi_jet_MET = DeltaPhi(j1.Phi(),pfMetPhi)
             if j1.Pt() < 30.0 and min_dPhi_jet_MET < 0.4:
                 SR_Cut4_jet1           = False
-                #SR_Cut7_dPhi_jet_MET   = False
+                SR_Cut7_dPhi_jet_MET   = False
 
         SR_Cut8_nLep           =   nEle+nMu+nTauLooseEleMu == 0
         SR_Cut9_pfMET          =   pfmetstatus
@@ -992,7 +992,7 @@ def AnalyzeDataSet():
                 if options.DeepCSV:
                     allquantities.jet1_deepcsv_sr2   = myJetCSV[ifirstjet]
             allquantities.ca15jet_pT_sr2             = Fatjet1_pT
-            allquantities.min_dPhi_sr2               = min_dPhi_jet_MET
+            #allquantities.min_dPhi_sr2               = min_dPhi_jet_MET
             #allquantities.min_dPhi_CAjet_sr2         = min_dPhi_Fatjet_MET
             allquantities.met_sr2                    = pfMet
             writeSR=True
@@ -1097,7 +1097,7 @@ def AnalyzeDataSet():
 
             if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
 
-                #ZpT = math.sqrt( (myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px())*(myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px()) + (myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py())*(myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py()) )
+                ZpT = math.sqrt( (myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px())*(myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px()) + (myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py())*(myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py()) )
                 if  SRnjetcond and ZmumuPhicond and SRFatjetcond and (N2DDT < 0):
 
                     allquantities.reg_2mu2b_Zmass = ZmumuMass

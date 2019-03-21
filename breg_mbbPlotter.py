@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-from ROOT import TFile, TTree, TH1F, TH1D, TH1, TCanvas, TChain,TGraphAsymmErrors, TMath, TH2D, TLorentzVector, AddressOf, gROOT, TNamed, gStyle
+from ROOT import TFile, TTree, TH1F, TH1D, TH1, TCanvas, TChain,TGraphAsymmErrors, TMath, TH2D, TLorentzVector, AddressOf, gROOT, TNamed, gStyle, TF1
 import ROOT as ROOT
 import os
 import sys, optparse
@@ -12,7 +12,8 @@ import numpy as numpy_
 skimmedTree = TChain("tree/treeMaker")
 skimmedTree.Add(sys.argv[1])
 
-
+outfilename= 'Outputplot.root'
+outfile = TFile(outfilename,'RECREATE')
 #NEntries = ntuple.GetEntries()
 
 #if len(sys.argv)>2:
@@ -52,12 +53,12 @@ def SetCanvas():
     c1.SetTicky(1)
     c1.SetGridy()
     c1.SetGridx()
-    c1.SetLogy(1)
+    #c1.SetLogy(1)
     return c1
 
 def CreateLegend(x1, y1, x2, y2, header):
 
-    leg = ROOT.TLegend(x1, x2, y1, y2)
+    leg = ROOT.TLegend(x1, y1, x2, y2)
     leg.SetFillColor(0)
     leg.SetFillStyle(3002)
     leg.SetBorderSize(0)
@@ -93,11 +94,14 @@ gStyle.SetErrorX(0.)
 ROOT.gROOT.SetBatch(True)
 
 def Analyze():
+
+
+
     DCSVMWP=0.6324
     NEntries = skimmedTree.GetEntries()
 
-    h_Mbb                     =TH1F('h_Mbb_',  'h_Mbb_',  50,0.,250.)
-    h_regMbb                  =TH1F('h_regMbb_',  'h_regMbb_',  50,0.,250.)
+    h_Mbb                     =TH1F('h_Mbb_',  'h_Mbb_',  30,0.,170.)
+    h_regMbb                  =TH1F('h_regMbb_',  'h_regMbb_',  30,0.,170.)
 
     h_jet1_pT                 =TH1F('h_jet1_pT_',  'h_jet1_pT_',  50,0.0,500.)
     h_jet2_pT                 =TH1F('h_jet2_pT',  'h_jet2_pT',  50,0.0,500.)
@@ -196,20 +200,51 @@ def Analyze():
             h_Mbb.Fill(addJet.M())
             h_regMbb.Fill(addJetReg.M())
 
+
+    f1 = TF1("f1", "gaus",  100, 150);
+    f2 = TF1("f2", "gaus",  90, 140);
+    # outfile.cd()
+    # h_Mbb.Write()
+    # h_regMbb.Write()
+    # outfile.Close()
+
     c      = SetCanvas()
-    legend = CreateLegend(0.60, 0.94, 0.75, 0.92, "")
+    legend = CreateLegend(0.20, 0.64, 0.55, 0.92, "")
 
     h_Mbb.SetLineColor(2)
+    h_Mbb.SetMarkerColor(2)
+    h_Mbb.SetMarkerSize(3)
     h_Mbb.SetLineWidth(3)
-    legend.AddEntry(h_Mbb,"without regression")
+    h_Mbb.SetMarkerStyle(23)
+    h_Mbb.SetXTitle("Mbb")
+
+
     h_regMbb.SetLineColor(3)
+    h_regMbb.SetMarkerColor(3)
+    h_regMbb.SetMarkerSize(3)
     h_regMbb.SetLineWidth(3)
-    legend.AddEntry(h_regMbb,"with b jet regression")
+    h_regMbb.SetMarkerStyle(22)
+    h_regMbb.SetXTitle("Mbb")
 
 
-    h_Mbb.Draw('HIST')
-    h_regMbb.Draw('HIST same')
+
+    h_regMbb.Draw('P')
+    h_regMbb.Fit("f1","","",100,150)
+    f1.SetLineColor(3)
+    f1.Draw('same')
+    #h_Mbb.Fit("gaus","")
+    h_Mbb.Draw('same P')
+    h_Mbb.Fit("f2","","",90,140)
+    f2.SetLineColor(2)
+    f2.Draw("same")
+
+    legend.AddEntry(h_Mbb,"Baseline")
+    legend.AddEntry(f2,"#mu=114.5,  #sigma=15.3")
+    legend.AddEntry(h_regMbb,"DNN")
+    legend.AddEntry(f1,"#mu=121.5,  #sigma=13.3")
+
     legend.Draw()
+
 
     txt = 'monoHbb'
     texcms = AddText(txt)

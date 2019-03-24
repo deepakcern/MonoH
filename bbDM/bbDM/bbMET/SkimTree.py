@@ -855,8 +855,8 @@ def AnalyzeDataSet():
             st_CA15Puppi_doublebtag.push_back(CA15Puppi_doublebtag[ica15])
             st_CA15PuppiECF_2_3_10.push_back(CA15PuppiECF_2_3_10[ica15])
             st_CA15PuppiECF_1_2_10.push_back(CA15PuppiECF_1_2_10[ica15])
-            st_CA15PassIDTight.push_back(CA15PassIDTight[ica15])
-            st_CA15PassIDLoose.push_back(CA15PassIDLoose[ica15])
+            st_CA15PassIDTight.push_back(bool(CA15PassIDTight[ica15]))
+            st_CA15PassIDLoose.push_back(bool(CA15PassIDLoose[ica15]))
             st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
 
         st_AK8nthikJets[0]=len(AK8jetspassindex)

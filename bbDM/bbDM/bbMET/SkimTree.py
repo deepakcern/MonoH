@@ -69,8 +69,10 @@ def AnalyzeDataSet():
 
     triglist=['HLT_PFMET170_','HLT_PFMET170_NoiseCleaned','HLT_PFMET170_JetIdCleaned_v','HLT_PFMET170_HBHECleaned_v',
         'HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v','HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v','HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v',
-        'HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v','HLT_PFMET110_PFMHT110_','HLT_IsoMu24_v','HLT_IsoTkMu24_v','HLT_Ele27_WPTight_Gsf',
-        'HLT_IsoMu20','HLT_Ele27_WPLoose_Gsf','HLT_Photon165_HE10','HLT_Photon175']
+        'HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v','HLT_PFMET110_PFMHT110_','HLT_IsoMu24_v','HLT_IsoTkMu24_v','HLT_IsoMu27_v','HLT_IsoTkMu27_v','HLT_Ele27_WPTight_Gsf',
+        'HLT_IsoMu20','HLT_Ele27_WPLoose_Gsf','HLT_Ele105_CaloIdVT_GsfTrkIdT_v','HLT_Ele115_CaloIdVT_GsfTrkIdT_v','HLT_Ele32_WPTight_Gsf_v','HLT_Ele32_eta2p1_WPTight_Gsf_v','HLT_Ele27_eta2p1_WPTight_Gsf_v','HLT_Photon165_HE10','HLT_Photon175']
+
+#['HLT_PFMET170_','HLT_PFMET170_NoiseCleaned','HLT_PFMET170_JetIdCleaned_v','HLT_PFMET170_HBHECleaned_v','HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v','HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v','HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v','HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v','HLT_PFMET110_PFMHT110_','HLT_IsoMu24_v','HLT_IsoTkMu24_v','HLT_IsoMu27_v','HLT_IsoTkMu27_v','HLT_Ele27_WPTight_Gsf','HLT_Ele105_CaloIdVT_GsfTrkIdT_v','HLT_Ele115_CaloIdVT_GsfTrkIdT_v','HLT_Ele32_WPTight_Gsf_v','HLT_IsoMu20','HLT_Ele27_eta2p1_WPTight_Gsf_v','HLT_Ele27_WPLoose_Gsf_v','HLT_Ele32_eta2p1_WPTight_Gsf_v','HLT_Photon165_HE10','HLT_Photon175']
 
 #    METtrigs = ['HLT_PFMET120_Mu5_v', 'HLT_MET600_v', 'HLT_PFMET100_PFMHT100_IDTight_v', 'HLT_MET250_v', 'HLT_PFMET400_v', 'HLT_PFMETTypeOne190_HBHE_BeamHaloCleaned_v', 'HLT_PFMETNoMu110_PFMHTNoMu110_IDTight_v', 'HLT_PFMETNoMu100_PFMHTNoMu100_IDTight_v', 'HLT_PFMET90_PFMHT90_IDTight_v', 'HLT_Mu6_PFHT200_PFMET100_v', 'HLT_PFMET600_v', 'HLT_Mu14er_PFMET100_v', 'HLT_PFMET170_NoiseCleaned_v', 'HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_v', 'HLT_PFMET170_NotCleaned_v', 'HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_v', 'HLT_PFMET100_PFMHT100_IDTight_BeamHaloCleaned_v', 'HLT_Mu3er_PFHT140_PFMET125_v', 'HLT_MET200_v', 'HLT_PFMET170_HBHE_BeamHaloCleaned_v', 'HLT_MET75_IsoTrk50_v', 'HLT_MET90_IsoTrk50_v', 'HLT_PFMETNoMu90_PFMHTNoMu90_IDTight_v', 'HLT_DoubleMu3_PFMET50_v', 'HLT_MonoCentralPFJet80_PFMETNoMu110_PFMHTNoMu110_IDTight_v', 'HLT_PFMET110_PFMHT110_IDTight_v', 'HLT_DiCentralPFJet55_PFMET110_v', 'HLT_MET700_v', 'HLT_MonoCentralPFJet80_PFMETNoMu90_PFMHTNoMu90_IDTight_v', 'HLT_MET60_IsoTrk35_Loose_v', 'HLT_PFMET170_JetIdCleaned_v', 'HLT_PFMET170_BeamHaloCleaned_v', 'HLT_MonoCentralPFJet80_PFMETNoMu120_PFMHTNoMu120_IDTight_v', 'HLT_MET300_v', 'HLT_PFMET120_PFMHT120_IDTight_v', 'HLT_Mu6_PFHT200_PFMET80_BTagCSV_p067_v', 'HLT_MonoCentralPFJet80_PFMETNoMu100_PFMHTNoMu100_IDTight_v', 'HLT_CaloMHTNoPU90_PFMET90_PFMHT90_IDTight_BTagCSV_p067_v', 'HLT_PFMET170_HBHECleaned_v', 'HLT_PFMET120_BTagCSV_p067_v', 'HLT_PFMET500_v','HLT_PFMET300_v']
 
@@ -171,6 +173,8 @@ def AnalyzeDataSet():
     st_AK8thikjetChadEF           = ROOT.std.vector('float')()
     st_AK8SDmass                  = ROOT.std.vector('float')()
     st_AK8Puppijet_DoubleSV       = ROOT.std.vector('float')()
+    st_AK8thikJetLooseID          = ROOT.std.vector('float')()
+    st_AK8thikjetTightID          = ROOT.std.vector('float')()
     st_AK8PuppisubjetCSV          = ROOT.std.vector(ROOT.std.vector('float'))()
 
 
@@ -309,6 +313,9 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_AK8SDmass',st_AK8SDmass)
     outTree.Branch( 'st_AK8PuppisubjetCSV',st_AK8PuppisubjetCSV)
     outTree.Branch( 'st_AK8Puppijet_DoubleSV',st_AK8Puppijet_DoubleSV)
+
+    outTree.Branch( 'st_AK8thikJetLooseID',st_AK8thikJetLooseID)
+    outTree.Branch( 'st_AK8thikjetTightID',st_AK8thikjetTightID)
 
     #outTree.Branch( 'st_AK8THIKjetNPV',st_AK8THIKjetNPV)
     #outTree.Branch( 'st_AK8thikJetLooseID',st_AK8thikJetLooseID)
@@ -795,6 +802,8 @@ def AnalyzeDataSet():
         st_AK8SDmass.clear()
         st_AK8PuppisubjetCSV.clear()
         st_AK8Puppijet_DoubleSV.clear()
+        st_AK8thikJetLooseID.clear()
+        st_AK8thikjetTightID.clear()
 
 
 
@@ -867,6 +876,9 @@ def AnalyzeDataSet():
             st_AK8SDmass.push_back(AK8SDmass[iak8jet])
             st_AK8PuppisubjetCSV.push_back(AK8PuppisubjetCSV[iak8jet])
             st_AK8Puppijet_DoubleSV.push_back(AK8Puppijet_DoubleSV[iak8jet])
+            st_AK8thikJetLooseID.push_back(bool(AK8thikJetLooseID[iak8jet]))
+            st_AK8thikjetTightID.push_back(bool(AK8thikjetTightID[iak8jet]))
+
 
         st_nEle[0] = len(myEles)
         for iele in myEles:
@@ -964,7 +976,7 @@ def AnalyzeDataSet():
                 zeeRecoilPx = -( pfMet*math.cos(pfMetPhi) + p4_ele1.Px() + p4_ele2.Px())
                 zeeRecoilPy = -( pfMet*math.sin(pfMetPhi) + p4_ele1.Py() + p4_ele2.Py())
                 ZeeRecoilPt =  math.sqrt(zeeRecoilPx**2  +  zeeRecoilPy**2)
-                if ee_mass > 70.0 and ee_mass < 110.0 and ZeeRecoilPt > 150.:
+                if ee_mass > 60.0 and ee_mass < 120.0 and ZeeRecoilPt > 150.:
                     ZeeRecoil[0] = ZeeRecoilPt
                     ZeeMass[0] = ee_mass
                     ZeePhi[0] = arctan(zeeRecoilPx,zeeRecoilPy)
@@ -980,7 +992,7 @@ def AnalyzeDataSet():
                 zmumuRecoilPx = -( pfMet*math.cos(pfMetPhi) + p4_mu1.Px() + p4_mu2.Px())
                 zmumuRecoilPy = -( pfMet*math.sin(pfMetPhi) + p4_mu1.Py() + p4_mu2.Py())
                 ZmumuRecoilPt =  math.sqrt(zmumuRecoilPx**2  +  zmumuRecoilPy**2)
-                if mumu_mass > 70.0 and mumu_mass < 110.0 and ZmumuRecoilPt > 150.:
+                if mumu_mass > 60.0 and mumu_mass < 120.0 and ZmumuRecoilPt > 150.:
                     ZmumuRecoil[0] = ZmumuRecoilPt
                     ZmumuMass[0] = mumu_mass
                     ZmumuPhi[0] = arctan(zmumuRecoilPx,zmumuRecoilPy)

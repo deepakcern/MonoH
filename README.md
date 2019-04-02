@@ -33,7 +33,7 @@ python SkimTree.py root://se01.indiacms.res.in:1094//dpm/indiacms.res.in/home/cm
 The T2ListMaker can be used to produce lists of ntuples (CRAB job outputs) that SkimTree takes as input. Since the CRAB job outputs are stored in T2, the ListMaker can be used from a T3 location which has read access to the T2 location (via `rfdir`).
 1. Copy the T2ListMaker directory from your working directory to the T3 location (if different from your working directory), *or* run the following from a T3 location:
     ```bash
-    wget https://raw.githubusercontent.com/mondalspandan/bbMET/master/T2FileListMaker/ListMaker_T3.py
+    wget https://raw.githubusercontent.com/deepakcern/MonoH/monoH_boosted/bbDM/T2FileListMaker/ListMaker_T3.py
     ```
 2. Find the parent directory in T2 where the ntuples are stored.
     Example:
@@ -47,7 +47,7 @@ The T2ListMaker can be used to produce lists of ntuples (CRAB job outputs) that 
     ```
     Example:
     ```bash
-    python ListMaker_T3.py crab /dpm/indiacms.res.in/home/cms/store/user/spmondal/t3store2/bbDM_data 180321_data_ntuples
+    python ListMaker_T3.py crab /dpm/indiacms.res.in/home/cms/store/user/dekumar/t3store2/bbDM_data 180321_data_ntuples
     ```
 This produces one directory and one log file. In the example above, the directory and logfile will be named `Filelist_180321_data_ntuples` and `log_180321_data_ntuples.txt` respectively. The filelists are now available in your T3 location. Both the directory and the log files now have to be copied back to the working directory.
 4. Repeat the above for each of signal, data and bkg. So in the end you will probably have 3 or more different directories (and corresponding log files).

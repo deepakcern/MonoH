@@ -8,8 +8,8 @@
 
 First step is to generate ntuples.
 
-1. Follow instructions from https://github.com/tiwariPC/DMAnaRun2/tree/onlyAK4_80X_puppi_deepCSV (onlyAK4_80X_puppi_deepCSV branch) to setup DelPanj within CMSSW.
-2. Use MultiCrab to submit jobs for signal, backgrounds, and data separately. (Detailed instructions to be updated soon).
+1. Follow instructions from https://github.com/tiwariPC/DMAnaRun2/tree/onlyAK4_80X_puppi_deepCSV (only 80X_puppi+deepCSV branch) to setup DelPanj within CMSSW.
+
 
 # 2. Run SkimTree
 

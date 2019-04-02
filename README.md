@@ -172,6 +172,8 @@ The boolean flags are explained as follows:
 * e: Electron Control Regions
 * p: Photon Control Regions
 * The `-d` flag is used to select the appropriate primary dataset for each region.
+
+(## No need to follow further instrutions)
 4. Similarly for getting systematics only, navigate to `bbMETplot/Scripts/syst` and run:
 ```
 python ../bbMET_StackFactory_syst.py -d MET -s -m -q

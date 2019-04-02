@@ -152,31 +152,7 @@ This produces one directory. In the example above, the directory will be named `
 
 ***This section will require BranchReader outputs of only signal samples. Can be any or all of bbDM-NLO, bbDM-LO or ttDM samples.***
 
-### 4.1. 2D Efficiency Plots
 
-1. Navigate to `SignalEffPlots` directory and then `cd` to either NLO, LO or ttDM depending on which you wish to plot.
-2. `mkdir signal`
-3. Copy **all** BranchReader outputs of this particular signal to this `signal` directory.
-4. Run `python SEffPlot.py` to produce the plots.
-
-The required file name format for files inside the signal directory are as follows:
-
-* NLO: Output_pseudo_NLO_Mchi-x_Mphi-y.root
-* LO: Output_pseudo_LO_Mchi-x_Mphi-y.root
-* ttDM: Output_pseudoscalar_Mchi-x_Mphi-y_TuneZZZ.root
-
-### 4.2. 1D Plots
-
-1D plotting script is manual and only available for NLO.
-1. Edit SignalEffPlots/NLO/1D.py L4-5 to set the values.
-2. Run using `python 1D.py`
-
-### 4.3. Cut-by-cut efficiencies
-
-The idea is to see the signal efficiencies after each cut is applied, as a function of M_Med for fixed M_DM.
-1. Navigate to `CutbycutEff` directory and `mkdir signal`.
-2. Copy all signal files with M_DM = 1 GeV (Output_pseudo_NLO_Mchi-1_Mphi-*.root) to `signal` directory.
-3. Run `python CutByCutEff.py`.
 
 # 5. Run Plotting Script
 

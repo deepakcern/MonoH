@@ -97,6 +97,13 @@ python releaseJobs.py
     ```
     The outputs .root files are stitched on a per sample basis and one .root file per sample is produced inside `bbMET/bbMET/BR_Condor_Farmout/hadd_outputs`.
 3. These .root files inside `BR_Outputs` can be used directly as inputs to the plotting code and will henceforth be referred to as **BranchReader outputs**.ch
+4. 
+```
+cd file_structure
+. mk_bkg_data.sh
+. hadd_data.sh
+. makesig.sh [to make dummy files]
+```
 
 
 # 4. Run Plotting Script

@@ -52,7 +52,13 @@ The SkimTree outputs (Skimmed Trees) are saved to the location that was specifie
 
 # 3. Run BranchReader
 
-Clone this repository in a location from where HTCondor jobs can be submitted (```ui.indiacms.res.in``` for example). We shall refer to this location as the working directory for this section.
+Clone this repository in a location from where HTCondor jobs can be submitted (```user@login.uscms.org``` for example). We shall refer to this location as the working directory for this section.
+
+```
+git clone https://github.com/deepakcern/MonoH.git
+git checkout monoH_boosted
+cd MonoH/bbDM/bbMET
+```
 
 ## 3.1. Running Locally
 

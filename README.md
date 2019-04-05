@@ -83,6 +83,10 @@ python bbMETBranchReader.py -a -F -i input.txt -D . --csv
     tail -f logsubmit.txt
     ```
 6. To monitor status of jobs, use `condor_q username`.
+7. If jobs are in `held` then use the command:
+```
+python releaseJobs.py
+```
 
 ### 3.2.2. Retrieving Outputs
 

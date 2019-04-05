@@ -120,7 +120,7 @@ cd file_structure
 cd CMSSW_8_0_26_patch1/src
 git clone https://github.com/deepakcern/bbMETplot.git
 ```
-2. Open `bbMETplot/Scripts/bbMET_StackFactory_withSM.py` and edit L306 to suit the current working directory. Edit L375[give the path of bkg_data dir], L352[give the path of signal directory], and L395[give the path of bkg_data directory] to the path(s) where the BranchReader outputs are stored.
+2. Open `bbMETplot/Scripts/bbMET_StackFactory_withSM.py` and edit L306 to suit the current working directory. Edit L375[`give the path of bkg_data dir`], L352[`give the path of signal directory`], and L395[`give the path of bkg_data directory`] to the path(s) where the BranchReader outputs are stored.
 3. Navigate to `bbMETplot/Scripts/test` and run
 ```
 python ../bbMET_StackFactory_withSM.py -d MET -s -m -q

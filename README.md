@@ -80,7 +80,7 @@ Proxy_path = /afs/cern.ch/user/d/dekumar/private/$(Proxy_filename)
 ```
 add open `.bashrc` file and add:
 ```
-alias voms='voms-proxy-init --voms cms --valid 192:00' # && cp -v /tmp/x509up_u104803 /afs/cern.ch/user/d/dekumar/private/x509up
+alias voms='voms-proxy-init --voms cms --valid 192:00 && cp -v /tmp/x509up_u104803 /afs/cern.ch/user/d/dekumar/private/x509up'
 ```
 
 ### 3.2.1. Running BranchReader Condor Jobs

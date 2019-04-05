@@ -135,7 +135,7 @@ git clone https://github.com/deepakcern/bbMETplot.git
 ```
 python ../bbMET_StackFactory_withSM.py -d MET -s -m -q
 python ../bbMET_StackFactory_withSM.py -d SE -e
-python ../bbMET_StackFactory_withSM.py -d SP -p
+python ../bbMET_StackFactory_withSM.py -d SP -p [not needed]
 ```
 The boolean flags are explained as follows:
 

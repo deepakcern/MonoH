@@ -83,6 +83,8 @@ add open `.bashrc` file and add:
 alias voms='voms-proxy-init --voms cms --valid 192:00 && cp -v /tmp/x509up_u104803 /afs/cern.ch/user/d/dekumar/private/x509up'
 ```
 
+Initiate your voms-proxy using `voms`.
+
 ### 3.2.1. Running BranchReader Condor Jobs
 
 1. Navigate to workingdir/`MonoH/bbDM/bbDM/bbMET/BR_Condor_Farmout/`.

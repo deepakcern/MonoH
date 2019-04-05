@@ -109,6 +109,10 @@ cd file_structure
 # 4. Run Plotting Script
 
 1. [This is the step to make CRs plots]
+2. Clone this repository
+```
+git clone https://github.com/deepakcern/bbMETplot.git
+```
 2. Open `bbMETplot/Scripts/bbMET_StackFactory.py` and edit L92 to suit the current working directory. Edit L160, L229, and L272 to the path(s) where the BranchReader outputs are stored.
 3. Navigate to `bbMETplot/Scripts/test` and run
 ```

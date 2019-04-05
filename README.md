@@ -73,7 +73,15 @@ python bbMETBranchReader.py -a -F -i input.txt -D . --csv
 ## 3.2. Running on HTCondor
 
 ***The number of BranchReader jobs can be adjusted by combining suitable number of input files in the Farmout mode.***
-
+***Note: If you submit condor jobs using `lxplus` then open `submit_multi.sub` file and add these two line:
+```
+Proxy_filename = x509up
+Proxy_path = /afs/cern.ch/user/d/dekumar/private/$(Proxy_filename)
+```
+add open `.bashrc` file and add:
+```
+alias voms='voms-proxy-init --voms cms --valid 192:00' # && cp -v /tmp/x509up_u104803 /afs/cern.ch/user/d/dekumar/private/x509up
+```
 
 ### 3.2.1. Running BranchReader Condor Jobs
 

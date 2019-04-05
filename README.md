@@ -28,34 +28,7 @@ python SkimTree.py root://se01.indiacms.res.in:1094//dpm/indiacms.res.in/home/cm
 
 ***SkimTree jobs are numerous is number, hence using a Condor network with large number of cores is recommended. Recommended submit node: uscms.***
 
-### 2.2.1. Making a list of ntuple files
-
-The T2ListMaker can be used to produce lists of ntuples (CRAB job outputs) that SkimTree takes as input. Since the CRAB job outputs are stored in T2, the ListMaker can be used from a T3 location which has read access to the T2 location (via `rfdir`).
-1. Copy the T2ListMaker directory from your working directory to the T3 location (if different from your working directory), *or* run the following from a T3 location:
-    ```bash
-    wget https://raw.githubusercontent.com/deepakcern/MonoH/monoH_boosted/bbDM/T2FileListMaker/ListMaker_T3.py
-    ```
-2. Find the parent directory in T2 where the ntuples are stored.
-    Example:
-    ```bash
-    rfdir /dpm/indiacms.res.in/home/cms/store/user/username/t3store2
-    ```
-    can be used to view contents of the directory. Navigate to the parent directory where the ntuples are stored.
-3. Run `ListMaker_T3.py` using
-    ```bash
-    python ListMaker_T3.py crab path_to_parent_T2_directory_of_ntuples filelist_tag
-    ```
-    Example:
-    ```bash
-    python ListMaker_T3.py crab /dpm/indiacms.res.in/home/cms/store/user/dekumar/t3store2/bbDM_data 180321_data_ntuples
-    ```
-This produces one directory and one log file. In the example above, the directory and logfile will be named `Filelist_180321_data_ntuples` and `log_180321_data_ntuples.txt` respectively. The filelists are now available in your T3 location. Both the directory and the log files now have to be copied back to the working directory.
-4. Repeat the above for each of signal, data and bkg. So in the end you will probably have 3 or more different directories (and corresponding log files).
-5. Navigate to `bbMET/bbMET/ST_Condor/` in the working directory.
-6. `mkdir Filelists`
-7. Now copy all directories and log files (such as `Filelist_180321_data_ntuples` and `log_180321_data_ntuples.txt`) to workingdir/`bbMET/bbMET/ST_Condor/Filelists` using `cp` (or `scp` if the working directory is not in T3).
-
-### 2.2.2. Running SkimTree Condor Jobs
+### 2.2.1. Running SkimTree Condor Jobs
 
 1. Navigate to workingdir/`bbMET/bbMET/ST_Condor/`.
 2. Open `runAnalysis.sh` to edit.
@@ -71,7 +44,7 @@ This produces one directory and one log file. In the example above, the director
     ```
 7. To monitor status of jobs, use `condor_q username`.
 
-### 2.2.3. Outputs
+### 2.2.2. Outputs
 
 The SkimTree outputs (Skimmed Trees) are saved to the location that was specified in the `runAnalysis.sh` file. These will be used while running BranchReader (next section).
 

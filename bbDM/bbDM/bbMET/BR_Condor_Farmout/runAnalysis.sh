@@ -17,7 +17,7 @@ cd $CMSSW_BASE
 cmsenv
 cd ../../
 
-python bbMETBranchReader.py -a -F -i "$1" -D . -o BROutput.root --deepcsv
+python bbMETBranchReader.py -a -F -i "$1" -D . -o BROutput.root --csv
 
 exitcode=$?
 

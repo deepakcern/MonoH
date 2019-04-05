@@ -94,13 +94,8 @@ python bbMETBranchReader.py -a -F -i input.txt -D . --csv
     The outputs .root files are stitched on a per sample basis and one .root file per sample is produced inside `bbMET/bbMET/BR_Condor_Farmout/hadd_outputs`.
 3. These .root files inside `hadd_outputs` can be used directly as inputs to the plotting code and will henceforth be referred to as **BranchReader outputs**.ch
 
-# 4. Generate Signal Efficiency Plots
 
-***This section will require BranchReader outputs of only signal samples. Can be any or all of bbDM-NLO, bbDM-LO or ttDM samples.***
-
-
-
-# 5. Run Plotting Script
+# 4. Run Plotting Script
 
 1. Copy all the outputs from BranchReader (in `hadd_outputs` directory) to a directory (or, optionally, segregate the files in separate directories named `data`, `bkg`, and `signal`).
 2. Open `bbMETplot/Scripts/bbMET_StackFactory.py` and edit L92 to suit the current working directory. Edit L160, L229, and L272 to the path(s) where the BranchReader outputs are stored.
@@ -119,72 +114,3 @@ The boolean flags are explained as follows:
 * p: Photon Control Regions
 * The `-d` flag is used to select the appropriate primary dataset for each region.
 
-(## No need to follow further instrutions)
-4. Similarly for getting systematics only, navigate to `bbMETplot/Scripts/syst` and run:
-```
-python ../bbMET_StackFactory_syst.py -d MET -s -m -q
-python ../bbMET_StackFactory_syst.py -d SE -e
-python ../bbMET_StackFactory_syst.py -d SP -p
-```
-The root files are stored inside syst/date/bbMETROOT directory.
-Go to syst directory and run the following file(update the directory named by date):
-```
-. syst_plot.sh
-```
-
-### 5.1. CR Summary plots
-
-* Control region summary plots, separately for muon and electron regions, are automatically plotted by the above plotting script. However, the combined summary plot, although produced by the plotting script, will not be correct.
-* To make a combined summary plots, the number of data events and bkgsum events for each region have to be copied to bbMETplot/Scripts/CRSummary.py, L5-L6. It can then be run using ```python CRSummary.py```.
-
-# 6. Make a combined .root histogram file
-
-The idea is to make a combined .root file containing MET and Hadronic Recoil histograms of all regions with all systematics with suitable names.
-
-1. Open bbMETplot/Scripts/CombinedRootMaker.py and edit L36 if histograms for systematics are contained in a separate directory. Otherwise point this to read the same directory as next step.
-2. Run:
-  ```
-  python CombinedRootMaker.py path_to_the_plot_script_output_dir path_to_systematics
-  ```
-  Example:
-  ```
-  python CombinedRootMaker.py test/22022018 syst/22022018
-  ```
-
-This creates a directory named DataCardRootFiles. The file `AllMETHistos.root` inside this directory contains all histograms from all regions with all systematics. Besides this, a .root file for each region is also created. Depending on the signal model either the `AllMETHistos.root` file or all the other files need to be used as input to the limit setting code.
-
-# 7. Preliminary Limits and Fitting
-
-1. Copy all files from bbMETplot/Scripts/DataCardRootFiles directory to LimitsAndFitting/bbDM/data directory.
-2. Run:
-   ```
-   python RunLimitOnAll.py create
-   python RunLimitOnAll.py run
-   ```
-   This will create .txt files inside the bin/ directory.
-   Navigate to the ```plotting``` directory.
-3. To make DMSimp plots:
-   ```
-   python TextToTGraph.py
-   python plotLimit.py ps
-   python plotLimit.py s
-   ```
-4. To make 2HDM+a plots with variable MH4:
-   ```
-   python TextToTGraph_2HDMa.py
-   plotLimit.py 2h
-   ```
-5. To make 2HDM+a plots with fixed MH4 (50 or 100 GeV) but variable tanβ or variable sinθ:
-   ```
-   python TextToTGraph_fixedMH4.py
-   python plotLimit.py tanb50
-   python plotLimit.py tanb100
-   python plotLimit.py sinp50
-   ```
-6. To plot overlapping cross section and limit plots for various tanβ and sinθ scans:
-   ```
-   cd variableTanB
-   python TextToGraph_tanB_allMH4.py
-   python plotLimit_overlap.py tanb
-   python plotLimit_overlap.py sinp
-   ```

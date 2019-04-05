@@ -112,7 +112,7 @@ python releaseJobs.py
     python HADD_multi_Farmout.py
     ```
     The outputs .root files are stitched on a per sample basis and one .root file per sample is produced inside `bbMET/bbMET/BR_Condor_Farmout/hadd_outputs`.
-3. These .root files inside `BR_Outputs` can be used directly as inputs to the plotting code and will henceforth be referred to as **BranchReader outputs**.ch
+3. These .root files inside `hadd_outputs` can be used directly as inputs to the plotting code and will henceforth be referred to as **BranchReader outputs**.ch
 4. 
 ```
 cd file_structure

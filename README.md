@@ -71,7 +71,7 @@ python bbMETBranchReader.py -a -F -i input.txt -D . --csv
 
 ### 3.2.1. Running BranchReader Condor Jobs
 
-1. Navigate to workingdir/`bbMET/bbMET/BR_Condor_Farmout/`.
+1. Navigate to workingdir/`MonoH/bbDM/bbDM/bbMET/BR_Condor_Farmout/`.
 2. This framework automatically combines multiple skimmed_tree root files in one job. The number of root files to be combined in each job can be specified by editing L4 of MultiSubmit.py (`maxfilesperjob=100`).
 3. Initiate your voms-proxy using `voms-proxy-init --voms cms --valid 192:00`.
 4. Submit jobs using
@@ -91,12 +91,12 @@ python releaseJobs.py
 ### 3.2.2. Retrieving Outputs
 
 1. Once all BranchReader Condor jobs are complete, one needs to combine the output .root files for each sample. This can be achieved by using the `hadd` command. If no CMSSW or ROOT instance is sourced by default in your working area, go to a CMSSW release base and run `cmsenv`, otherwise the `hadd` command may not work.
-2. Navigate to `bbMET/bbMET/BR_Condor_Farmout/` and run
+2. Navigate to `MonoH/bbDM/bbDM/bbMET/BR_Condor_Farmout/` and run
     ```bash
     python HADD_multi_Farmout.py
     ```
     The outputs .root files are stitched on a per sample basis and one .root file per sample is produced inside `bbMET/bbMET/BR_Condor_Farmout/hadd_outputs`.
-3. These .root files inside `hadd_outputs` can be used directly as inputs to the plotting code and will henceforth be referred to as **BranchReader outputs**.ch
+3. These .root files inside `BR_Outputs` can be used directly as inputs to the plotting code and will henceforth be referred to as **BranchReader outputs**.ch
 
 
 # 4. Run Plotting Script

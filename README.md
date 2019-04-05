@@ -68,35 +68,8 @@ python bbMETBranchReader.py -a -F -i input.txt -D . --csv
 
 ***The number of BranchReader jobs can be adjusted by combining suitable number of input files in the Farmout mode. Recommended submit node: ui.indiacms.***
 
-### 3.2.1. Making a list of skimmed trees
 
-The T2ListMaker can be used to produce lists of skimmed trees (SkimTree outputs) that SkimTree takes as input. Since the skimmed trees are also stored in T2, the ListMaker can be used from a T3 location which has read access to the T2 location (via `rfdir`). For Farmout mode of the BranchReader, it is necessary to use the "nolog" variant of the ListMaker.
-
-1. Copy the T2ListMaker directory from your working directory to the T3 location (if different from your working directory), *or* run the following from a T3 location:
-    ```bash
-    wget https://raw.githubusercontent.com/mondalspandan/bbMET/master/T2FileListMaker/ListMaker_T3_nolog.py
-    ```
-2. Find the parent directory in T2 where the skimmed trees are stored.
-    Example:
-    ```bash
-    rfdir /dpm/indiacms.res.in/home/cms/store/user/username/t3store2
-    ```
-    can be used to view contents of the directory. Navigate to the parent directory where the skimmed trees are stored.
-3. Run `ListMaker_T3_nolog.py` using
-    ```bash
-    python ListMaker_T3_nolog.py st path_to_parent_T2_directory_of_skimmed_trees filelist_tag
-    ```
-    Example:
-    ```bash
-    python ListMaker_T3_nolog.py st /dpm/indiacms.res.in/home/cms/store/user/spmondal/t3store2/bbDM_skimmed_trees 180322_skimmed_trees
-    ```
-This produces one directory. In the example above, the directory will be named `Filelist_180322_skimmed_trees`, The filelists are now available in your T3 location. Both the *contents of the directory* now have to be copied back to the working directory.
-4. Repeat the above for each of signal, data and bkg. So in the end you will probably have 3 or more different directories).
-5. Navigate to `bbMET/bbMET/BR_Condor_Farmout/` in the working directory.
-6. `mkdir Filelists`
-7. Now copy *files inside all the directories* (such as `Filelist_180322_skimmed_trees/*.txt) to workingdir/`bbMET/bbMET/BR_Condor_Farmout/Filelists` using `cp` (or `scp` if the working directory is not in T3). This means there will be .txt files inside the Filelists folder, unlike in case of SkimTree jobs.
-
-### 3.2.2. Running BranchReader Condor Jobs
+### 3.2.1. Running BranchReader Condor Jobs
 
 1. Navigate to workingdir/`bbMET/bbMET/BR_Condor_Farmout/`.
 2. This framework automatically combines multiple skimmed_tree root files in one job. The number of root files to be combined in each job can be specified by editing L4 of MultiSubmit.py (`maxfilesperjob=100`).
@@ -111,7 +84,7 @@ This produces one directory. In the example above, the directory will be named `
     ```
 6. To monitor status of jobs, use `condor_q username`.
 
-### 3.2.3. Retrieving Outputs
+### 3.2.2. Retrieving Outputs
 
 1. Once all BranchReader Condor jobs are complete, one needs to combine the output .root files for each sample. This can be achieved by using the `hadd` command. If no CMSSW or ROOT instance is sourced by default in your working area, go to a CMSSW release base and run `cmsenv`, otherwise the `hadd` command may not work.
 2. Navigate to `bbMET/bbMET/BR_Condor_Farmout/` and run

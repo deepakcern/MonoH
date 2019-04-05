@@ -66,7 +66,7 @@ python bbMETBranchReader.py -a -F -i input.txt -D . --csv
 ```
 ## 3.2. Running on HTCondor
 
-***The number of BranchReader jobs can be adjusted by combining suitable number of input files in the Farmout mode. Recommended submit node: ui.indiacms.***
+***The number of BranchReader jobs can be adjusted by combining suitable number of input files in the Farmout mode.***
 
 
 ### 3.2.1. Running BranchReader Condor Jobs

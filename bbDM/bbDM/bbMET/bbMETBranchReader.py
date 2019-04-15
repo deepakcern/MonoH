@@ -1189,7 +1189,8 @@ def AnalyzeDataSet():
 
 #Top CR
 
-        TopdPhicond=True
+        TopdPhicond2=True
+	TopdPhicond1=True
 
         TopCond=False
         if nJets==1 and nBjets==1:

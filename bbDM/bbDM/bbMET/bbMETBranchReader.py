@@ -1196,7 +1196,7 @@ def AnalyzeDataSet():
         if nJets==1 and nBjets==1:
             TopCond=True
 
-        if applydPhicut and mybJetsP4==1:
+        if applydPhicut and nBjets==1:
         #     if WenuPhi>-10.:
             if DeltaPhi(WenuPhi,mybJetsP4[0].Phi()) < 0.4: TopdPhicond1=False
         #     if WmunuPhi>-10.:

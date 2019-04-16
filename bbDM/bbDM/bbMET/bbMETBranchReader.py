@@ -659,7 +659,7 @@ def AnalyzeDataSet():
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # Jet Selection
         ## Also segregate CSV or DeepCSV collection of jets in this step itself
-
+        CSVLWP=0.54
         CSVMWP=0.8484
         deepCSVMWP=0.6324
 
@@ -712,12 +712,12 @@ def AnalyzeDataSet():
                 myJetNhadEF.append(thinjetNhadEF[nb])
                 myJetChadEF.append(thinjetChadEF[nb])
 
-                if thinJetCSV[nb] > CSVMWP and abs(thinjetP4[nb].Eta())<2.4:
+                if thinJetCSV[nb] > CSVLWP and abs(thinjetP4[nb].Eta())<2.4:
                     mybjets.append(nb)
                     mybJetsP4.append(thinjetP4[nb])
                     #bjetIndex.append(nb)
 
-                if thinJetCSV[nb] < CSVMWP and abs(thinjetP4[nb].Eta())<2.4:
+                if thinJetCSV[nb] < CSVLWP and abs(thinjetP4[nb].Eta())<2.4:
                     myfailedbjets.append(nb)
                     myfailedbJetsP4.append(thinjetP4[nb])
 

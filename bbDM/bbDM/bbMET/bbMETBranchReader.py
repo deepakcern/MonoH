@@ -1809,7 +1809,7 @@ def AnalyzeDataSet():
                                 if jetcond:
                                     CR1e2bWCutFlow['JetCond']+=allweights
 
-                                    if nEle==1 and nMu==0 and nTauTightElectron:
+                                    if nEle==1 and nMu==0 and nTauTightElectron==0:
                                         CR1e2bWCutFlow['nlep']+=allweights
 
                                         if myEles[0].Pt() > 40. and myEleTightID[0]:
@@ -1847,7 +1847,7 @@ def AnalyzeDataSet():
                                     CR1mu2bWCutFlow['JetCond']+=allweights
 
 
-                                    if nEle==0 and nMu==1 and nTauTightMuon:
+                                    if nEle==0 and nMu==1 and nTauTightMuon==0:
                                         CR1mu2bWCutFlow['nlep']+=allweights
 
                                         if myMuos[0].Pt() > 30. and myMuTightID[0] and myMuIso[0]<0.15:
@@ -1884,7 +1884,7 @@ def AnalyzeDataSet():
                                 if jetcond:
                                     CR1e2bTCutFlow['JetCond']+=allweights
 
-                                    if nEle==1 and nMu==0 and nTauTightElectron:
+                                    if nEle==1 and nMu==0 and nTauTightElectron==0:
                                         CR1e2bTCutFlow['nlep']+=allweights
 
                                         if myEles[0].Pt() > 40. and myEleTightID[0]:
@@ -1922,7 +1922,7 @@ def AnalyzeDataSet():
                                 if jetcond:
                                     CR1mu2bTCutFlow['JetCond']+=allweights
 
-                                    if nEle==0 and nMu==1 and nTauTightMuon:
+                                    if nEle==0 and nMu==1 and nTauTightMuon==0:
                                         CR1mu2bTCutFlow['nlep']+=allweights
 
                                         if myMuos[0].Pt() > 20. and myMuTightID[0] and myMuIso[0]<0.15:

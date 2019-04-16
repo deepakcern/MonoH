@@ -1723,7 +1723,7 @@ def AnalyzeDataSet():
                                 if jetcond:
                                     CR2e2bCutFlow['JetCond']+=allweights
                     #CR2e2bCutFlow['nlepCond']+=allweights
-                                    if nEle==2 and nMu==0:
+                                    if nEle==2 and nMu==0 and nTauTightElectron==0:
                                         CR2e2bCutFlow['nlep']+=allweights
                                         if myEles[0].Pt()>myEles[1].Pt():
                                             iLeadLep=0
@@ -1767,7 +1767,7 @@ def AnalyzeDataSet():
                                 if jetcond:
                                     CR2mu2bCutFlow['JetCond']+=allweights
 
-                                    if nMu==2 and nEle==0:
+                                    if nMu==2 and nEle==0 and nTauTightMuon==0:
                                         CR2mu2bCutFlow['nlep']+=allweights
                                         if myMuos[0].Pt()>myMuos[1].Pt():
                                             iLeadLep=0

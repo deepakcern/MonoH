@@ -165,6 +165,13 @@ class MonoHbbQuantities:
                 bins='40'
                 low='0.'
                 high='2000.'
+
+            elif 'N2' in quant:
+                bins='40'
+                low='-10.'
+                high='10.'
+
+
             elif 'nca15jet' in quant:
                 bins='5'
                 low='0'

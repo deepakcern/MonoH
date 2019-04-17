@@ -761,6 +761,7 @@ def AnalyzeDataSet():
         myCA15Mass=[]
         myCA15Tagger=[]
         myCA15_N2DDT=[]
+        myCA15_N2=[]
 
         #if CA15doubleB:
         for ca15jet in range(CA15njets):
@@ -779,8 +780,10 @@ def AnalyzeDataSet():
             myCA15Tagger.append(CA15Puppi_doublebtag[ca15jet])
             if (CA15PuppiECF_1_2_10[ca15jet])**2 == 0 :
                 myCA15_N2DDT.append(99999)
+                myCA15_N2.append(-99999)
             else:
                 N2=(CA15PuppiECF_2_3_10[ca15jet])/((CA15PuppiECF_1_2_10[ca15jet])**2)
+                myCA15_N2.append(N2)
                 myCA15_N2DDT.append(N2-0.113)
 
 
@@ -821,6 +824,7 @@ def AnalyzeDataSet():
 
         Selca15jetsP4=[]
         SelN2DDT=[]
+        SelN2=[]
         FatjetIndex=[]
         myCleanFatjet=[]
 
@@ -835,6 +839,7 @@ def AnalyzeDataSet():
             if myCA15P4[i].Pt() > 200. and abs(myCA15P4[i].Eta()) < 2.4 and myCA15Mass[i] > 100. and myCA15Mass[i] < 150. and myCA15Tagger[i] > 0.75:
                         Selca15jetsP4.append(myCA15P4[i])
                         SelN2DDT.append(myCA15_N2DDT[i])
+                        SelN2.append(myCA15_N2[i])
                         #FatjetIndex.append(ca15jet)
 
 
@@ -852,6 +857,7 @@ def AnalyzeDataSet():
         N2DDTCond=False
         if nFatJet==1:
             N2DDT = SelN2DDT[0]
+            N2    = SelN2[0]
             N2DDTCond = N2DDT < 0
             # if N2DDTCond:
             #     print "yes"
@@ -956,7 +962,9 @@ def AnalyzeDataSet():
 
 
 
-        if SR_Cut3_trigstatus and SR_Cut9_pfMET and SR_Cut1_nJets and SR_Cut4_jet1 and SR_Cut7_dPhi_jet_MET and SR_Cut8_nLep and (N2DDT < 0):
+        if SR_Cut3_trigstatus and SR_Cut9_pfMET and SR_Cut1_nJets and SR_Cut4_jet1 and SR_Cut7_dPhi_jet_MET and SR_Cut8_nLep:
+                allquantities.N2DDT_sr2 = N2DDT
+                allquantities.N2_sr2 = N2
                 allquantities.nca15jet_sr2 = nFatJet
 
         if SR_Cut3_trigstatus and SR_Cut9_pfMET and SR_Cut_nFATJet and SR_Cut1_nJets and SR_Cut4_jet1 and SR_Cut7_dPhi_jet_MET and SR_Cut8_nLep and (N2DDT < 0):
@@ -1037,6 +1045,11 @@ def AnalyzeDataSet():
 
                 ZpT = math.sqrt( (myEles[iLeadLep].Px()+myEles[iSecondLep].Px())*(myEles[iLeadLep].Px()+myEles[iSecondLep].Px()) + (myEles[iLeadLep].Py()+myEles[iSecondLep].Py())*(myEles[iLeadLep].Py()+myEles[iSecondLep].Py()) )
 
+
+                if SRnjetcond and ZeePhicond and SRFatjetcond:
+                    allquantities.reg_2e2b_N2DDT = N2DDT
+                    allquantities.reg_2e2b_N2    = N2
+
                 if SRnjetcond and ZeePhicond and SRFatjetcond and (N2DDT <0):
 
                     allquantities.reg_2e2b_Zmass = ZeeMass
@@ -1076,6 +1089,11 @@ def AnalyzeDataSet():
             if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
 
                 ZpT = math.sqrt( (myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px())*(myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px()) + (myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py())*(myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py()) )
+
+                if SRnjetcond and ZmumuPhicond and SRFatjetcond:
+                    allquantities.reg_2mu2b_N2DDT = N2DDT
+                    allquantities.reg_2mu2b_N2    = N2
+
                 if  SRnjetcond and ZmumuPhicond and SRFatjetcond and (N2DDT < 0):
 
                     allquantities.reg_2mu2b_Zmass = ZmumuMass
@@ -1132,6 +1150,10 @@ def AnalyzeDataSet():
                 WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
                 #
 
+                if  WePhicond and SRFatjetcond and WCond:
+                    allquantities.reg_1e2bW_N2DDT = N2DDT
+                    allquantities.reg_1e2bW_N2    = N2
+
                 if  WePhicond and SRFatjetcond and WCond and (N2DDT<0):
 
                     allquantities.reg_1e2bW_Wmass = Wenumass
@@ -1161,6 +1183,10 @@ def AnalyzeDataSet():
             if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
 
                 WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myMuos[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myMuos[iLeadLep].Py())**2)
+
+                if  WmuPhicond and SRFatjetcond and WCond:
+                    allquantities.reg_1mu2bW_N2DDT = N2DDT
+                    allquantities.reg_1mu2bW_N2    = N2
 
                 if  WmuPhicond and SRFatjetcond and WCond and (N2DDT <0):
 
@@ -1212,6 +1238,10 @@ def AnalyzeDataSet():
 
                 WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
 
+                if TopdPhicond1 and SRFatjetcond and TopCond:
+                    allquantities.reg_1e2bT_N2DDT = N2DDT
+                    allquantities.reg_1e2bT_N2    = N2
+
                 if TopdPhicond1 and SRFatjetcond and TopCond and (N2DDT<0):
 
                     allquantities.reg_1e2bT_Wmass = Wenumass
@@ -1241,6 +1271,10 @@ def AnalyzeDataSet():
             if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
 
                 #WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myMuos[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myMuos[iLeadLep].Py())**2)
+                if  TopdPhicond2 and SRFatjetcond and TopCond:
+                    allquantities.reg_1mu2bT_N2DDT = N2DDT
+                    allquantities.reg_1mu2bT_N2    = N2
+
                 if  TopdPhicond2 and SRFatjetcond and TopCond and (N2DDT<0):
 
                     allquantities.reg_1mu2bT_Wmass = Wmunumass

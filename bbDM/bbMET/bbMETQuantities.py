@@ -154,17 +154,24 @@ class MonoHbbQuantities:
                 low='0.'
                 high='0.25'
             elif 'Zmass' in quant:
-                bins='40'
+                bins='8'
                 low='70.'
                 high='110.'
             elif 'Wmass' in quant:
+                bins='8'
+                low='0.'
+                high='400.'
+            elif 'met' in quant:
                 bins='40'
                 low='0.'
-                high='200.'
-            elif 'met' in quant:
-                bins='2000'
-                low='0.'
                 high='2000.'
+
+            elif 'N2' in quant:
+                bins='40'
+                low='-10.'
+                high='10.'
+
+
             elif 'nca15jet' in quant:
                 bins='5'
                 low='0'
@@ -176,14 +183,9 @@ class MonoHbbQuantities:
                 high='5'
 
             elif  'bb_Mass' in quant:
-                bins='60'
+                bins='25'
                 low='0.0'
                 high='250.'
-
-            elif  'MT' in quant:
-                bins='1000'
-                low='0.0'
-                high='2000.'
 
 
             elif 'chf' in quant or 'nhf' in quant or 'EF' in quant:
@@ -199,7 +201,7 @@ class MonoHbbQuantities:
                 low='0'
                 high='6'
             elif 'recoil' in quant:
-                bins='2000'
+                bins='40'
                 low='0.'
                 high='2000.'
             elif '_dR_' in quant:
@@ -207,13 +209,17 @@ class MonoHbbQuantities:
                 low='0.'
                 high='6.'
             elif 'lep1_pT' in quant or 'jet1_pT' in quant:
-                bins='010'
+                bins='10'
                 low='0.'
                 high='1000.'
             elif 'lep2_pT' in quant or 'jet2_pT' in quant:
-                bins='100'
+                bins='10'
                 low='0.'
                 high='1000.'
+            elif 'ca15jet_pT' in quant:
+                bins='10'
+                low='0.'
+                high='1000'
             elif 'dr_jet_sr2' in quant or 'dr_jet_sr1' in quant:
                 bins='50'
                 low='0.'
@@ -223,7 +229,7 @@ class MonoHbbQuantities:
                 low='0.'
                 high='100.'
             elif 'syst' in quant:
-                bins='2000'
+                bins='40'
                 low='0.'
                 high='2000.'
             else:                   # for pT, mass, etc.
@@ -234,10 +240,9 @@ class MonoHbbQuantities:
             return bins,low,high
 
         for quant in allquantlist:
-            #print (quant)
-            if 'met_dfgduhv' in  quant or 'syst_fghjdhv' in quant:
+            if 'metdjfbv' in  quant or 'systjdhfgv' in quant:
                 xbinnum='[200,270,345,480,1000]'
-                xbins='4'
+                xbins='3'
                 exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+xbins+",array('d',"+xbinnum+")))")
             else:
                 bins,low,high=getBins(quant)
@@ -248,9 +253,9 @@ class MonoHbbQuantities:
             exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+bins+","+low+","+high+"))")
 
         for quant in regquants:
-            if 'hadrecoil_hjdfbhjb' in quant or 'syst_jhdfbhj' in quant:
+            if 'hadrecoiljhfdgv' in quant or 'systudfhg' in quant:
                 xbinnum='[200,270,345,480,1000]'
-                xbins='4'
+                xbins='3'
                 exec("self.h_"+quant+".append(TH1F('h_"+quant+"_','h_"+quant+"_',"+xbins+",array('d',"+xbinnum+")))")
             else:
                 bins,low,high=getBins(quant)
@@ -432,7 +437,7 @@ class MonoHbbQuantities:
                 exec("if self."+quant+" is not None: self.h_"+quant+"[0] .Fill(self."+quant+", WF)")
 
 
-    def WriteHisto(self, (nevts,nevts_weight,npass,cutflowvalues,cutflownames,cutflowvaluesSR1,cutflownamesSR1,cutflowvaluesSR2,cutflownamesSR2,CRvalues,CRnames,regionnames, CRcutnames,CRcutflowvaluesSet, CRSummary,regNames, CRSummaryMu,regNamesMu, CRSummaryEle,regNamesEle)):
+    def WriteHisto(self, (nevts,nevts_weight,npass,cutflowvaluesSR2,cutflownamesSR2,CRvalues,CRnames,regionnames, CRcutnames,CRcutflowvaluesSet,CRSummaryMu,regNamesMu, CRSummaryEle,regNamesEle)):
         f = TFile(self.rootfilename,'RECREATE')
         print
         f.cd()
@@ -445,19 +450,19 @@ class MonoHbbQuantities:
         self.h_npass[0].SetBinContent(1,npass)
         self.h_npass[0].Write()
 
-        ncutflow=len(cutflowvalues)
-        self.h_cutflow=TH1F('h_cutflow_','h_cutflow_',ncutflow, 0, ncutflow)                          # Cutflow
-        for icutflow in range(len(cutflowvalues)):
-            self.h_cutflow.GetXaxis().SetBinLabel(icutflow+1,cutflownames[icutflow])
-            self.h_cutflow.SetBinContent(icutflow+1,cutflowvalues[icutflow])
-        self.h_cutflow.Write()
+        # ncutflow=len(cutflowvalues)
+        # self.h_cutflow=TH1F('h_cutflow_','h_cutflow_',ncutflow, 0, ncutflow)                          # Cutflow
+        # for icutflow in range(len(cutflowvalues)):
+        #     self.h_cutflow.GetXaxis().SetBinLabel(icutflow+1,cutflownames[icutflow])
+        #     self.h_cutflow.SetBinContent(icutflow+1,cutflowvalues[icutflow])
+        # self.h_cutflow.Write()
 
-        ncutflowSR1=len(cutflowvaluesSR1)
-        self.h_cutflowSR1=TH1F('h_cutflow_SR1_','h_cutflow_SR1_',ncutflowSR1, 0, ncutflowSR1)                          # Cutflow
-        for icutflow in range(len(cutflowvaluesSR1)):
-            self.h_cutflowSR1.GetXaxis().SetBinLabel(icutflow+1,cutflownamesSR1[icutflow])
-            self.h_cutflowSR1.SetBinContent(icutflow+1,cutflowvaluesSR1[icutflow])
-        self.h_cutflowSR1.Write()
+        # ncutflowSR1=len(cutflowvaluesSR1)
+        # self.h_cutflowSR1=TH1F('h_cutflow_SR1_','h_cutflow_SR1_',ncutflowSR1, 0, ncutflowSR1)                          # Cutflow
+        # for icutflow in range(len(cutflowvaluesSR1)):
+        #     self.h_cutflowSR1.GetXaxis().SetBinLabel(icutflow+1,cutflownamesSR1[icutflow])
+        #     self.h_cutflowSR1.SetBinContent(icutflow+1,cutflowvaluesSR1[icutflow])
+        # self.h_cutflowSR1.Write()
 
         ncutflowSR2=len(cutflowvaluesSR2)
         self.h_cutflowSR2=TH1F('h_cutflow_SR2_','h_cutflow_SR2_',ncutflowSR2, 0, ncutflowSR2)                          # Cutflow
@@ -482,12 +487,12 @@ class MonoHbbQuantities:
         self.h_CRs.Write()
 
 
-        nreg=len(regNames)
-        self.h_CRSum=TH1F('h_CRSum_','h_CRSum_',nreg, 0, nreg)
-        for ireg in range(nreg):
-            self.h_CRSum.GetXaxis().SetBinLabel(ireg+1,regNames[ireg])
-            self.h_CRSum.SetBinContent(ireg+1,CRSummary[regNames[ireg]])
-        self.h_CRSum.Write()
+        # nreg=len(regNames)
+        # self.h_CRSum=TH1F('h_CRSum_','h_CRSum_',nreg, 0, nreg)
+        # for ireg in range(nreg):
+        #     self.h_CRSum.GetXaxis().SetBinLabel(ireg+1,regNames[ireg])
+        #     self.h_CRSum.SetBinContent(ireg+1,CRSummary[regNames[ireg]])
+        # self.h_CRSum.Write()
 
         nreg=len(regNamesMu)
         self.h_CRSumMu=TH1F('h_CRSumMu_','h_CRSumMu_',nreg, 0, nreg)

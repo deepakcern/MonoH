@@ -155,7 +155,7 @@ if not options.CSV and not options.DeepCSV:
     print "Please run using --csv or --deepcsv. Exiting."
     sys.exit()
 
-applydPhicut=False
+applydPhicut=True
 
 #print 'options = ',[options.inputfile]
 inputfilename = options.inputfile
@@ -258,20 +258,6 @@ triglist=['HLT_PFMET170_','HLT_PFMET170_NoiseCleaned','HLT_PFMET170_JetIdCleaned
 
 #st_quantlist = triglist + ['st_lumiSection', 'st_eventId', 'st_pfMetCorrPt', 'st_pfMetCorrPhi', 'st_THINnJet', 'st_THINjetP4', 'st_THINjetCISVV2', 'st_THINjetHadronFlavor', 'st_THINjetNHadEF', 'st_THINjetCHadEF', 'st_THINjetNPV', 'st_AK4deepCSVnJet', 'st_AK4deepCSVjetP4', 'st_AK4deepCSVjetDeepCSV_b', 'st_AK4deepCSVjetHadronFlavor', 'st_AK4deepCSVjetNHadEF', 'st_AK4deepCSVjetCHadEF', 'st_AK4deepCSVjetNPV', 'st_nPho', 'st_phoP4', 'st_phoIsPassLoose', 'st_phoIsPassMedium', 'st_phoIsPassTight', 'st_nEle', 'st_eleP4', 'st_eleIsPassLoose', 'st_eleIsPassMedium', 'st_eleIsPassTight', 'st_nMu', 'st_muP4', 'st_isLooseMuon', 'st_isMediumMuon', 'st_isTightMuon', 'st_muChHadIso', 'st_muNeHadIso', 'st_muGamIso', 'st_muPUPt', 'st_HPSTau_n', 'st_HPSTau_4Momentum', 'st_isData', 'mcweight', 'st_pu_nTrueInt', 'st_pu_nPUVert', 'st_nGenPar', 'st_genParId', 'st_genMomParId', 'st_genParSt', 'st_genParP4', 'WenuRecoil', 'Wenumass', 'WenuPhi', 'WmunuRecoil', 'Wmunumass', 'WmunuPhi', 'ZeeRecoil', 'ZeeMass', 'ZeePhi', 'ZmumuRecoil', 'ZmumuMass', 'ZmumuPhi', 'TOPRecoil', 'TOPPhi', 'GammaRecoil', 'GammaPhi']
 
-#def fileIsCorr(rootfile):
-    #try:
-        #tempTree = TChain("outTree")
-        #tempTree.Add(rootfile)
-        #N = tempTree.GetEntries()
-        #for i in range(N):
-            #tempTree.GetEntry(i)
-            #for quant in st_quantlist:
-                #print quant
-                #tempTree.__getattr__(quant)
-        #return False
-    #except:
-        #print rootfile+" is corrupt. Skipping."
-        #return True
 
 h_t = TH1F('h_t','h_t',2,0,2)
 h_t_weight = TH1F('h_t_weight','h_t_weight',2,0,2)
@@ -281,6 +267,13 @@ if isfarmout:
     infile = open(inputfilename)
     failcount=0
     for ifile in infile:
+	skimmedTree_temp = TChain("outTree")
+	skimmedTree_temp.Add(ifile)
+	try:
+	    skimmedTree.GetEntry(1)
+	except:
+	    print "THis is corrupted file: ",ifile
+	    continue
         try:
             f_tmp = TFile.Open(ifile.rstrip(),'READ')
             if f_tmp.IsZombie():            # or fileIsCorr(ifile.rstrip()):
@@ -323,77 +316,43 @@ UnPrescaledIsoMu20 = IsoMu20isUnPrescaled(samplepath)
 #print
 
 def AnalyzeDataSet():
-    ## Input rootfile name
 
-    #rootfilename = inputfilename
-    #print (rootfilename,inputfilename)
-    #f = TFile(rootfilename,'READ')
-    #skimmedTree = f.Get('tree/treeMaker')
     NEntries = skimmedTree.GetEntries()
     print 'NEntries = '+str(NEntries)
     npass = 0
 
-
-    #print [rootfilename, NEntries]
     cutStatus={'preselection':NEntries}
-    cutStatusSR1={'preselection':NEntries}
-    cutStatusSR2={'preselection':NEntries}
 
-    cutflownames=['trig','MET','CA15conds','dPhicond','njets','nbjets','MbbCond','jet1','jet2/3','nlep']
-    for SRname in cutflownames:
-        cutStatus[SRname] = 0
-
-    cutflownamesSR1=['trig','MET','dPhicond','njets','nbjets','jet1','jet2','nlep']
-    for SRname in cutflownamesSR1:
-        cutStatusSR1[SRname] = 0
-
-    cutflownamesSR2=['trig','MET','CA15conds','dPhicond','njets','nbjets','MbbCond','jet1','jet2','jet3','nlep']
-    for SRname in cutflownamesSR2:
-        cutStatusSR2[SRname] = 0
-
-    #cutStatusSR1['njet+nBjet'] = 0
-    #cutStatusSR1['lep'] = 0
-    #cutStatusSR1['jet1'] = 0
-    #cutStatusSR1['jet2'] = 0
-
-    #cutStatusSR2['njet+nBjet'] = 0
-    #cutStatusSR2['lep'] = 0
-    #cutStatusSR2['jet1'] = 0
-    #cutStatusSR2['jet2'] = 0
-    #cutStatusSR2['jet3'] = 0
-
-#    CRCutFlow['njet+nBjet']=0
-#    CRCutFlow['jetcond']=0
-#    CRCutFlow['nlepcond']=0
-#    CRCutFlow['zJet']=0
-#    CRCutFlow['zLep']=0
-#    CRCutFlow['zMass']=0
-#    CRCutFlow['zrecoil']=0
-#    CRCutFlow['ZdPhi']=0
+    cutStatusSR={'preselection':NEntries}
 
 
-    CRcutnames=['datatrig','trig','recoil','realMET','mass','CA15conds','dPhicond','njets','nbjets','MbbCond','jetconds','nlep/npho','lepconds']
-    regionnames=['2e1b','2mu1b','2e2b','2mu2b','1e1b','1mu1b','1e2bW','1mu2bW','1e2bT','1mu2bT','1mu1e1b','1mu1e2b','1gamma1b','1gamma2b','QCD1b','QCD2b']
+    cutflownamesSR=['trig','MET','nFATJet','nJets','JetCond','nlepCond','N2DDT']
+    for SRname in cutflownamesSR:
+        cutStatusSR[SRname] = 0
+
+
+    CRcutnames=['datatrig','trig','recoil','realMET','mass','nFATJet','nJets','JetCond','nlep','nlepCond','N2DDT']
+    regionnames=['2e2b','2mu2b','1e2bW','1mu2bW','1e2bT','1mu2bT']#,'1gamma2b','QCD2b']
     for CRreg in regionnames:
         exec("CR"+CRreg+"CutFlow={'preselection':NEntries}")
         for cutname in CRcutnames:
             exec("CR"+CRreg+"CutFlow['"+cutname+"']=0")
 
 
-    CRs=['ZCRSR1','ZCRSR2','WCRSR1','WCRSR2','TopCRSR1','TopCRSR2', 'GammaCRSR1','GammaCRSR2']
+    CRs=['ZCRSR','WCRSR','TopCRSR']
 
     CRStatus={'total':NEntries}
     for CRname in CRs:
         CRStatus[CRname]=0
 
     # ---CR Summary---
-    regNames=['1#mu1b','1e1b','1#mu2bW','1e2bW','1#mu2bT','1e2bT','2#mu1b','2e1b','2#mu2b','2e2b','1#mu1e1b','1#mu1e2b']
-    regNamesMu=['1#mu1b','1#mu2bW','1#mu2bT','2#mu1b','2#mu2b','1#mu1e1b','1#mu1e2b']
-    regNamesEle=['1e1b','1e2bW','1e2bT','2e1b','2e2b']
+    # regNames=['1#mu1b','1e1b','1#mu2b','1e2b','2#mu1b','2e1b','2#mu2b','2e2b','1#mu1e1b','1#mu1e2b']
+    regNamesMu=['1#mu2bT','1#mu2bW','2#mu2b','1#mu1e2b']#,'2#mu2b','1#mu1e1b','1#mu1e2b']
+    regNamesEle=['1e2bT','1e2bW','2e2b']
 
-    CRSummary={}
-    for ireg in regNames:
-        CRSummary[ireg]=0.
+    # CRSummary={}
+    # for ireg in regNames:
+    #     CRSummary[ireg]=0.
 
     CRSummaryMu={}
     for ireg in regNamesMu:
@@ -426,23 +385,14 @@ def AnalyzeDataSet():
     reader1.load(calib1, 1,  "comb" )
     reader1.load(calib1, 2,  "incl" )
 
-#    h_total = TH1F('h_total','h_total',2,0,2)
-#    h_total_mcweight = TH1F('h_total_mcweight','h_total_mcweight',2,0,2)
-
-
-
     for ievent in range(NEntries):
-    #for ievent in range(501):
 
-        ##
         sf_resolved1 = []
         sf_resolved2 = []
         sf_resolved3 = []
-        #print "event number = ",ievent
-        skimmedTree.GetEntry(ievent)
 
-        ## Get all relevant branches
-#        if True:
+	skimmedTree.GetEntry(ievent)
+
         try:
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -463,10 +413,6 @@ def AnalyzeDataSet():
 
             pfMet                      = skimmedTree.__getattr__('st_pfMetCorrPt')
             pfMetPhi                   = skimmedTree.__getattr__('st_pfMetCorrPhi')
-            pfMetJetResUp              = skimmedTree.__getattr__('st_pfMetUncJetResUp')
-            pfMetJetResDown            = skimmedTree.__getattr__('st_pfMetUncJetResDown')
-            pfMetJetEnUp               = skimmedTree.__getattr__('st_pfMetUncJetEnUp')
-            pfMetJetEnDown             = skimmedTree.__getattr__('st_pfMetUncJetEnDown')
 
             nTHINJets                  = skimmedTree.__getattr__('st_THINnJet')
             thinjetP4                  = skimmedTree.__getattr__('st_THINjetP4')
@@ -477,34 +423,36 @@ def AnalyzeDataSet():
             thinjetNhadEF              = skimmedTree.__getattr__('st_THINjetNHadEF')
             thinjetChadEF              = skimmedTree.__getattr__('st_THINjetCHadEF')
             thinjetNPV                 = skimmedTree.__getattr__('st_THINjetNPV')
-            thinjetCorrUnc             = skimmedTree.__getattr__('st_THINjetCorrUnc')
 
             #AK8Jets BRANCHES
-            AK8nFatJets               = skimmedTree.__getattr__('st_AK8nthikJets')
-            AK8FatjetP4               = skimmedTree.__getattr__('st_AK8thikjetP4')
+            AK8nthikJets               = skimmedTree.__getattr__('st_AK8nthikJets')
+            AK8thikjetP4               = skimmedTree.__getattr__('st_AK8thikjetP4')
             AK8SDmass                  = skimmedTree.__getattr__('st_AK8SDmass')
             AK8PuppisubjetCSV          = skimmedTree.__getattr__('st_AK8PuppisubjetCSV')
-            AK8DoubleBtagger           = skimmedTree.__getattr__('st_AK8Puppijet_DoubleSV')
-
 
             #CA15jets
             CA15njets                 = skimmedTree.__getattr__('st_CA15njets')
             CA15jetP4                 = skimmedTree.__getattr__('st_CA15jetP4')
             CA15SDmass                = skimmedTree.__getattr__('st_CA15SDmass')
-            CA15PuppisubjetCSV        = skimmedTree.__getattr__('st_CA15PuppisubjetCSV')
-            CA15Puppi_doublebtag        = skimmedTree.__getattr__('st_CA15Puppi_doublebtag')
+#            CA15PuppisubjetCSV        = skimmedTree.__getattr__('st_CA15PuppisubjetCSV')
+            CA15Puppi_doublebtag      = skimmedTree.__getattr__('st_CA15Puppi_doublebtag')
+            CA15PuppiECF_1_2_10       = skimmedTree.__getattr__('st_CA15PuppiECF_1_2_10')
+            CA15PuppiECF_2_3_10       = skimmedTree.__getattr__('st_CA15PuppiECF_2_3_10')
+            # CA15PassIDTight           = skimmedTree.__getattr__('st_CA15PassIDTight')
+            # CA15PassIDLoose           = skimmedTree.__getattr__('st_CA15PassIDLoose')
 
-            try:
-                thinjetCEmEF               = skimmedTree.__getattr__('st_THINjetCEmEF')
-                thinjetPhoEF               = skimmedTree.__getattr__('st_THINjetPhoEF')
-                thinjetEleEF               = skimmedTree.__getattr__('st_THINjetEleEF')
-                thinjetMuoEF               = skimmedTree.__getattr__('st_THINjetMuoEF')
-            except:
-                nulljet=[-1. for i in range(nTHINJets)]
-                thinjetCEmEF=nulljet
-                thinjetPhoEF=nulljet
-                thinjetEleEF=nulljet
-                thinjetMuoEF=nulljet
+            #
+            # try:
+            #     thinjetCEmEF               = skimmedTree.__getattr__('st_THINjetCEmEF')
+            #     thinjetPhoEF               = skimmedTree.__getattr__('st_THINjetPhoEF')
+            #     thinjetEleEF               = skimmedTree.__getattr__('st_THINjetEleEF')
+            #     thinjetMuoEF               = skimmedTree.__getattr__('st_THINjetMuoEF')
+            # except:
+            #     nulljet=[-1. for i in range(nTHINJets)]
+            #     thinjetCEmEF=nulljet
+            #     thinjetPhoEF=nulljet
+            #     thinjetEleEF=nulljet
+            #     thinjetMuoEF=nulljet
 
             nTHINdeepCSVJets           = skimmedTree.__getattr__('st_AK4deepCSVnJet')
             thindeepCSVjetP4           = skimmedTree.__getattr__('st_AK4deepCSVjetP4')
@@ -513,20 +461,6 @@ def AnalyzeDataSet():
             thindeepCSVjetNhadEF       = skimmedTree.__getattr__('st_AK4deepCSVjetNHadEF')
             thindeepCSVjetChadEF       = skimmedTree.__getattr__('st_AK4deepCSVjetCHadEF')
             thindeepCSVjetNPV          = skimmedTree.__getattr__('st_AK4deepCSVjetNPV')
-            try:
-                thindeepCSVjetCEmEF               = skimmedTree.__getattr__('st_AK4deepCSVjetCEmEF')
-                thindeepCSVjetPhoEF               = skimmedTree.__getattr__('st_AK4deepCSVjetPhoEF')
-                thindeepCSVjetEleEF               = skimmedTree.__getattr__('st_AK4deepCSVjetEleEF')
-                thindeepCSVjetMuoEF               = skimmedTree.__getattr__('st_AK4deepCSVjetMuoEF')
-                thindeepCSVjetCorrUnc              = skimmedTree.__getattr__('st_AK4deepCSVjetCorrUnc')
-
-            except:
-                nulljet=[-1. for i in range(nTHINdeepCSVJets)]
-                thindeepCSVjetCEmEF=nulljet
-                thindeepCSVjetPhoEF=nulljet
-                thindeepCSVjetEleEF=nulljet
-                thindeepCSVjetMuoEF=nulljet
-                thindeepCSVjetCorrUnc=nulljet
 
             nPho                       = skimmedTree.__getattr__('st_nPho')
             phoP4                      = skimmedTree.__getattr__('st_phoP4')
@@ -621,8 +555,7 @@ def AnalyzeDataSet():
 #        #**************************************************************************
 
 
-        jetSR1Info           = []
-        jetSR2Info           = []
+        jetSRInfo           = []
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # MC Weights ----------------------------------------------------------------------------------------------------------------------------------------------------
@@ -653,11 +586,9 @@ def AnalyzeDataSet():
         for iele in range(nEle):
             if eleP4[iele].Pt() < 10 : continue
             if abs(eleP4[iele].Eta()) >2.5: continue
-            #if not bool(eleIsPassMedium[iele]): continue    ##   Temporary test
 
             myEles.append(eleP4[iele])
             myEleLooseID.append(eleIsPassLoose[iele])
-            #myEleLooseID.append(eleIsPassMedium[iele]) ##   Temporary test
             myEleTightID.append(eleIsPassTight[iele])
 
         myMuos = []
@@ -668,23 +599,29 @@ def AnalyzeDataSet():
             if muP4[imu].Pt()<10 : continue
             if abs(muP4[imu].Eta()) > 2.4  : continue
 
-            #for iele in myEles:
-                #if DeltaR(iele,muP4[imu]) < 0.4: print DeltaR(iele,muP4[imu])
-#            #---Fake muon cleaner----
-#            isClean=True
-#            for iele in myEles[:]:
-#                el_mu_dR=math.sqrt(  (  iele.Eta()-muP4[imu].Eta() )**2  + (  DeltaPhi(iele.Phi(),muP4[imu].Phi()) )**2 )
-#                if el_mu_dR < 0.4:
-#                    isClean=False
-##                    myEles.remove(iele)     #Removes correspoding electron as well
-#                    break
-#            if not isClean: continue
-#            ##---
             myMuos.append(muP4[imu])
             myMuLooseID.append(isLooseMuon[imu])
             myMuTightID.append(isTightMuon[imu])
             myMuIso.append(MuIso[imu])
 
+
+        myPhos=[]
+        myPhoLooseID=[]
+        myPhoTightID=[]
+        for ipho in range(nPho):
+            if phoP4[ipho].Pt() < 15 : continue
+            if phoP4[ipho].Eta() > 2.5 : continue
+            #---Fake Pho cleaner----
+            # isClean=True
+            # for ijet in myJetP4:
+            #     pho_jet_dR=DeltaR(ijet,phoP4[ipho])    # math.sqrt(  (  ijet.Eta()-phoP4[ipho].Eta() )**2  + (  DeltaPhi(ijet.Phi(),phoP4[ipho].Phi()) )**2 )
+            #     if pho_jet_dR < 0.4:
+            #         isClean=False
+            #         break
+            # if not isClean: continue
+            myPhos.append(phoP4[ipho])
+            myPhoLooseID.append(phoIsPassLoose[ipho])
+            myPhoTightID.append(phoIsPassTight[ipho])
 
 #        myTaus=[]
         nTausDRbased=0
@@ -708,42 +645,44 @@ def AnalyzeDataSet():
             #---Fake tau cleaner----
             isClean=True
             for iele in myEles[:]:
-                lep_tau_dR=DeltaR(iele,tauP4[itau])    # math.sqrt(  (  iele.Eta()-tauP4[itau].Eta() )**2  + (  DeltaPhi(iele.Phi(),tauP4[itau].Phi()) )**2 )
+                lep_tau_dR=DeltaR(iele,tauP4[itau])
                 if lep_tau_dR < 0.4:
                     isClean=False
-#                    myEles.remove(iele)     #Removes correspoding electron as well
                     break
             for imu in myMuos[:]:
-                lep_tau_dR=DeltaR(imu,tauP4[itau])          #math.sqrt(  (  imu.Eta()-tauP4[itau].Eta() )**2  + (  DeltaPhi(imu.Phi(),tauP4[itau].Phi()) )**2 )
+                lep_tau_dR=DeltaR(imu,tauP4[itau])
                 if lep_tau_dR < 0.4:
                     isClean=False
-#                    myMuos.remove(imu)      #Removes correspoding muon as well
                     break
-#            if not isClean: continue
             if isClean: nTausDRbased+=1
-            ##---
-#            myTaus.append(tauP4[itau])
-
         #--------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # Jet Selection
         ## Also segregate CSV or DeepCSV collection of jets in this step itself
-
+        CSVLWP=0.54
         CSVMWP=0.8484
         deepCSVMWP=0.6324
 
         mybJetsP4=[]
         mybjets=[]
+        bjetIndex=[]
+
         myJetCSV=[]
         myJetP4=[]
         myJetHadronFlavor=[]
-        myJetCorrUnc=[]
         myJetNhadEF=[]
         myJetChadEF=[]
         myJetCEmEF=[]
         myJetPhoEF=[]
         myJetEleEF=[]
         myJetMuoEF=[]
+
+        myCA15P4=[]
+        myCA15Doubleb=[]
+        caSDMass=[]
+        myfailedbjets=[]
+        myfailedbJetsP4=[]
+
 
         if options.CSV:
 
@@ -760,14 +699,10 @@ def AnalyzeDataSet():
                         isClean=False
                         break
 
-
-                        #for itau in tauP4:
-                            #if DeltaR(itau,iele) < 0.4:
-                                #isClean=False
-                                #break
-                        #else:
-                            #myEles.remove(iele)
-
+                for iph in range(nPho):
+                    if DeltaR(phoP4[iph],thinjetP4[nb]) < 0.4:
+                        isClean=False
+                        break
                 if not isClean: continue
             #---
 
@@ -776,15 +711,15 @@ def AnalyzeDataSet():
                 myJetHadronFlavor.append(THINjetHadronFlavor[nb])
                 myJetNhadEF.append(thinjetNhadEF[nb])
                 myJetChadEF.append(thinjetChadEF[nb])
-                myJetCorrUnc.append(thinjetCorrUnc[nb])
-                myJetCEmEF.append(thinjetCEmEF[nb])
-                myJetPhoEF.append(thinjetPhoEF[nb])
-                myJetEleEF.append(thinjetEleEF[nb])
-                myJetMuoEF.append(thinjetMuoEF[nb])
 
-                if thinJetCSV[nb] > CSVMWP and abs(thinjetP4[nb].Eta())<2.4:
+                if thinJetCSV[nb] > CSVLWP and abs(thinjetP4[nb].Eta())<2.4:
                     mybjets.append(nb)
                     mybJetsP4.append(thinjetP4[nb])
+                    #bjetIndex.append(nb)
+
+                if thinJetCSV[nb] < CSVLWP and abs(thinjetP4[nb].Eta())<2.4:
+                    myfailedbjets.append(nb)
+                    myfailedbJetsP4.append(thinjetP4[nb])
 
             myJetNPV=thinjetNPV
             nUncleanJets=nTHINJets
@@ -805,19 +740,11 @@ def AnalyzeDataSet():
 
                 if not isClean: continue
             #---
-
                 myJetP4.append(thindeepCSVjetP4[nb])
                 myJetCSV.append(thinJetdeepCSV[nb])
                 myJetHadronFlavor.append(THINdeepCSVjetHadronFlavor[nb])
                 myJetNhadEF.append(thindeepCSVjetNhadEF[nb])
                 myJetChadEF.append(thindeepCSVjetChadEF[nb])
-                myJetCorrUnc.append(-1)
-
-                if ievent==0: print "Jet Energy fractions are not saved in DeepCSV collection. Saving default -1 for these."
-                myJetCEmEF.append(thindeepCSVjetCEmEF[nb])
-                myJetPhoEF.append(thindeepCSVjetPhoEF[nb])
-                myJetEleEF.append(thindeepCSVjetEleEF[nb])
-                myJetMuoEF.append(thindeepCSVjetMuoEF[nb])
 
                 if thinJetdeepCSV[nb] > deepCSVMWP and abs(thindeepCSVjetP4[nb].Eta())<2.4:
                     mybjets.append(nb)
@@ -826,22 +753,43 @@ def AnalyzeDataSet():
             myJetNPV=thindeepCSVjetNPV
             nUncleanJets=nTHINdeepCSVJets
 
-        myPhos=[]
-        myPhoLooseID=[]
-        myPhoTightID=[]
-        for ipho in range(nPho):
-            if phoP4[ipho].Pt() < 175 : continue
-            #---Fake Pho cleaner----
+
+
+#   do FATJet cleaning here
+
+        myCA15P4=[]
+        myCA15Mass=[]
+        myCA15Tagger=[]
+        myCA15_N2DDT=[]
+        myCA15_N2=[]
+
+        #if CA15doubleB:
+        for ca15jet in range(CA15njets):
             isClean=True
-            for ijet in myJetP4:
-                pho_jet_dR=DeltaR(ijet,phoP4[ipho])    # math.sqrt(  (  ijet.Eta()-phoP4[ipho].Eta() )**2  + (  DeltaPhi(ijet.Phi(),phoP4[ipho].Phi()) )**2 )
-                if pho_jet_dR < 0.4:
+            for iele in myEles:
+                if DeltaR(iele,CA15jetP4[ca15jet]) < 0.4:
+                    isClean=False
+                    break
+            for imu in myMuos:
+                if DeltaR(imu,CA15jetP4[ca15jet]) < 0.4:
                     isClean=False
                     break
             if not isClean: continue
-            myPhos.append(phoP4[ipho])
-            myPhoLooseID.append(phoIsPassLoose[ipho])
-            myPhoTightID.append(phoIsPassTight[ipho])
+            myCA15P4.append(CA15jetP4[ca15jet])
+            myCA15Mass.append(CA15SDmass[ca15jet])
+            myCA15Tagger.append(CA15Puppi_doublebtag[ca15jet])
+            if (CA15PuppiECF_1_2_10[ca15jet])**2 == 0 :
+                myCA15_N2DDT.append(99999)
+                myCA15_N2.append(-99999)
+            else:
+                N2=(CA15PuppiECF_2_3_10[ca15jet])/((CA15PuppiECF_1_2_10[ca15jet])**2)
+                myCA15_N2.append(N2)
+                myCA15_N2DDT.append(N2-0.113)
+
+
+
+
+
 
 
 
@@ -862,14 +810,11 @@ def AnalyzeDataSet():
         nTauLooseEleMu=len(myTausLooseEleMu)
         nTau=nTauLooseEleMu
 
-
-#        print "Unclean,dR-based,Loose,ETight,MTight,EMTight:",nUncleanTau,nTausDRbased,nTauLooseEleMu,nTauTightElectron,nTauTightMuon, nTauTightEleMu
-
         nBjets=len(mybjets)
+        nfailBjets=len(myfailedbjets)
         nJets=len(myJetCSV)
-        addJets = nJets-2
 ##################################
-        #AK8Jets collections
+        #Fatjet collections
         hasAK8jet=False
         myAK8JetsP4=[]
         myAK8CSV=[]
@@ -877,119 +822,65 @@ def AnalyzeDataSet():
         hastwobjets=False
         hasAKMass=False
 
-
-        CA15cvs=[]
-        myca15jetsP4=[]
-        myak8jetP4=[]
-        myCleanFatjet = []
+        Selca15jetsP4=[]
+        SelN2DDT=[]
+        SelN2=[]
+        FatjetIndex=[]
+        myCleanFatjet=[]
 
         hasca15twobjets=False
+
         CA15doubleB=True
 
-        for i in range(AK8nFatJets):
-            if AK8FatjetP4[i].Pt() > 200 and abs(AK8FatjetP4[i].Eta()) < 2.4 and AK8SDmass[i] > 100 and AK8SDmass[i] < 150 and AK8DoubleBtagger[i] > 0.6:
-                myak8jetP4.append(AK8FatjetP4[i])
 
 
-        if CA15doubleB:
-            for ca15jet in range(CA15njets):
-                if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4 and CA15SDmass[ca15jet] > 100. and CA15SDmass[ca15jet] < 150. and CA15Puppi_doublebtag[ca15jet] > 0.75:
-                            myca15jetsP4.append(CA15jetP4[ca15jet])
-        if not CA15doubleB:
-            for ca15jet in range(CA15njets):
-                if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4:
-                    if CA15SDmass[ca15jet] > 100. and CA15SDmass[ca15jet] < 150.:
-                        for i in range(len(CA15PuppisubjetCSV[ca15jet])):
-                            if (CA15PuppisubjetCSV[ca15jet])[i] > 0.5426:
-                                CA15cvs.append(i)
-                        if len(CA15cvs) >=2:
-                            hasca15twobjets = True
-                            myca15jetsP4.append(CA15jetP4[ca15jet])
-
-#do fatjet cleaning w.r.t. jet, lepton
-
-        useFatJet=False
-        if useFatJet:
-            myFATJET = myak8jetP4
-        else:
-            myFATJET = myca15jetsP4
-
-
-        for fatj in range(len(myFATJET)):
-                isClean=True
-                for iele in myEles:
-                    if DeltaR(iele,myFATJET[fatj]) < 1.5:
-                        isClean=False
-                        break
-
-                for imu in myMuos:
-                    if DeltaR(imu,myFATJET[fatj]) < 1.5:
-                        isClean=False
-                        break
-
-                # for ipho in range(nPho):
-                #     # if phoP4[ipho].Pt() < 175 : continue
-                #     # isClean=True
-                #     for ijet in myJetP4:
-                #         if DeltaR(phoP4[ipho],myFATJET[fatj]) < 1.5:   # math.sqrt(  (  ijet.Eta()-phoP4[ipho].Eta() )**2  + (  DeltaPhi(ijet.Phi(),phoP4[ipho].Phi()) )**2 )
-                #         #if pho_jet_dR < 1.5:
-                #         isClean=False
-                #         break
-
-                if not isClean: continue
-                myCleanFatjet.append(myFATJET[fatj])
-
-        nFatJet=len(myCleanFatjet)
+        #if CA15doubleB:
+        for i in range(len(myCA15P4)):
+            if myCA15P4[i].Pt() > 200. and abs(myCA15P4[i].Eta()) < 2.4 and myCA15Mass[i] > 100. and myCA15Mass[i] < 150. and myCA15Tagger[i] > 0.75:
+                        Selca15jetsP4.append(myCA15P4[i])
+                        SelN2DDT.append(myCA15_N2DDT[i])
+                        SelN2.append(myCA15_N2[i])
+                        #FatjetIndex.append(ca15jet)
 
 
 
+        # else:
+        #     for i in range(AK8nFatJets):
+        #         if AK8FatjetP4[i].Pt() > 200 and abs(AK8FatjetP4[i].Eta()) < 2.4 and AK8SDmass[i] > 100 and AK8SDmass[i] < 150 and AK8DoubleBtagger[i] > .6:
+        #             myak8jetP4.append(AK8FatjetP4[i])
+        #             FatjetIndex.append(i)
+
+
+
+        nFatJet=len(Selca15jetsP4)
+        N2DDT=9999
+        N2DDTCond=False
+        if nFatJet==1:
+            N2DDT = SelN2DDT[0]
+            N2    = SelN2[0]
+            N2DDTCond = N2DDT < 0
+            # if N2DDTCond:
+            #     print "yes"
+            #selFatjet=myCleanFatjet[0]
+            #selFatjet=CleanFatjetIndex[0]
 
 
  #----------------------------------------------------------------------------------------------------------------------------------------------------------------
  #----------------------------------------------------------------------------------------------------------------------------------------------------------------
         ## Sort jets
 
-        if nJets==0: continue
-
-        alljetPT=[jet.Pt() for jet in myJetP4]
-        jetindex=[i for i in range(len(alljetPT))]
-
-        sortedjets=[jet for pt,jet in sorted(zip(alljetPT,myJetP4), reverse=True)]      # This gives a list of jets with their pTs in descending order
-        sortedindex=[jetindex for pt,jetindex in sorted(zip(alljetPT,jetindex), reverse=True)]     # Indices of jets in myJetP4 in decscending order of jetPT
-
-        j1=sortedjets[0]
-        if nJets>1:
-            j2=sortedjets[1]
-            bbMass=(j1+j2).M()
-
-        if nJets>2: j3=sortedjets[2]
-
-        ifirstjet=sortedindex[0]
-        if nJets>1: isecondjet=sortedindex[1]
-        if nJets>2: ithirdjet=sortedindex[2]
-
-        min_dPhi_jet_MET = min(   [  DeltaPhi(jt.Phi(),pfMetPhi) for jt in myJetP4]   )
-#        print alljetPT
-#        print [jet.Pt() for jet in sortedjets]
-        HiggsMassCond=False
-        if nBjets==2:
-            allbjetPT=[jet.Pt() for jet in mybJetsP4]
-            bjetindex=[i for i in range(len(allbjetPT))]
-
-            sortedbjets=[jet for pt,jet in sorted(zip(allbjetPT,mybJetsP4), reverse=True)]      # This gives a list of jets with their pTs in descending order
-            sortedbindex=[bjetindex for pt,bjetindex in sorted(zip(allbjetPT,bjetindex), reverse=True)] # Indices of jets in myJetP4 in decscending order of jetPT
-
-            bj1=sortedbjets[0]
-            bj2=sortedbjets[1]
-            Higgsmass=(bj1+bj2).M()
-            DR_bbbar=bj1.DeltaR(bj2)
-            higgspt=(bj1+bj2).Pt()
-            hbbPhi=(bj1+bj2).Phi()
-            ifirstbjet=sortedbindex[0]
-            isecondbjet=sortedbindex[1]
+        if nFatJet==0: continue
+        if nFatJet==1:
+            Fatjet1_pT=Selca15jetsP4[0].Pt()
+            min_dPhi_Fatjet_MET=DeltaPhi(Selca15jetsP4[0].Phi(),pfMetPhi)
 
 
-        ##
+        ifirstjet=0
+
+        if nJets > 0:
+            j1 = myJetP4[ifirstjet]
+            min_dPhi_jet_MET = DeltaPhi(j1.Phi(),pfMetPhi)
+
 # --------------------------------------------------------------------------------------------------------------------------------------------------------
 
         allquantlist=AllQuantList.getAll()
@@ -1014,29 +905,26 @@ def AnalyzeDataSet():
             keepevent=True
         #********************              REMEMBER TO UNBLIND AT SOME POINT!
 
-#        writeSR1=False
-        writeSR2=False
-#        isZeeCR1=False
-        isZeeCR2=False
-        # isZmumuCR1=False
-        isZmumuCR2=False
-        # isWenuCR1=False
+        writeSR=False
+        isZeeCR=False
+        isZmumuCR=False
+        isWenuCR=False
+        isWmunuCR=False
+        isTopCR=False
+        isGammaCR=False
+
+        writeSR=False
+        isZeeCR=False
+        isZmumuCR=False
         isWenuCR2T=False
         isWenuCR2W=False
-        # isWmunuCR1=False
         isWmunuCR2T=False
         isWmunuCR2W=False
-        # isTopCR1=False
         isTopCR2=False
-        # isGammaCR1=False
         isGammaCR2=False
 
-
-
-        SR1njetcond=False
-        SR2njetcond=False
-        SR1jetcond=False
-        SR2jetcond=False
+        SRnjetcond=False
+        SRjetcond=False
 
 
         if nEle+nMu+nTauLooseEleMu==0:
@@ -1044,138 +932,56 @@ def AnalyzeDataSet():
         else:
             SRlepcond=False
 
-
-
-        # if mynak8==0:
-        #     SR2ak8cond=True
-        # else:
-        #     SR2ak8cond=False
-
-        if nFatJet==0:
-            SR2ca15cond=True
+        if nFatJet == 1:
+            SRFatjetcond=True
         else:
-            SR2ca15cond=False
+            SRFatjetcond=False
 
 
 
+     ## for SR
 
+        if (nJets == 0 or nJets == 1):
+            SRnjetcond    =    True
 
-     ## for SR2
-        # 3 jets and 2 btagged
+        SR_Cut7_dPhi_jet_MET        =   True #min_dPhi_jet_MET > 0.4
+        SR_Cut_nFATJet              =   nFatJet == 1
+        SR_Cut1_nJets               =   nJets == 0 or nJets == 1
+        SR_Cut2_nBjets              =   True
+        SR_Cut3_trigstatus          =   SRtrigstatus
+        SR_Cut4_jet1                =   True
 
-        if (nJets == 2 or nJets == 3) and pfmetstatus and SRlepcond and SRtrigstatus and SR2ca15cond:
-            #===CSVs before any selection===
-            preselquantlist=AllQuantList.getPresel()
-            for quant in preselquantlist:
-                exec("allquantities."+quant+" = None")
+        if nJets ==1:
+            #min_dPhi_jet_MET = DeltaPhi(j1.Phi(),pfMetPhi)
+            if j1.Pt() < 30.0 and min_dPhi_jet_MET < 0.4:
+                SR_Cut4_jet1           = False
+                SR_Cut7_dPhi_jet_MET   = False
 
-            if options.CSV:
-                allquantities.presel_jet1_csv_sr2=myJetCSV[ifirstjet]
-                allquantities.presel_jet2_csv_sr2=myJetCSV[isecondjet]
-                if nJets>2: allquantities.presel_jet3_csv_sr2=myJetCSV[ithirdjet]
-
-            if options.DeepCSV:
-                allquantities.presel_jet1_deepcsv_sr2=myJetCSV[ifirstjet]
-                allquantities.presel_jet2_deepcsv_sr2=myJetCSV[isecondjet]
-                if nJets>2: allquantities.presel_jet3_deepcsv_sr2=myJetCSV[ithirdjet]
-
-            allquantities.presel_jet1_chf_sr2=myJetChadEF[ifirstjet]
-            allquantities.presel_jet1_nhf_sr2=myJetNhadEF[ifirstjet]
-            allquantities.FillPreSel()
-            #===
-
-        if (nJets == 2 or nJets == 3) and nBjets==2:
-            MT_SR=MT(higgspt, pfMet, (pfMetPhi-hbbPhi))
-            SR2njetcond=True
-
-        # SR2_Cut_AK8             =   mynak8 == 0
-        SR2_Cut_CA15            =   nFatJet == 0
-        SR2_Cut1_nJets          =   nJets == 2 or nJets == 3
-        SR2_Cut2_nBjets         =   nBjets==2
-        SR2_Cut3_trigstatus     =   SRtrigstatus
-        SR2_Cut4_jet1           =   j1.Pt() > 50.0 and myJetNhadEF[ifirstjet] < 0.8 and myJetChadEF[ifirstjet] > 0.1
-        if nJets>1:
-            SR2_Cut5_jet2       =   j2.Pt() > 50.0
-        else:
-            SR2_Cut5_jet2       =   False
-        if nJets>2:
-            SR2_Cut6_jet3       =   j3.Pt() > 30.0
-        else:
-            SR2_Cut6_jet3       =   True
-        SR2_Cut7_dPhi_jet_MET   =   min_dPhi_jet_MET > 0.5
-        SR2_Cut8_nLep           =   nEle+nMu+nTauLooseEleMu == 0
-        SR2_Cut9_pfMET          =   pfmetstatus
+        SR_Cut8_nLep           =   nEle+nMu+nTauLooseEleMu == 0
+        SR_Cut9_pfMET          =   pfmetstatus
 
 
 
-
-        if SR2_Cut1_nJets and SR2_Cut2_nBjets and SR2_Cut3_trigstatus and SR2_Cut4_jet1 and SR2_Cut5_jet2 and SR2_Cut6_jet3 and SR2_Cut7_dPhi_jet_MET and SR2_Cut8_nLep and SR2_Cut9_pfMET and keepevent:
-            if Higgsmass > 100. and Higgsmass < 150.:
+        if SR_Cut3_trigstatus and SR_Cut9_pfMET and SR_Cut1_nJets and SR_Cut4_jet1 and SR_Cut7_dPhi_jet_MET and SR_Cut8_nLep:
+                allquantities.N2DDT_sr2 = N2DDT
+                allquantities.N2_sr2 = N2
                 allquantities.nca15jet_sr2 = nFatJet
 
-        if SR2_Cut_CA15 and SR2_Cut1_nJets and SR2_Cut2_nBjets and SR2_Cut3_trigstatus and SR2_Cut4_jet1 and SR2_Cut5_jet2 and SR2_Cut6_jet3 and SR2_Cut8_nLep and SR2_Cut9_pfMET and keepevent:
-            if Higgsmass > 100. and Higgsmass < 150.:
-                allquantities.dPhi_leadJET_sr2=DeltaPhi(j1.Phi(),pfMetPhi)
-                if nJets>2:
-                    allquantities.dPhi_lastJet_sr2=DeltaPhi(j3.Phi(),pfMetPhi)
-                else:
-                    allquantities.dPhi_lastJet_sr2=DeltaPhi(j2.Phi(),pfMetPhi)
+        if SR_Cut3_trigstatus and SR_Cut9_pfMET and SR_Cut_nFATJet and SR_Cut1_nJets and SR_Cut4_jet1 and SR_Cut7_dPhi_jet_MET and SR_Cut8_nLep and (N2DDT < 0):
 
-
-        if SR2_Cut_CA15 and SR2_Cut1_nJets and SR2_Cut2_nBjets and SR2_Cut3_trigstatus and SR2_Cut4_jet1 and SR2_Cut5_jet2 and SR2_Cut6_jet3 and SR2_Cut7_dPhi_jet_MET and SR2_Cut8_nLep and SR2_Cut9_pfMET and keepevent:
-
-            allquantities.bb_Mass_sr2=Higgsmass
-            allquantities.MT_sr2=MT_SR
-
-
-            if Higgsmass > 100. and Higgsmass < 150.:
-
+            if nJets==1:
                 allquantities.jet1_pT_sr2     = j1.Pt()
                 allquantities.jet1_eta_sr2    = j1.Eta()
                 allquantities.jet1_phi_sr2    = j1.Phi()
                 if options.CSV:
-                   allquantities.jet1_csv_sr2       = myJetCSV[ifirstjet]
+                    allquantities.jet1_csv_sr2       = myJetCSV[ifirstjet]
                 if options.DeepCSV:
-                   allquantities.jet1_deepcsv_sr2   = myJetCSV[ifirstjet]
-
-
-                allquantities.jet2_pT_sr2     = j2.Pt()
-                allquantities.jet2_eta_sr2    = j2.Eta()
-                allquantities.jet2_phi_sr2    = j2.Phi()
-                if options.CSV:
-                    allquantities.jet2_csv_sr2      = myJetCSV[isecondjet]
-                if options.DeepCSV:
-                    allquantities.jet2_deepcsv_sr2  = myJetCSV[isecondjet]
-
-                if nJets>2:
-                    allquantities.jet3_pT_sr2     = j3.Pt()
-                    allquantities.jet3_eta_sr2    = j3.Eta()
-                    allquantities.jet3_phi_sr2    = j3.Phi()
-                    if options.CSV:
-                        allquantities.jet3_csv_sr2       = myJetCSV[ithirdjet]
-                    if options.DeepCSV:
-                        allquantities.jet3_deepcsv_sr2   = myJetCSV[ithirdjet]
-
-                allquantities.min_dPhi_sr2    = min_dPhi_jet_MET
-                allquantities.met_sr2         = pfMet
-                allquantities.jet1_nhf_sr2    = myJetNhadEF[ifirstjet]
-                allquantities.jet1_chf_sr2    = myJetChadEF[ifirstjet]
-                allquantities.lep_syst_sr2_up = pfMet
-                allquantities.lep_syst_sr2_down = pfMet
-                allquantities.btag_syst_sr2_up = pfMet
-                allquantities.btag_syst_sr2_down = pfMet
-                allquantities.metTrig_syst_sr2_up = pfMet
-                allquantities.metTrig_syst_sr2_down = pfMet
-                allquantities.ewkZ_syst_sr2_up = pfMet
-                allquantities.ewkZ_syst_sr2_down = pfMet
-                allquantities.ewkW_syst_sr2_up = pfMet
-                allquantities.ewkW_syst_sr2_down = pfMet
-                allquantities.ewkTop_syst_sr2_up = pfMet
-                allquantities.ewkTop_syst_sr2_down = pfMet
-                writeSR2=True
-
-
-
+                    allquantities.jet1_deepcsv_sr2   = myJetCSV[ifirstjet]
+            allquantities.ca15jet_pT_sr2             = Fatjet1_pT
+            #allquantities.min_dPhi_sr2               = min_dPhi_jet_MET
+            #allquantities.min_dPhi_CAjet_sr2         = min_dPhi_Fatjet_MET
+            allquantities.met_sr2                    = pfMet
+            writeSR=True
 
 
 
@@ -1204,26 +1010,8 @@ def AnalyzeDataSet():
 
         ####new conds
         jetcond=True
-        SR2jet2=True
-
-        if j1.Pt() < 50.0: jetcond=False
-
-        if myJetNhadEF[ifirstjet] > 0.8 : jetcond=False
-        if myJetChadEF[ifirstjet]< 0.1: jetcond=False
-
-        if nJets>=2:
-            if j2.Pt() < 30.0: jetcond=False
-
-            if j2.Pt() > 50.0:
-                SR2jet2=True
-            else:
-                SR2jet2=False
-
-            if nJets>=3:
-                if j3.Pt() < 30.0: jetcond=False
-
-
-
+        if nJets==1:
+            if j1.Pt() < 30.0: jetcond=False
 
 # -------------------------------------------
 # Z CR
@@ -1231,19 +1019,18 @@ def AnalyzeDataSet():
 
         #Z CR specific bools
 
-        ZdPhicond=True
+        ZeePhicond=True
+        ZmumuPhicond=True
 
-        if applydPhicut:
-            if ZeePhi>-10.:
-                if min( [DeltaPhi(ZeePhi,myJetP4[nb].Phi()) for nb in range(nJets)] ) < 0.5: ZdPhicond=False
-            if ZmumuPhi>-10.:
-                if min( [DeltaPhi(ZmumuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] ) < 0.5: ZdPhicond=False
-
-
+        if applydPhicut and nJets == 1:
+            #if ZeePhi>-10.:
+            if DeltaPhi(ZeePhi,myJetP4[ifirstjet].Phi()) < 0.4: ZeePhicond=False
+            #if ZmumuPhi>-10.:
+            if DeltaPhi(ZmumuPhi,myJetP4[ifirstjet].Phi()) < 0.4: ZmumuPhicond=False
 
          #2e, 1 b-tagged
 
-        if nEle==2 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and ZeeMass>70. and ZeeMass<110. and ZeeRecoil>200. and jetcond and pfMet > 0.:
+        if nEle==2 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and ZeeMass>60. and ZeeMass<120. and ZeeRecoil>200. and jetcond and pfMet > 0.:
 #            CRCutFlow['nlepcond']+=1
             alllepPT=[lep.Pt() for lep in myEles]
             lepindex=[i for i in range(len(myEles))]
@@ -1254,81 +1041,40 @@ def AnalyzeDataSet():
             iLeadLep=sortedindex[0]
             iSecondLep=sortedindex[1]
 
-            if myEles[iLeadLep].Pt() > 30. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and myEleLooseID[iSecondLep]:
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and myEleLooseID[iSecondLep]:
 
                 ZpT = math.sqrt( (myEles[iLeadLep].Px()+myEles[iSecondLep].Px())*(myEles[iLeadLep].Px()+myEles[iSecondLep].Px()) + (myEles[iLeadLep].Py()+myEles[iSecondLep].Py())*(myEles[iLeadLep].Py()+myEles[iSecondLep].Py()) )
 
-            #2e, 2 b-tagged
-                if nBjets==2 and SR2jet2 and SR2njetcond and SR2ca15cond:
-                    allquantities.reg_2e2b_min_dPhi_jet_Recoil_n_minus_1 = min( [DeltaPhi(ZeePhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
 
-                if nBjets==2 and SR2jet2 and SR2njetcond:
-                    allquantities.reg_2e2b_nca15jet = nFatJet
+                if SRnjetcond and ZeePhicond and SRFatjetcond:
+                    allquantities.reg_2e2b_N2DDT = N2DDT
+                    allquantities.reg_2e2b_N2    = N2
 
-                if nBjets==2 and SR2jet2 and SR2njetcond and ZdPhicond and SR2ca15cond:
-                    MT_Zee=MT(higgspt, ZeeRecoil, (ZeePhi-hbbPhi))
-                    allquantities.reg_2e2b_MT=MT_Zee
+                if SRnjetcond and ZeePhicond and SRFatjetcond and (N2DDT <0):
 
-                    allquantities.reg_2e2b_bb_Mass=Higgsmass
-                    #if Higgsmass > 100. and Higgsmass < 150.:
                     allquantities.reg_2e2b_Zmass = ZeeMass
                     allquantities.reg_2e2b_ZpT=ZpT
 
                     allquantities.reg_2e2b_hadrecoil = ZeeRecoil
                     allquantities.reg_2e2b_MET = pfMet
+                    allquantities.reg_2e2b_ca15jet_pT = Fatjet1_pT
 
                     allquantities.reg_2e2b_lep1_pT=myEles[iLeadLep].Pt()
                     allquantities.reg_2e2b_lep2_pT=myEles[iSecondLep].Pt()
-
-
-                    allquantities.reg_2e2b_jet1_pT=j1.Pt()
-                    if nJets>1: allquantities.reg_2e2b_jet2_pT=j2.Pt()
-
-                    allquantities.reg_2e2b_jet1_eta=j1.Eta()
-                    if nJets>1: allquantities.reg_2e2b_jet2_eta=j2.Eta()
-
-                    allquantities.reg_2e2b_jet1_NHadEF=myJetNhadEF[ifirstjet]
-                    allquantities.reg_2e2b_jet1_CHadEF=myJetChadEF[ifirstjet]
-                    allquantities.reg_2e2b_jet1_CEmEF=myJetCEmEF[ifirstjet]
-                    allquantities.reg_2e2b_jet1_PhoEF=myJetPhoEF[ifirstjet]
-                    allquantities.reg_2e2b_jet1_EleEF=myJetEleEF[ifirstjet]
-                    allquantities.reg_2e2b_jet1_MuoEF=myJetMuoEF[ifirstjet]
-
                     allquantities.reg_2e2b_njet = nJets
-
-                    if options.CSV:
-                        allquantities.reg_2e2b_jet1_csv = myJetCSV[ifirstjet]
-                        if nJets>1: allquantities.reg_2e2b_jet2_csv = myJetCSV[isecondjet]
-                    if options.DeepCSV:
-                        allquantities.reg_2e2b_jet1_deepcsv = myJetCSV[ifirstjet]
-                        if nJets>1: allquantities.reg_2e2b_jet2_deepcsv = myJetCSV[isecondjet]
-
-                    allquantities.reg_2e2b_min_dPhi_jet_Recoil = min( [DeltaPhi(ZeePhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_2e2b_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-
+                    # allquantities.reg_2e2b_CA15Doublebtag  = CA15cvs[0]
+                    # if nJets==1:
+                    #     allquantities.reg_2e2b_min_dPhi_jet_Recoil = min( [DeltaPhi(ZeePhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                    #     allquantities.reg_2e2b_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                    #allquantities.reg_2e2b_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
                     allquantities.reg_2e2b_ntau = nTauTightElectron
                     allquantities.reg_2e2b_nele = nEle
                     allquantities.reg_2e2b_nmu = nMu
-                    allquantities.reg_2e2b_nUncleanTau = nUncleanTau
-                    allquantities.reg_2e2b_nUncleanEle = nUncleanEle
-                    allquantities.reg_2e2b_nUncleanMu = nUncleanMu
-                    allquantities.lep_syst_2e2b_up = ZeeRecoil
-                    allquantities.lep_syst_2e2b_down = ZeeRecoil
-                    allquantities.btag_syst_2e2b_up = ZeeRecoil
-                    allquantities.btag_syst_2e2b_down = ZeeRecoil
-                    allquantities.metTrig_syst_2e2b_up = ZeeRecoil
-                    allquantities.metTrig_syst_2e2b_down = ZeeRecoil
-                    allquantities.ewkZ_syst_2e2b_up = ZeeRecoil
-                    allquantities.ewkZ_syst_2e2b_down = ZeeRecoil
-                    allquantities.ewkW_syst_2e2b_up = ZeeRecoil
-                    allquantities.ewkW_syst_2e2b_down = ZeeRecoil
-                    allquantities.ewkTop_syst_2e2b_up = ZeeRecoil
-                    allquantities.ewkTop_syst_2e2b_down = ZeeRecoil
-                    isZeeCR2 = True
+                    isZeeCR = True
 
 
         #2mu, 1 b-tagged
-        if nMu==2 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and ZmumuMass>70. and ZmumuMass<110. and ZmumuRecoil>200. and jetcond and pfMet > 0.:
+        if nMu==2 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and ZmumuMass>60. and ZmumuMass<120. and ZmumuRecoil>200. and jetcond and pfMet > 0.:
 
 #            CRCutFlow['nlepcond']+=1
             alllepPT=[lep.Pt() for lep in myMuos]
@@ -1340,506 +1086,250 @@ def AnalyzeDataSet():
             iLeadLep=sortedindex[0]
             iSecondLep=sortedindex[1]
 
-            if myMuos[iLeadLep].Pt() > 30. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
+            if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
 
                 ZpT = math.sqrt( (myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px())*(myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px()) + (myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py())*(myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py()) )
 
+                if SRnjetcond and ZmumuPhicond and SRFatjetcond:
+                    allquantities.reg_2mu2b_N2DDT = N2DDT
+                    allquantities.reg_2mu2b_N2    = N2
 
-            #2mu, 2 b-tagged
-                if  nBjets==2 and SR2jet2 and SR2njetcond and SR2ca15cond:
-                    allquantities.reg_2mu2b_min_dPhi_jet_Recoil_n_minus_1 = min( [DeltaPhi(ZmumuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                if  SRnjetcond and ZmumuPhicond and SRFatjetcond and (N2DDT < 0):
 
-                if nBjets==2 and SR2jet2 and SR2njetcond:
-                    allquantities.reg_2mu2b_nca15jet = nFatJet
-
-                if  nBjets==2 and SR2jet2 and SR2njetcond and ZdPhicond and SR2ca15cond:
-                    MT_Zmumu=MT(higgspt, ZmumuRecoil, (ZmumuPhi-hbbPhi))
-                    allquantities.reg_2mu2b_MT=MT_Zmumu
-
-                    allquantities.reg_2mu2b_bb_Mass=Higgsmass
-                    #if Higgsmass > 100. and Higgsmass < 150.:
                     allquantities.reg_2mu2b_Zmass = ZmumuMass
                     allquantities.reg_2mu2b_ZpT=ZpT
 
                     allquantities.reg_2mu2b_hadrecoil = ZmumuRecoil
                     allquantities.reg_2mu2b_MET = pfMet
+                    allquantities.reg_2mu2b_ca15jet_pT = Fatjet1_pT
 
                     allquantities.reg_2mu2b_lep1_pT=myMuos[iLeadLep].Pt()
                     allquantities.reg_2mu2b_lep2_pT=myMuos[iSecondLep].Pt()
 
                     allquantities.reg_2mu2b_lep1_iso=myMuIso[iLeadLep]
                     allquantities.reg_2mu2b_lep2_iso=myMuIso[iSecondLep]
-
-
-                    allquantities.reg_2mu2b_jet1_pT=j1.Pt()
-                    if nJets>1: allquantities.reg_2mu2b_jet2_pT=j2.Pt()
-
-                    allquantities.reg_2mu2b_jet1_eta=j1.Eta()
-                    if nJets>1: allquantities.reg_2mu2b_jet2_eta=j2.Eta()
-
-                    allquantities.reg_2mu2b_jet1_NHadEF=myJetNhadEF[ifirstjet]
-                    allquantities.reg_2mu2b_jet1_CHadEF=myJetChadEF[ifirstjet]
-                    allquantities.reg_2mu2b_jet1_CEmEF=myJetCEmEF[ifirstjet]
-                    allquantities.reg_2mu2b_jet1_PhoEF=myJetPhoEF[ifirstjet]
-                    allquantities.reg_2mu2b_jet1_EleEF=myJetEleEF[ifirstjet]
-                    allquantities.reg_2mu2b_jet1_MuoEF=myJetMuoEF[ifirstjet]
-
                     allquantities.reg_2mu2b_njet = nJets
-
-                    if options.CSV:
-                        allquantities.reg_2mu2b_jet1_csv = myJetCSV[ifirstjet]
-                        if nJets>1: allquantities.reg_2mu2b_jet2_csv = myJetCSV[isecondjet]
-
-                    if options.DeepCSV:
-                        allquantities.reg_2mu2b_jet1_deepcsv = myJetCSV[ifirstjet]
-                        if nJets>1: allquantities.reg_2mu2b_jet2_deepcsv = myJetCSV[isecondjet]
-
-                    allquantities.reg_2mu2b_min_dPhi_jet_Recoil = min( [DeltaPhi(ZmumuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_2mu2b_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-
-                    allquantities.reg_2mu2b_ntau = nTauTightMuon
-                    allquantities.reg_2mu2b_nele = nEle
+                    # allquantities.reg_2mu2b_CA15Doublebtag  = CA15cvs[0]
+                    # if nJets==1:
+                    #     allquantities.reg_2mu2b_min_dPhi_jet_Recoil = min( [DeltaPhi(ZmumuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                    #     allquantities.reg_2mu2b_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                    #allquantities.reg_2mu2b_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    #allquantities.reg_2mu2b_ntau = nTauTightMuon
+                    #allquantities.reg_2mu2b_nele = nEle
                     allquantities.reg_2mu2b_nmu = nMu
-                    allquantities.reg_2mu2b_nUncleanTau = nUncleanTau
-                    allquantities.reg_2mu2b_nUncleanEle = nUncleanEle
-                    allquantities.reg_2mu2b_nUncleanMu = nUncleanMu
-                    allquantities.lep_syst_2mu2b_up = ZmumuRecoil
-                    allquantities.lep_syst_2mu2b_down = ZmumuRecoil
-                    allquantities.btag_syst_2mu2b_up = ZmumuRecoil
-                    allquantities.btag_syst_2mu2b_down = ZmumuRecoil
-                    allquantities.metTrig_syst_2mu2b_up = ZmumuRecoil
-                    allquantities.metTrig_syst_2mu2b_down = ZmumuRecoil
-                    allquantities.ewkZ_syst_2mu2b_up = ZmumuRecoil
-                    allquantities.ewkZ_syst_2mu2b_down = ZmumuRecoil
-                    allquantities.ewkW_syst_2mu2b_up = ZmumuRecoil
-                    allquantities.ewkW_syst_2mu2b_down = ZmumuRecoil
-                    allquantities.ewkTop_syst_2mu2b_up = ZmumuRecoil
-                    allquantities.ewkTop_syst_2mu2b_down = ZmumuRecoil
-                    isZmumuCR2 = True
-#######-------------------------------------------------------------------------------------------------------------
-#####-------------------------------------------------------------------------------------------------------
+                    isZmumuCR = True
 
-#################-----------------------------------------------------------------------------------------------------
+
 # -------------------------------------------
-# Full W CR
+# W CR
 # -------------------------------------------
 
         #W CR specific bools
+
+        WePhicond=True
+        WmuPhicond=True
+
         WCond=False
-        if nJets==2 and nBjets==2:
+        if ((nfailBjets==1 and nJets==1 ) or nJets==0):
             WCond=True
 
-        WdPhicond=True
-
-        if applydPhicut:
-            if WenuPhi>-10.:
-                if min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] ) < 0.5: WdPhicond=False
-            if WmunuPhi>-10.:
-                if min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] ) < 0.5: WdPhicond=False
-
+        if applydPhicut and nJets==1:
+            #if WenuPhi>-10.:
+            if DeltaPhi(WenuPhi,myJetP4[ifirstjet].Phi()) < 0.4: WePhicond=False
+            #if WmunuPhi>-10.:
+            if DeltaPhi(WmunuPhi,myJetP4[ifirstjet].Phi()) < 0.4: WmuPhicond=False
 
 
         #1e, 1 b-tagged
-        if nEle==1 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and Wenumass>50. and Wenumass<160. and pfMet > 50.:
+        if nEle==1 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and Wenumass > 0. and pfMet > 50.:
 
             iLeadLep=0
 
-            if myEles[iLeadLep].Pt() > 30. and myEleTightID[iLeadLep]:
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep]:
 
                 WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
+                #
 
+                if  WePhicond and SRFatjetcond and WCond:
+                    allquantities.reg_1e2bW_N2DDT = N2DDT
+                    allquantities.reg_1e2bW_N2    = N2
 
+                if  WePhicond and SRFatjetcond and WCond and (N2DDT<0):
 
-            #1e, 2 b-tagged
-                if nBjets==2 and SR2jet2 and WCond and SR2ca15cond:
-                    allquantities.reg_1e2bW_min_dPhi_jet_Recoil_n_minus_1 = min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-
-                if nBjets==2 and SR2jet2 and WCond:
-                    allquantities.reg_1e2bW_nca15jet = nFatJet
-
-                if nBjets==2 and SR2jet2 and WCond and WdPhicond and SR2ca15cond:
-                    MT_We=MT(higgspt, WenuRecoil, (WenuPhi-hbbPhi))
-                    allquantities.reg_1e2bW_MT = MT_We
-
-                    allquantities.reg_1e2bW_bb_Mass=Higgsmass
-                    # if Higgsmass > 100. and Higgsmass < 150.:
                     allquantities.reg_1e2bW_Wmass = Wenumass
                     allquantities.reg_1e2bW_WpT=WpT
 
                     allquantities.reg_1e2bW_hadrecoil = WenuRecoil
                     allquantities.reg_1e2bW_MET = pfMet
+                    allquantities.reg_1e2bW_ca15jet_pT = Fatjet1_pT
 
                     allquantities.reg_1e2bW_lep1_pT=myEles[iLeadLep].Pt()
-
-                    allquantities.reg_1e2bW_jet1_pT=j1.Pt()
-
-                    if nJets>1: allquantities.reg_1e2bW_jet2_pT=j2.Pt()
-
-                    allquantities.reg_1e2bW_jet1_eta=j1.Eta()
-                    if nJets>1: allquantities.reg_1e2bW_jet2_eta=j2.Eta()
-
-                    allquantities.reg_1e2bW_jet1_NHadEF=myJetNhadEF[ifirstjet]
-                    allquantities.reg_1e2bW_jet1_CHadEF=myJetChadEF[ifirstjet]
-                    allquantities.reg_1e2bW_jet1_CEmEF=myJetCEmEF[ifirstjet]
-                    allquantities.reg_1e2bW_jet1_PhoEF=myJetPhoEF[ifirstjet]
-                    allquantities.reg_1e2bW_jet1_EleEF=myJetEleEF[ifirstjet]
-                    allquantities.reg_1e2bW_jet1_MuoEF=myJetMuoEF[ifirstjet]
-
                     allquantities.reg_1e2bW_njet = nJets
-
-                    if options.CSV:
-                        allquantities.reg_1e2bW_jet1_csv = myJetCSV[ifirstjet]
-                        if nJets>1: allquantities.reg_1e2bW_jet2_csv = myJetCSV[isecondjet]
-
-                        allquantities.reg_1e2bW_min_dR_jet_ele_preclean = min( [DeltaR(myEles[iLeadLep],thinjetP4[nb]) for nb in range(nTHINJets)] )          #For diagnosis
-
-                    if options.DeepCSV:
-                        allquantities.reg_1e2bW_jet1_deepcsv = myJetCSV[ifirstjet]
-                        if nJets>1: allquantities.reg_1e2bW_jet2_deepcsv = myJetCSV[isecondjet]
-
-                    allquantities.reg_1e2bW_min_dR_jet_ele_postclean = min( [DeltaR(myEles[iLeadLep],myJetP4[nb]) for nb in range(nJets)] )
-
-                    allquantities.reg_1e2bW_min_dPhi_jet_Recoil = min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_1e2bW_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-
-                    allquantities.reg_1e2bW_ntau = nTauTightElectron
-                    allquantities.reg_1e2bW_nele = nEle
+                    # allquantities.reg_1e2bW_CA15Doublebtag  = CA15cvs[0]
+                    if nJets==1:
+                        allquantities.reg_1e2bW_min_dPhi_jet_Recoil = min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                        allquantities.reg_1e2bW_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                    #allquantities.reg_1e2bW_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    #allquantities.reg_1e2bW_ntau = nTauTightElectron
+                    #allquantities.reg_1e2bW_nele = nEle
                     allquantities.reg_1e2bW_nmu = nMu
-                    allquantities.reg_1e2bW_nUncleanTau = nUncleanTau
-                    allquantities.reg_1e2bW_nUncleanEle = nUncleanEle
-                    allquantities.reg_1e2bW_nUncleanMu = nUncleanMu
-                    allquantities.lep_syst_1e2bW_up = WenuRecoil
-                    allquantities.lep_syst_1e2bW_down = WenuRecoil
-                    allquantities.btag_syst_1e2bW_up = WenuRecoil
-                    allquantities.btag_syst_1e2bW_down = WenuRecoil
-                    allquantities.metTrig_syst_1e2bW_up = WenuRecoil
-                    allquantities.metTrig_syst_1e2bW_down = WenuRecoil
-                    allquantities.ewkZ_syst_1e2bW_up = WenuRecoil
-                    allquantities.ewkZ_syst_1e2bW_down = WenuRecoil
-                    allquantities.ewkW_syst_1e2bW_up = WenuRecoil
-                    allquantities.ewkW_syst_1e2bW_down = WenuRecoil
-                    allquantities.ewkTop_syst_1e2bW_up = WenuRecoil
-                    allquantities.ewkTop_syst_1e2bW_down = WenuRecoil
                     isWenuCR2W = True
 
 
         #1mu, 1 b-tagged
-        if nMu==1 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and Wmunumass>50. and Wmunumass<160. and pfMet > 50.:
+        if nMu==1 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and Wmunumass > 0. and pfMet > 50.:
             iLeadLep=0
 
-            if myMuos[iLeadLep].Pt() > 30. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
+            if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
 
                 WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myMuos[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myMuos[iLeadLep].Py())**2)
 
+                if  WmuPhicond and SRFatjetcond and WCond:
+                    allquantities.reg_1mu2bW_N2DDT = N2DDT
+                    allquantities.reg_1mu2bW_N2    = N2
 
-            #1mu, 2 b-tagged
-                if  nBjets==2 and SR2jet2 and WCond and SR2ca15cond:
-                    allquantities.reg_1mu2bW_min_dPhi_jet_Recoil_n_minus_1 = min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                if  WmuPhicond and SRFatjetcond and WCond and (N2DDT <0):
 
-                if nBjets==2 and SR2jet2 and WCond:
-                    allquantities.reg_1mu2bW_nca15jet = nFatJet
-
-                if  nBjets==2 and SR2jet2 and WCond and WdPhicond and SR2ca15cond:
-                    MT_Wmu=MT(higgspt, WmunuRecoil, (WmunuPhi-hbbPhi))
-                    allquantities.reg_1mu2bW_MT = MT_Wmu
-
-                    allquantities.reg_1mu2bW_bb_Mass=Higgsmass
-                    # if Higgsmass > 100. and Higgsmass < 150.:
                     allquantities.reg_1mu2bW_Wmass = Wmunumass
                     allquantities.reg_1mu2bW_WpT=WpT
 
                     allquantities.reg_1mu2bW_hadrecoil = WmunuRecoil
                     allquantities.reg_1mu2bW_MET = pfMet
+                    allquantities.reg_1mu2bW_ca15jet_pT = Fatjet1_pT
 
                     allquantities.reg_1mu2bW_lep1_pT=myMuos[iLeadLep].Pt()
                     allquantities.reg_1mu2bW_lep1_iso=myMuIso[iLeadLep]
-
-                    allquantities.reg_1mu2bW_jet1_pT=j1.Pt()
-
-                    if nJets>1: allquantities.reg_1mu2bW_jet2_pT=j2.Pt()
-
-                    allquantities.reg_1mu2bW_jet1_eta=j1.Eta()
-                    if nJets>1: allquantities.reg_1mu2bW_jet2_eta=j2.Eta()
-
-                    allquantities.reg_1mu2bW_jet1_NHadEF=myJetNhadEF[ifirstjet]
-                    allquantities.reg_1mu2bW_jet1_CHadEF=myJetChadEF[ifirstjet]
-                    allquantities.reg_1mu2bW_jet1_CEmEF=myJetCEmEF[ifirstjet]
-                    allquantities.reg_1mu2bW_jet1_PhoEF=myJetPhoEF[ifirstjet]
-                    allquantities.reg_1mu2bW_jet1_EleEF=myJetEleEF[ifirstjet]
-                    allquantities.reg_1mu2bW_jet1_MuoEF=myJetMuoEF[ifirstjet]
-
                     allquantities.reg_1mu2bW_njet = nJets
-
-                    if options.CSV:
-                        allquantities.reg_1mu2bW_jet1_csv = myJetCSV[ifirstjet]
-                        if nJets>1: allquantities.reg_1mu2bW_jet2_csv = myJetCSV[isecondjet]
-
-                    if options.DeepCSV:
-                        allquantities.reg_1mu2bW_jet1_deepcsv = myJetCSV[ifirstjet]
-                        if nJets>1: allquantities.reg_1mu2bW_jet2_deepcsv = myJetCSV[isecondjet]
-
-                    allquantities.reg_1mu2bW_min_dPhi_jet_Recoil = min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                    allquantities.reg_1mu2bW_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-
-                    allquantities.reg_1mu2bW_ntau = nTauTightMuon
-                    allquantities.reg_1mu2bW_nele = nEle
+                    # allquantities.reg_1mu2bW_CA15Doublebtag  = CA15cvs[0]
+                    if nJets==1:
+                        allquantities.reg_1mu2bW_min_dPhi_jet_Recoil = min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                        allquantities.reg_1mu2bW_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                    #allquantities.reg_1mu2bW_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    #allquantities.reg_1mu2bW_ntau = nTauTightMuon
+                    #allquantities.reg_1mu2bW_nele = nEle
                     allquantities.reg_1mu2bW_nmu = nMu
-                    allquantities.reg_1mu2bW_nUncleanTau = nUncleanTau
-                    allquantities.reg_1mu2bW_nUncleanEle = nUncleanEle
-                    allquantities.reg_1mu2bW_nUncleanMu = nUncleanMu
-                    allquantities.lep_syst_1mu2bW_up = WmunuRecoil
-                    allquantities.lep_syst_1mu2bW_down = WmunuRecoil
-                    allquantities.btag_syst_1mu2bW_up = WmunuRecoil
-                    allquantities.btag_syst_1mu2bW_down = WmunuRecoil
-                    allquantities.metTrig_syst_1mu2bW_up = WmunuRecoil
-                    allquantities.metTrig_syst_1mu2bW_down = WmunuRecoil
-                    allquantities.ewkZ_syst_1mu2bW_up = WmunuRecoil
-                    allquantities.ewkZ_syst_1mu2bW_down = WmunuRecoil
-                    allquantities.ewkW_syst_1mu2bW_up = WmunuRecoil
-                    allquantities.ewkW_syst_1mu2bW_down = WmunuRecoil
-                    allquantities.ewkTop_syst_1mu2bW_up = WmunuRecoil
-                    allquantities.ewkTop_syst_1mu2bW_down = WmunuRecoil
                     isWmunuCR2W = True
 
 
-#------------------------------------------------
+########--------------------------------------
+
 #Top CR
-#------------------------------------------------
 
+        TopdPhicond2=True
+	TopdPhicond1=True
 
-        #This top CR
         TopCond=False
-        if nJets > 2 and nBjets==2:
+        if nJets==1 and nBjets==1:
             TopCond=True
 
-        WdPhicond=True
-
-        if applydPhicut:
-            if WenuPhi>-10.:
-                if min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] ) < 0.5: WdPhicond=False
-            if WmunuPhi>-10.:
-                if min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] ) < 0.5: WdPhicond=False
+        if applydPhicut and nBjets==1:
+        #     if WenuPhi>-10.:
+            if DeltaPhi(WenuPhi,mybJetsP4[0].Phi()) < 0.4: TopdPhicond1=False
+        #     if WmunuPhi>-10.:
+            if DeltaPhi(WmunuPhi,mybJetsP4[0].Phi()) < 0.4: TopdPhicond2=False
 
 
         #1e, 1 b-tagged
-        if nEle==1 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and Wenumass>50. and Wenumass<160. and pfMet > 50.:
+        if nEle==1 and nMu==0 and nTauTightElectron==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and  Wenumass > 0. and pfMet > 50.:
 
             iLeadLep=0
 
-            if myEles[iLeadLep].Pt() > 30. and myEleTightID[iLeadLep]:
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep]:
 
                 WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
 
+                if TopdPhicond1 and SRFatjetcond and TopCond:
+                    allquantities.reg_1e2bT_N2DDT = N2DDT
+                    allquantities.reg_1e2bT_N2    = N2
 
-            #1e, 2 b-tagged
-                if nBjets==2 and SR2jet2 and TopCond and SR2ca15cond:
-                    allquantities.reg_1e2bT_min_dPhi_jet_Recoil_n_minus_1 = min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                if TopdPhicond1 and SRFatjetcond and TopCond and (N2DDT<0):
 
-                if nBjets==2 and SR2jet2 and TopCond and Higgsmass > 100. and Higgsmass < 150:
-                    allquantities.reg_1e2bT_nca15jet = nFatJet
+                    allquantities.reg_1e2bT_Wmass = Wenumass
+                    allquantities.reg_1e2bT_WpT=WpT
 
-                if nBjets==2 and SR2jet2 and TopCond and WdPhicond and SR2ca15cond:
-                    MT_We=MT(higgspt, WenuRecoil, (WenuPhi-hbbPhi))
-                    allquantities.reg_1e2bT_MT = MT_We
-                    allquantities.reg_1e2bT_bb_Mass=Higgsmass
+                    allquantities.reg_1e2bT_hadrecoil = WenuRecoil
+                    allquantities.reg_1e2bT_MET = pfMet
+                    allquantities.reg_1e2bT_ca15jet_pT = Fatjet1_pT
 
-                    if Higgsmass > 100. and Higgsmass < 150.:
-                        allquantities.reg_1e2bT_Wmass = Wenumass
-                        allquantities.reg_1e2bT_WpT=WpT
-
-                        allquantities.reg_1e2bT_hadrecoil = WenuRecoil
-                        allquantities.reg_1e2bT_MET = pfMet
-
-                        allquantities.reg_1e2bT_lep1_pT=myEles[iLeadLep].Pt()
-
-                        allquantities.reg_1e2bT_jet1_pT=j1.Pt()
-
-                        if nJets>1: allquantities.reg_1e2bT_jet2_pT=j2.Pt()
-
-                        allquantities.reg_1e2bT_jet1_eta=j1.Eta()
-                        if nJets>1: allquantities.reg_1e2bT_jet2_eta=j2.Eta()
-
-                        allquantities.reg_1e2bT_jet1_NHadEF=myJetNhadEF[ifirstjet]
-                        allquantities.reg_1e2bT_jet1_CHadEF=myJetChadEF[ifirstjet]
-                        allquantities.reg_1e2bT_jet1_CEmEF=myJetCEmEF[ifirstjet]
-                        allquantities.reg_1e2bT_jet1_PhoEF=myJetPhoEF[ifirstjet]
-                        allquantities.reg_1e2bT_jet1_EleEF=myJetEleEF[ifirstjet]
-                        allquantities.reg_1e2bT_jet1_MuoEF=myJetMuoEF[ifirstjet]
-
-                        allquantities.reg_1e2bT_njet = nJets
-
-                        if options.CSV:
-                            allquantities.reg_1e2bT_jet1_csv = myJetCSV[ifirstjet]
-                            if nJets>1: allquantities.reg_1e2bT_jet2_csv = myJetCSV[isecondjet]
-
-                            allquantities.reg_1e2bT_min_dR_jet_ele_preclean = min( [DeltaR(myEles[iLeadLep],thinjetP4[nb]) for nb in range(nTHINJets)] )          #For diagnosis
-
-                        if options.DeepCSV:
-                            allquantities.reg_1e2bT_jet1_deepcsv = myJetCSV[ifirstjet]
-                            if nJets>1: allquantities.reg_1e2bT_jet2_deepcsv = myJetCSV[isecondjet]
-
-                        allquantities.reg_1e2bT_min_dR_jet_ele_postclean = min( [DeltaR(myEles[iLeadLep],myJetP4[nb]) for nb in range(nJets)] )
-
+                    allquantities.reg_1e2bT_lep1_pT=myEles[iLeadLep].Pt()
+                    allquantities.reg_1e2bT_njet = nJets
+                    # allquantities.reg_1e2bT_CA15Doublebtag  = CA15cvs[0]
+                    if nJets==1:
                         allquantities.reg_1e2bT_min_dPhi_jet_Recoil = min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                         allquantities.reg_1e2bT_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-
-                        allquantities.reg_1e2bT_ntau = nTauTightElectron
-                        allquantities.reg_1e2bT_nele = nEle
-                        allquantities.reg_1e2bT_nmu = nMu
-                        allquantities.reg_1e2bT_nUncleanTau = nUncleanTau
-                        allquantities.reg_1e2bT_nUncleanEle = nUncleanEle
-                        allquantities.reg_1e2bT_nUncleanMu = nUncleanMu
-                        allquantities.lep_syst_1e2bT_up = WenuRecoil
-                        allquantities.lep_syst_1e2bT_down = WenuRecoil
-                        allquantities.btag_syst_1e2bT_up = WenuRecoil
-                        allquantities.btag_syst_1e2bT_down = WenuRecoil
-                        allquantities.metTrig_syst_1e2bT_up = WenuRecoil
-                        allquantities.metTrig_syst_1e2bT_down = WenuRecoil
-                        allquantities.ewkZ_syst_1e2bT_up = WenuRecoil
-                        allquantities.ewkZ_syst_1e2bT_down = WenuRecoil
-                        allquantities.ewkW_syst_1e2bT_up = WenuRecoil
-                        allquantities.ewkW_syst_1e2bT_down = WenuRecoil
-                        allquantities.ewkTop_syst_1e2bT_up = WenuRecoil
-                        allquantities.ewkTop_syst_1e2bT_down = WenuRecoil
-                        isWenuCR2T = True
+                    #allquantities.reg_1e2bT_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    allquantities.reg_1e2bT_ntau = nTauTightElectron
+                    allquantities.reg_1e2bT_nele = nEle
+                    allquantities.reg_1e2bT_nmu = nMu
+                    isWenuCR2T = True
 
 
         #1mu, 1 b-tagged
-        if nMu==1 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and Wmunumass>50. and Wmunumass<160. and pfMet > 50.:
+        if nMu==1 and nEle==0 and nTauTightMuon==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and Wmunumass > 0. and pfMet > 50.:
             iLeadLep=0
 
-            if myMuos[iLeadLep].Pt() > 30. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
+            if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
 
-                WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myMuos[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myMuos[iLeadLep].Py())**2)
+                #WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myMuos[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myMuos[iLeadLep].Py())**2)
+                if  TopdPhicond2 and SRFatjetcond and TopCond:
+                    allquantities.reg_1mu2bT_N2DDT = N2DDT
+                    allquantities.reg_1mu2bT_N2    = N2
 
-            #1mu, 2 b-tagged
-                if  nBjets==2 and SR2jet2 and TopCond and SR2ca15cond:
-                    allquantities.reg_1mu2bT_min_dPhi_jet_Recoil_n_minus_1 = min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                if  TopdPhicond2 and SRFatjetcond and TopCond and (N2DDT<0):
 
-                if nBjets==2 and SR2jet2 and TopCond and Higgsmass > 100. and Higgsmass < 150:
-                    allquantities.reg_1mu2bT_nca15jet = nFatJet
+                    allquantities.reg_1mu2bT_Wmass = Wmunumass
+                    allquantities.reg_1mu2bT_WpT=WpT
 
-                if nBjets==2 and SR2jet2 and TopCond and WdPhicond and SR2ca15cond:
-                    MT_We=MT(higgspt, WenuRecoil, (WenuPhi-hbbPhi))
-                    allquantities.reg_1e2bT_MT = MT_We
-                    allquantities.reg_1mu2bT_bb_Mass=Higgsmass
+                    allquantities.reg_1mu2bT_hadrecoil = WmunuRecoil
+                    allquantities.reg_1mu2bT_MET = pfMet
+                    allquantities.reg_1mu2bT_ca15jet_pT = Fatjet1_pT
 
-                    if Higgsmass > 100. and Higgsmass < 150.:
-                        allquantities.reg_1mu2bT_Wmass = Wmunumass
-                        allquantities.reg_1mu2bT_WpT=WpT
-
-                        allquantities.reg_1mu2bT_hadrecoil = WmunuRecoil
-                        allquantities.reg_1mu2bT_MET = pfMet
-
-                        allquantities.reg_1mu2bT_lep1_pT=myMuos[iLeadLep].Pt()
-                        allquantities.reg_1mu2bT_lep1_iso=myMuIso[iLeadLep]
-
-                        allquantities.reg_1mu2bT_jet1_pT=j1.Pt()
-
-                        if nJets>1: allquantities.reg_1mu2bT_jet2_pT=j2.Pt()
-
-                        allquantities.reg_1mu2bT_jet1_eta=j1.Eta()
-                        if nJets>1: allquantities.reg_1mu2bT_jet2_eta=j2.Eta()
-
-                        allquantities.reg_1mu2bT_jet1_NHadEF=myJetNhadEF[ifirstjet]
-                        allquantities.reg_1mu2bT_jet1_CHadEF=myJetChadEF[ifirstjet]
-                        allquantities.reg_1mu2bT_jet1_CEmEF=myJetCEmEF[ifirstjet]
-                        allquantities.reg_1mu2bT_jet1_PhoEF=myJetPhoEF[ifirstjet]
-                        allquantities.reg_1mu2bT_jet1_EleEF=myJetEleEF[ifirstjet]
-                        allquantities.reg_1mu2bT_jet1_MuoEF=myJetMuoEF[ifirstjet]
-
-                        allquantities.reg_1mu2bT_njet = nJets
-
-                        if options.CSV:
-                            allquantities.reg_1mu2bT_jet1_csv = myJetCSV[ifirstjet]
-                            if nJets>1: allquantities.reg_1mu2bT_jet2_csv = myJetCSV[isecondjet]
-
-                        if options.DeepCSV:
-                            allquantities.reg_1mu2bT_jet1_deepcsv = myJetCSV[ifirstjet]
-                            if nJets>1: allquantities.reg_1mu2bT_jet2_deepcsv = myJetCSV[isecondjet]
-
+                    allquantities.reg_1mu2bT_lep1_pT=myMuos[iLeadLep].Pt()
+                    allquantities.reg_1mu2bT_lep1_iso=myMuIso[iLeadLep]
+                    allquantities.reg_1mu2bT_njet = nJets
+                    # allquantities.reg_1mu2bT_CA15Doublebtag  = CA15cvs[0]
+                    if nJets==1:
                         allquantities.reg_1mu2bT_min_dPhi_jet_Recoil = min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                         allquantities.reg_1mu2bT_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                    #allquantities.reg_1mu2bT_min_dPhi_CAjet_MET=min_dPhi_CAjet_MET
+                    allquantities.reg_1mu2bT_ntau = nTauTightMuon
+                    allquantities.reg_1mu2bT_nele = nEle
+                    allquantities.reg_1mu2bT_nmu = nMu
+                    isWmunuCR2T = True
 
-                        allquantities.reg_1mu2bT_ntau = nTauTightMuon
-                        allquantities.reg_1mu2bT_nele = nEle
-                        allquantities.reg_1mu2bT_nmu = nMu
-                        allquantities.reg_1mu2bT_nUncleanTau = nUncleanTau
-                        allquantities.reg_1mu2bT_nUncleanEle = nUncleanEle
-                        allquantities.reg_1mu2bT_nUncleanMu = nUncleanMu
-                        allquantities.lep_syst_1mu2bT_up = WmunuRecoil
-                        allquantities.lep_syst_1mu2bT_down = WmunuRecoil
-                        allquantities.btag_syst_1mu2bT_up = WmunuRecoil
-                        allquantities.btag_syst_1mu2bT_down = WmunuRecoil
-                        allquantities.metTrig_syst_1mu2bT_up = WmunuRecoil
-                        allquantities.metTrig_syst_1mu2bT_down = WmunuRecoil
-                        allquantities.ewkZ_syst_1mu2bT_up = WmunuRecoil
-                        allquantities.ewkZ_syst_1mu2bT_down = WmunuRecoil
-                        allquantities.ewkW_syst_1mu2bT_up = WmunuRecoil
-                        allquantities.ewkW_syst_1mu2bT_down = WmunuRecoil
-                        allquantities.ewkTop_syst_1mu2bT_up = WmunuRecoil
-                        allquantities.ewkTop_syst_1mu2bT_down = WmunuRecoil
-                        isWmunuCR2T = True
+        # QCD CR
 
-
-
-        #2b
-        QCD2b_Cut_CA15          =   SR2_Cut_CA15
-        QCD2b_Cut1_nJets        =   SR2_Cut1_nJets
-        QCD2b_Cut2_nBjets       =   SR2_Cut2_nBjets
-        QCD2b_Cut3_trigstatus   =   SR2_Cut3_trigstatus
-        QCD2b_Cut4_jet1         =   SR2_Cut4_jet1
-        QCD2b_Cut5_jet2         =   SR2_Cut5_jet2
-
-        QCD2b_Cut6_jet3         =   SR2_Cut6_jet3
-        QCD2b_Cut7_dPhi_jet_MET =   not SR2_Cut7_dPhi_jet_MET
-        QCD2b_Cut8_nLep         =   SR2_Cut8_nLep
-        QCD2b_Cut9_pfMET        =   SR2_Cut9_pfMET
-
-        if QCD2b_Cut1_nJets and QCD2b_Cut2_nBjets and QCD2b_Cut3_trigstatus and QCD2b_Cut4_jet1 and QCD2b_Cut5_jet2 and QCD2b_Cut6_jet3 and QCD2b_Cut8_nLep and QCD2b_Cut9_pfMET and QCD2b_Cut_CA15:
-            if Higgsmass > 100. and Higgsmass < 150.:
-                allquantities.reg_QCD2b_dPhi_leadJet=DeltaPhi(j1.Phi(),pfMetPhi)
-                if nJets>2:
-                    allquantities.reg_QCD2b_dPhi_lastJet=DeltaPhi(j3.Phi(),pfMetPhi)
-                else:
-                    allquantities.reg_QCD2b_dPhi_lastJet=DeltaPhi(j2.Phi(),pfMetPhi)
-
-        if QCD2b_Cut1_nJets and QCD2b_Cut2_nBjets and QCD2b_Cut3_trigstatus and QCD2b_Cut4_jet1 and QCD2b_Cut5_jet2 and QCD2b_Cut6_jet3 and QCD2b_Cut7_dPhi_jet_MET and QCD2b_Cut8_nLep and QCD2b_Cut9_pfMET and QCD2b_Cut_CA15:
-            allquantities.reg_QCD2b_bb_Mass=Higgsmass
-            if Higgsmass > 100. and Higgsmass < 150.:
-                allquantities.reg_QCD2b_MET         =   pfMet
-                allquantities.reg_QCD2b_jet1_pT     =   j1.Pt()
-                allquantities.reg_QCD2b_jet2_pT     =   j2.Pt()
-                allquantities.reg_QCD2b_jet1_eta    =   j1.Eta()
-                allquantities.reg_QCD2b_jet2_eta    =   j2.Eta()
-
-                if options.CSV:
-                    allquantities.reg_QCD2b_jet1_csv    =   myJetCSV[ifirstjet]
-                    allquantities.reg_QCD2b_jet2_csv    = myJetCSV[isecondjet]
-                if options.DeepCSV:
-                    allquantities.reg_QCD2b_jet1_deepcsv    =   myJetCSV[ifirstjet]
-                    allquantities.reg_QCD2b_jet2_deepcsv    = myJetCSV[isecondjet]
-
-                allquantities.reg_QCD2b_njet    =   nJets
-                allquantities.reg_QCD2b_ntau    =   nTauLooseEleMu
-                allquantities.reg_QCD2b_nele    =   nEle
-                allquantities.reg_QCD2b_nmu     =   nMu
-                allquantities.reg_QCD2b_nUncleanEle =   nUncleanEle
-                allquantities.reg_QCD2b_nUncleanMu  =   nUncleanMu
-                allquantities.reg_QCD2b_nUncleanTau =   nUncleanTau
-                allquantities.reg_QCD2b_min_dPhi_jet_MET    =   min_dPhi_jet_MET
+        # QCD2b_Cut_CA15          =   SR2_Cut_CA15
+        # QCD2b_Cut1_nJets        =   SR2_Cut1_nJets
+        # QCD2b_Cut2_nBjets       =   SR2_Cut2_nBjets
+        # QCD2b_Cut3_trigstatus   =   SR2_Cut3_trigstatus
+        # QCD2b_Cut4_jet1         =   SR2_Cut4_jet1
+        # # QCD2b_Cut5_jet2         =   SR2_Cut5_jet2
+        # #
+        # # QCD2b_Cut6_jet3         =   SR2_Cut6_jet3
+        # QCD2b_Cut7_dPhi_jet_MET =   not SR2_Cut7_dPhi_jet_MET
+        # QCD2b_Cut8_nLep         =   SR2_Cut8_nLep
+        # QCD2b_Cut9_pfMET        =   SR2_Cut9_pfMET
+        #
+        # if QCD2b_Cut1_nJets and QCD2b_Cut2_nBjets and QCD2b_Cut3_trigstatus and QCD2b_Cut4_jet1 and QCD2b_Cut7_dPhi_jet_MET and QCD2b_Cut8_nLep and QCD2b_Cut9_pfMET and QCD2b_Cut_CA15:
+        #         allquantities.reg_QCD2b_MET         =   pfMet
+        #         allquantities.reg_QCD2b_ca15jet_pT = Fatjet1_pT
+        #         allquantities.reg_QCD2b_njet    =   nJets
+        #         allquantities.reg_QCD2b_ntau    =   nTauLooseEleMu
+        #         allquantities.reg_QCD2b_nele    =   nEle
+        #         allquantities.reg_QCD2b_nmu     =   nMu
+                # allquantities.reg_QCD2b_nUncleanEle =   nUncleanEle
+                # allquantities.reg_QCD2b_nUncleanMu  =   nUncleanMu
+                # allquantities.reg_QCD2b_nUncleanTau =   nUncleanTau
+                # allquantities.reg_QCD2b_min_dPhi_jet_MET    =   min_dPhi_jet_MET
+                # allquantities.reg_QCD2b_min_dPhi_CAjet_MET    =   min_dPhi_CAjet_MET
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
+    #---------------------------------------------------------------------------------------------------------------------------------------
 
 
-        # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-        # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-        ## Photon Veto
-        # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
-        # ----to be added in future---------------------------------------------------------------------------------------------------------------------------------------
-
-
-        if pfmetstatus and SRlepcond and (SR1jetcond or SR2jetcond): npass = npass + 1
+        if pfmetstatus and SRlepcond and SRnjetcond:
+            #print "pass"
+            npass =+1
 
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -1855,14 +1345,7 @@ def AnalyzeDataSet():
         metTrig_secondmethodReweight=1.0
         metTrig_firstmethodReweight_up=1.0
         metTrig_firstmethodReweight_down=1.0
-        # if writeSR1:
-        #     xbin1 = metTrig_firstmethod.GetXaxis().FindBin(pfMet)
-        #     xbin2 = metTrig_secondmethod.GetXaxis().FindBin(pfMet)
-        #     metTrig_firstmethodReweight = metTrig_firstmethod.GetBinContent(xbin1)
-        #     metTrig_secondmethodReweight = metTrig_secondmethod.GetBinContent(xbin2)
-        #     metTrig_firstmethodReweight_up = metTrig_firstmethodReweight + (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        #     metTrig_firstmethodReweight_down = metTrig_firstmethodReweight - (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        if writeSR2:
+        if writeSR:
             xbin1 = metTrig_firstmethod.GetXaxis().FindBin(pfMet)
             xbin2 = metTrig_secondmethod.GetXaxis().FindBin(pfMet)
             metTrig_firstmethodReweight = metTrig_firstmethod.GetBinContent(xbin1)
@@ -1953,7 +1436,7 @@ def AnalyzeDataSet():
             mupt = muP4[imu].Pt()
             abeta = abs(muP4[imu].Eta())
             if uni < 0.54:
-                if mupt > 30:
+                if mupt > 20:
                     xbin = muonTightIDSFs_EfficienciesAndSF_BCDEF.GetXaxis().FindBin(abeta)
                     ybin = muonTightIDSFs_EfficienciesAndSF_BCDEF.GetYaxis().FindBin(mupt)
                     muIDSF_tight *= muonTightIDSFs_EfficienciesAndSF_BCDEF.GetBinContent(xbin,ybin)
@@ -1966,7 +1449,7 @@ def AnalyzeDataSet():
                     muIDSF_loose_systUP *= (muonLooseIDSFs_EfficienciesAndSF_BCDEF.GetBinContent(xbin,ybin) + muonLooseIDSFs_EfficienciesAndSF_BCDEF.GetBinErrorUp(xbin,ybin))
                     muIDSF_loose_systDOWN *= (muonLooseIDSFs_EfficienciesAndSF_BCDEF.GetBinContent(xbin,ybin) - muonLooseIDSFs_EfficienciesAndSF_BCDEF.GetBinErrorLow(xbin,ybin))
             if uni > 0.54:
-                if mupt > 30:
+                if mupt > 20:
                     xbin = muonTightIDSFs_EfficienciesAndSF_GH.GetXaxis().FindBin(abeta)
                     ybin = muonTightIDSFs_EfficienciesAndSF_GH.GetYaxis().FindBin(mupt)
                     muIDSF_tight *= muonTightIDSFs_EfficienciesAndSF_GH.GetBinContent(xbin,ybin)
@@ -2075,7 +1558,7 @@ def AnalyzeDataSet():
         for iele in range(nEle):
             elept = eleP4[iele].Pt()
             eleeta = eleP4[iele].Eta()
-            if elept > 30:
+            if elept > 40:
                 xbin = eleTightIDSF_EGamma_SF2D.GetXaxis().FindBin(eleeta)
                 ybin = eleTightIDSF_EGamma_SF2D.GetYaxis().FindBin(elept)
                 eleIDSF_tight *= eleTightIDSF_EGamma_SF2D.GetBinContent(xbin,ybin)
@@ -2111,42 +1594,31 @@ def AnalyzeDataSet():
             else:
                 puweight = 1.
 
-
-#            print pu_nTrueInt
-
-        #print (len_puweight, pu_nTrueInt, puweight)
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         ## Total weight
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         if puweight == 0.0:
-#            print 'Warning:: puweight is 0, setting it to 1'
             puweight = 1.0
 
         if genpTReweighting == 0.0:
-#            print 'Warning:: genpTReweighting is 0, setting it to 1'
             genpTReweighting = 1.0
 
         if metTrig_firstmethodReweight == 0.0:
-#            print 'Warning:: metTrig_Reweight is 0, setting it to 1'
             metTrig_firstmethodReweight = 1.0
 
         if metTrig_firstmethodReweight_up == 0.0:
-#            print 'Warning:: metTrig_Reweight is 0, setting it to 1'
             metTrig_firstmethodReweight_up = 1.0
 
         if metTrig_firstmethodReweight_down == 0.0:
-#            print 'Warning:: metTrig_Reweight is 0, setting it to 1'
             metTrig_firstmethodReweight_down = 1.0
 
         muweights = muonTrig_SF * muIDSF_loose * muIDSF_tight * muIsoSF_loose * muIsoSF_tight * muTracking_SF
         if muweights == 0.0:
-#            print 'Warning:: muon weight is 0, setting it to 1'
             muweights = 1.0
 
         #eleweights = eleTrig_reweight * eleRecoSF * eleIDSF_loose * eleIDSF_tight * eleVetoCutBasedIDSF
         eleweights = eleTrig_reweight * eleRecoSF * eleIDSF_loose * eleIDSF_tight
         if eleweights == 0.0:
-#            print 'Warning:: electron weight is 0, setting it to 1'
             eleweights = 1.0
 
         allweights = puweight * mcweight * genpTReweighting * eleweights * metTrig_firstmethodReweight * muweights
@@ -2154,55 +1626,34 @@ def AnalyzeDataSet():
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         temp_weight_withOutBtag = allweights
         ## BTag Scale Factor
-        if SR1njetcond:
-            ij = ifirstjet
-            if nJets>1: jj = isecondjet
 
-            flav1 = jetflav(myJetHadronFlavor[ij])
-            if nJets>1: flav2 = jetflav(myJetHadronFlavor[jj])
-
-#            print ("ij, flav, pt, eta, ",ij, flav1, myJetP4[ij].Pt(), myJetP4[ij].Eta())
+#        if SRnjetcond:
+        if nJets==0:
+            sf_resolved1.append(1.0)
+        else:
+            ij=0
+            jj=1
             reader1.eval_auto_bounds('central', 0, 1.2, 50.)
-            sf_resolved1 = weightbtag(reader1, flav1, myJetP4[ij].Pt(), myJetP4[ij].Eta())
-            if nJets>1: sf_resolved2 = weightbtag(reader1, flav2, myJetP4[jj].Pt(), myJetP4[jj].Eta())
-
-#            print (sf_resolved1, sf_resolved2)
-        elif (SR2njetcond or TopCond or WCond):
-            ij = ifirstjet
-            jj = isecondjet
-            if nJets>2: jk = ithirdjet
-
             flav1 = jetflav(myJetHadronFlavor[ij])
-            flav2 = jetflav(myJetHadronFlavor[jj])
-            if nJets>2: flav3 = jetflav(myJetHadronFlavor[jj])
-
-#            print ("ij, flav, pt, eta, ",ij, flav1, myJetP4[ij].Pt(), myJetP4[ij].Eta())
-            reader1.eval_auto_bounds('central', 0, 1.2, 50.)
             sf_resolved1 = weightbtag(reader1, flav1, myJetP4[ij].Pt(), myJetP4[ij].Eta())
-            sf_resolved2 = weightbtag(reader1, flav2, myJetP4[jj].Pt(), myJetP4[jj].Eta())
-            if nJets>2: sf_resolved3 = weightbtag(reader1, flav3, myJetP4[jk].Pt(), myJetP4[jk].Eta())
+            if nJets > 1:
+                flav2 = jetflav(myJetHadronFlavor[jj])
+                sf_resolved2 = weightbtag(reader1, flav2, myJetP4[jj].Pt(), myJetP4[jj].Eta())
+
+        # if SRnjetcond or WCond:
+        #     if sf_resolved1[0]==0.0:
+        #         sf_resolved1[0]=1.0
+        #     if sf_resolved2[0]==0.0:
+        #         sf_resolved2[0]=1.0
+        #     allweights = allweights * sf_resolved1[0]
 
 
-        if SR1njetcond:
+        if TopCond:
             if sf_resolved1[0]==0.0:
                 sf_resolved1[0]=1.0
+        #    if sf_resolved2[0]==0.0:
+        #        sf_resolved2[0]=1.0
             allweights = allweights * sf_resolved1[0]
-            if nJets>1:
-                if sf_resolved2[0]==0.0:
-                    sf_resolved2[0]=1.0
-                allweights = allweights * sf_resolved2[0]
-
-
-        if (SR2njetcond or WCond or TopCond):
-            if sf_resolved1[0]==0.0:
-                sf_resolved1[0]=1.0
-            if sf_resolved2[0]==0.0:
-                sf_resolved2[0]=1.0
-            allweights = allweights * sf_resolved1[0] * sf_resolved2[0]
-            if nJets>2:
-                if sf_resolved3[0]==0.0:
-                    sf_resolved3[0]=1.0
-                allweights = allweights * sf_resolved3[0]
 
 
 
@@ -2244,84 +1695,33 @@ def AnalyzeDataSet():
             allquantities.weight_ewkTop_down  =  allweights_ewkTop_down
 #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
-        #SR 1 Cutflow
-
-        # if keepevent:
-        #     if SR1_Cut3_trigstatus:
-        #         cutStatus['trig']+=allweights
-        #         cutStatusSR1['trig']+=allweights
-        #
-        #         if SR1_Cut8_pfMET:
-        #             cutStatus['MET']+=allweights
-        #             cutStatusSR1['MET']+=allweights
-        #
-        #             if SR2_Cut_CA15:
-        #                 cutStatus['CA15conds']+=allweights
-        #                 cutStatusSR2['CA15conds']+=allweights
-        #
-        #                 if SR1_Cut6_dPhi_jet_MET:
-        #                     cutStatus['dPhicond']+=allweights
-        #                     cutStatusSR1['dPhicond']+=allweights
-        #
-        #                     if SR1_Cut1_nJets:
-        #                         cutStatus['njets']+=allweights
-        #                         cutStatusSR1['njets']+=allweights
-        #
-        #                         if SR1_Cut2_nBjets:
-        #                             cutStatus['nbjets']+=allweights
-        #                             cutStatusSR1['nbjets']+=allweights
-        #
-        #                             if SR1_Cut4_jet1:
-        #                                 cutStatus['jet1']+=allweights
-        #                                 cutStatusSR1['jet1']+=allweights
-        #
-        #                                 if SR1_Cut5_jet2:
-        #                                     cutStatus['jet2/3']+=allweights
-        #                                     cutStatusSR1['jet2']+=allweights
-        #
-        #                                     if SR1_Cut7_nLep:
-        #                                         cutStatus['nlep']+=allweights
-        #                                         cutStatusSR1['nlep']+=allweights
-
         #SR2 Cutflow
 
-            if SR2_Cut3_trigstatus:
-                cutStatus['trig']+=allweights
-                cutStatusSR2['trig']+=allweights
+            if SR_Cut3_trigstatus:
+                cutStatusSR['trig']+=allweights
 
-                if SR2_Cut9_pfMET:
-                    cutStatus['MET']+=allweights
-                    cutStatusSR2['MET']+=allweights
+                if SR_Cut9_pfMET:
+                    cutStatusSR['MET']+=allweights
 
-                    if SR2ca15cond:
-                        CR2e2bCutFlow['CA15conds']+=allweights
+                    if SR_Cut_nFATJet:
+                        cutStatusSR['nFATJet']+=allweights
 
-                        if SR2_Cut7_dPhi_jet_MET:
-                            cutStatus['dPhicond']+=allweights
-                            cutStatusSR2['dPhicond']+=allweights
+                        # if UncleanedFatjet[selFatjet].Pt() >200.0:
+                        #     cutStatusSR['FatjetPT']+=allweights
+                        #
+                        #     if SDMass[selFatjet] > 100.0 and SDMass[selFatjet] < 150 :
+                        #         cutStatusSR['SDMass']+=allweights
 
-                            if SR2_Cut1_nJets:
-                                cutStatus['njets']+=allweights
-                                cutStatusSR2['njets']+=allweights
+                        if SR_Cut1_nJets:
+                            cutStatusSR['nJets']+=allweights
 
-                                if SR2_Cut2_nBjets:
-                                    cutStatus['nbjets']+=allweights
-                                    cutStatusSR2['nbjets']+=allweights
+                            if SR_Cut4_jet1:
+                                cutStatusSR['JetCond']+=allweights
 
-                                    if SR2_Cut4_jet1:
-                                        cutStatus['jet1']+=allweights
-                                        cutStatusSR2['jet1']+=allweights
-
-                                        if SR2_Cut5_jet2:
-                                            cutStatusSR2['jet2']+=allweights
-
-                                            if SR2_Cut6_jet3:
-                                                cutStatus['jet2/3']+=allweights
-                                                cutStatusSR2['jet3']+=allweights
-
-                                                if SR2_Cut8_nLep:
-                                                    cutStatus['nlep']+=allweights
-                                                    cutStatusSR2['nlep']+=allweights
+                                if SR_Cut8_nLep:
+                                    cutStatusSR['nlepCond']+=allweights
+                                    if N2DDT <0:
+                                        cutStatusSR['N2DDT']+=allweights
 
 
         # 2e cutflow
@@ -2331,389 +1731,258 @@ def AnalyzeDataSet():
 
 
         if EleCRtrigstatus:
-            CR2e1bCutFlow['trig']+=allweights
             CR2e2bCutFlow['trig']+=allweights
 
             if ZeeRecoil>200.:
-                CR2e1bCutFlow['recoil']+=allweights
                 CR2e2bCutFlow['recoil']+=allweights
 
                 if pfMet > 0.:
-                    CR2e1bCutFlow['realMET']+=allweights
                     CR2e2bCutFlow['realMET']+=allweights
 
-                    if ZeeMass>70. and ZeeMass<110.:
-                        CR2e1bCutFlow['mass']+=allweights
+                    if ZeeMass>60. and ZeeMass<120.:
                         CR2e2bCutFlow['mass']+=allweights
 
-                        if SR2ca15cond:
-                            CR2e2bCutFlow['CA15conds']+=allweights
+                        if SRFatjetcond:
+                            CR2e2bCutFlow['nFATJet']+=allweights
 
+                            # if UncleanedFatjet[selFatjet].Pt() >200.0:
+                            #     CR2e2bCutFlow['FatjetPT']+=allweights
+                            #
+                            #     if SDMass[selFatjet] > 100.0 and SDMass[selFatjet] < 150 :
+                            #         CR2e2bCutFlow['SDMass']+=allweights
 
-                            if ZdPhicond:
-                                CR2e1bCutFlow['dPhicond']+=allweights
-                                CR2e2bCutFlow['dPhicond']+=allweights
+                            if (nJets==0 or nJets ==1):
+                                CR2e2bCutFlow['nJets']+=allweights
 
-                                if nJets==1 or nJets==2:
-                                    CR2e1bCutFlow['njets']+=allweights
+                                if jetcond:
+                                    CR2e2bCutFlow['JetCond']+=allweights
+                    #CR2e2bCutFlow['nlepCond']+=allweights
+                                    if nEle==2 and nMu==0 and nTauTightElectron==0:
+                                        CR2e2bCutFlow['nlep']+=allweights
+                                        if myEles[0].Pt()>myEles[1].Pt():
+                                            iLeadLep=0
+                                            iSecondLep=1
+                                        else:
+                                            iLeadLep=1
+                                            iSecondLep=0
 
-                                    if nBjets==1:
-                                        CR2e1bCutFlow['nbjets']+=allweights
+                                        if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and myEleLooseID[iSecondLep]:
+                                            CR2e2bCutFlow['nlepCond']+=allweights
+                                            if N2DDT <0:
+                                                CR2e2bCutFlow['N2DDT']+=allweights
 
-                                        if jetcond:
-                                            CR2e1bCutFlow['jetconds']+=allweights
-
-                                            if nEle==2 and nMu==0:
-                                                CR2e1bCutFlow['nlep/npho']+=allweights
-                                                if myEles[0].Pt()>myEles[1].Pt():
-                                                    iLeadLep=0
-                                                    iSecondLep=1
-                                                else:
-                                                    iLeadLep=1
-                                                    iSecondLep=0
-
-                                                if myEles[iLeadLep].Pt() > 30. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and myEleLooseID[iSecondLep]:
-                                                    CR2e1bCutFlow['lepconds']+=allweights
-
-                                if nJets==2 or nJets==3:
-                                    CR2e2bCutFlow['njets']+=allweights
-
-                                    if nBjets==2:
-                                        CR2e2bCutFlow['nbjets']+=allweights
-                                        # if Higgsmass > 100 and Higgsmass < 150:
-                                        #     CR2e2bCutFlow['MbbCond']+=allweights
-
-                                        if jetcond and SR2jet2:
-                                            CR2e2bCutFlow['jetconds']+=allweights
-
-                                            if nEle==2 and nMu==0:
-                                                CR2e2bCutFlow['nlep/npho']+=allweights
-                                                if myEles[0].Pt()>myEles[1].Pt():
-                                                    iLeadLep=0
-                                                    iSecondLep=1
-                                                else:
-                                                    iLeadLep=1
-                                                    iSecondLep=0
-
-                                                if myEles[iLeadLep].Pt() > 30. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and myEleLooseID[iSecondLep]:
-                                                        CR2e2bCutFlow['lepconds']+=allweights
 
 
 
         if MuCRtrigstatus:
-            CR2mu1bCutFlow['trig']+=allweights
             CR2mu2bCutFlow['trig']+=allweights
 
             if ZmumuRecoil>200.:
-                CR2mu1bCutFlow['recoil']+=allweights
                 CR2mu2bCutFlow['recoil']+=allweights
 
                 if pfMet > 0.:
-                    CR2mu1bCutFlow['realMET']+=allweights
                     CR2mu2bCutFlow['realMET']+=allweights
 
-                    if ZmumuMass>70. and ZmumuMass<110.:
-                        CR2mu1bCutFlow['mass']+=allweights
+                    if ZmumuMass>60. and ZmumuMass<120.:
                         CR2mu2bCutFlow['mass']+=allweights
 
-                        if SR2ca15cond:
-                            CR2mu2bCutFlow['CA15conds']+=allweights
+                        if SRFatjetcond:
+                            CR2mu2bCutFlow['nFATJet']+=allweights
 
-                            if ZdPhicond:
-                                CR2mu1bCutFlow['dPhicond']+=allweights
-                                CR2mu2bCutFlow['dPhicond']+=allweights
+                            # if UncleanedFatjet[selFatjet].Pt() >200.0:
+                            #     CR2mu2bCutFlow['FatjetPT']+=allweights
+                            #
+                            #     if SDMass[selFatjet] > 100.0 and SDMass[selFatjet] < 150 :
+                            #         CR2mu2bCutFlow['SDMass']+=allweights
 
+                            if WCond:
+                                CR2mu2bCutFlow['nJets']+=allweights
 
-                                if nJets==1 or nJets==2:
-                                    CR2mu1bCutFlow['njets']+=allweights
+                                if jetcond:
+                                    CR2mu2bCutFlow['JetCond']+=allweights
 
-                                    if nBjets==1:
-                                        CR2mu1bCutFlow['nbjets']+=allweights
+                                    if nMu==2 and nEle==0 and nTauTightMuon==0:
+                                        CR2mu2bCutFlow['nlep']+=allweights
+                                        if myMuos[0].Pt()>myMuos[1].Pt():
+                                            iLeadLep=0
+                                            iSecondLep=1
+                                        else:
+                                            iLeadLep=1
+                                            iSecondLep=0
 
-                                        if jetcond:
-                                            CR2mu1bCutFlow['jetconds']+=allweights
+                                        if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
+                                            CR2mu2bCutFlow['nlepCond']+=allweights
+                                            if N2DDT <0:
+                                                CR2mu2bCutFlow['N2DDT']+=allweights
 
-                                            if nMu==2 and nEle==0:
-                                                CR2mu1bCutFlow['nlep/npho']+=allweights
-                                                if myMuos[0].Pt()>myMuos[1].Pt():
-                                                    iLeadLep=0
-                                                    iSecondLep=1
-                                                else:
-                                                    iLeadLep=1
-                                                    iSecondLep=0
-
-                                                if myMuos[iLeadLep].Pt() > 30. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
-                                                    CR2mu1bCutFlow['lepconds']+=allweights
-
-                                if nJets==2 or nJets==3:
-                                    CR2mu2bCutFlow['njets']+=allweights
-
-                                    if nBjets==2:
-                                        CR2mu2bCutFlow['nbjets']+=allweights
-                                        # if Higgsmass > 100 and Higgsmass < 150:
-                                        #     CR2mu2bCutFlow['MbbCond']+=allweights
-
-                                        if jetcond and SR2jet2:
-                                            CR2mu2bCutFlow['jetconds']+=allweights
-
-                                            if nMu==2 and nEle==0:
-                                                CR2mu2bCutFlow['nlep/npho']+=allweights
-                                                if myMuos[0].Pt()>myMuos[1].Pt():
-                                                    iLeadLep=0
-                                                    iSecondLep=1
-                                                else:
-                                                    iLeadLep=1
-                                                    iSecondLep=0
-
-                                                if myMuos[iLeadLep].Pt() > 30. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
-                                                    CR2mu2bCutFlow['lepconds']+=allweights
-#WCR cutflow
 
         if EleCRtrigstatus:
-            #CR1e1bCutFlow['trig']+=allweights
             CR1e2bWCutFlow['trig']+=allweights
 
             if WenuRecoil>200.:
-                #CR1e1bCutFlow['recoil']+=allweights
                 CR1e2bWCutFlow['recoil']+=allweights
 
                 if pfMet > 50.:
-                    #CR1e1bCutFlow['realMET']+=allweights
                     CR1e2bWCutFlow['realMET']+=allweights
 
-                    if Wenumass>50. and  Wenumass<160.:
-
-                    #if True:
-                        #CR1e1bCutFlow['mass']+=allweights
+                    if Wenumass>0:
                         CR1e2bWCutFlow['mass']+=allweights
 
-                        if SR2ca15cond:
-                            CR1e2bWCutFlow['CA15conds']+=allweights
+                        if SRFatjetcond:
+                            CR1e2bWCutFlow['nFATJet']+=allweights
 
+                            # if UncleanedFatjet[selFatjet].Pt() >200.0:
+                            #     CR1e2bWCutFlow['FatjetPT']+=allweights
+                            #
+                            #     if SDMass[selFatjet] > 100.0 and SDMass[selFatjet] < 150 :
+                            #         CR1e2bWCutFlow['SDMass']+=allweights
 
-                            if WdPhicond:
-                                #CR1e1bCutFlow['dPhicond']+=allweights
-                                CR1e2bWCutFlow['dPhicond']+=allweights
+                            if WCond:
+                                CR1e2bWCutFlow['nJets']+=allweights
 
-                                if nJets==2:
-                                    CR1e2bWCutFlow['njets']+=allweights
+                                if jetcond:
+                                    CR1e2bWCutFlow['JetCond']+=allweights
 
-                                    if nBjets==2:
-                                        CR1e2bWCutFlow['nbjets']+=allweights
-                                        #
-                                        # if Higgsmass > 100 and Higgsmass < 150:
-                                        #     CR1e2bWCutFlow['MbbCond']+=allweights
+                                    if nEle==1 and nMu==0 and nTauTightElectron==0:
+                                        CR1e2bWCutFlow['nlep']+=allweights
 
-                                        if jetcond and SR2jet2:
-                                            CR1e2bWCutFlow['jetconds']+=allweights
-
-                                            if nEle==1 and nMu==0:
-                                                CR1e2bWCutFlow['nlep/npho']+=allweights
-
-                                                if myEles[0].Pt() > 30. and myEleTightID[0]:
-                                                    CR1e2bWCutFlow['lepconds']+=allweights
-
+                                        if myEles[0].Pt() > 40. and myEleTightID[0]:
+                                            CR1e2bWCutFlow['nlepCond']+=allweights
+                                            if N2DDT <0:
+                                                CR1e2bWCutFlow['N2DDT']+=allweights
 
 
   #Cutflow
         if MuCRtrigstatus:
-            # CR1mu1bCutFlow['trig']+=allweights
             CR1mu2bWCutFlow['trig']+=allweights
 
             if WmunuRecoil>200.:
-                #CR1mu1bCutFlow['recoil']+=allweights
                 CR1mu2bWCutFlow['recoil']+=allweights
 
                 if pfMet > 50.:
-                    #CR1mu1bCutFlow['realMET']+=allweights
                     CR1mu2bWCutFlow['realMET']+=allweights
 
-                    if Wmunumass>50. and Wmunumass<160.:
-                    #if True:
-                        #CR1mu1bCutFlow['mass']+=allweights
+                    if Wmunumass>0.:
                         CR1mu2bWCutFlow['mass']+=allweights
 
-                        if SR2ca15cond:
-                            CR1mu2bWCutFlow['CA15conds']+=allweights
+                        if SRFatjetcond:
+                            CR1mu2bWCutFlow['nFATJet']+=allweights
+
+                            # if UncleanedFatjet[selFatjet].Pt() >200.0:
+                            #     CR1mu2bWCutFlow['FatjetPT']+=allweights
+                            #
+                            #     if SDMass[selFatjet] > 100.0 and SDMass[selFatjet] < 150 :
+                            #         CR1mu2bWCutFlow['SDMass']+=allweights
+
+                            if (nJets==0 or nJets ==1):
+                                CR1mu2bWCutFlow['nJets']+=allweights
+
+                                if jetcond:
+                                    CR1mu2bWCutFlow['JetCond']+=allweights
 
 
-                            if WdPhicond:
-                                #CR1mu1bCutFlow['dPhicond']+=allweights
-                                CR1mu2bWCutFlow['dPhicond']+=allweights
+                                    if nEle==0 and nMu==1 and nTauTightMuon==0:
+                                        CR1mu2bWCutFlow['nlep']+=allweights
 
-                                if nJets==2:
-                                    CR1mu2bWCutFlow['njets']+=allweights
+                                        if myMuos[0].Pt() > 30. and myMuTightID[0] and myMuIso[0]<0.15:
+                                            CR1mu2bWCutFlow['nlepCond']+=allweights
+                                            if N2DDT <0:
+                                                CR1mu2bWCutFlow['N2DDT']+=allweights
 
-                                    if nBjets==2:
-                                        CR1mu2bWCutFlow['nbjets']+=allweights
-                                        # if Higgsmass > 100 and Higgsmass < 150:
-                                        #     CR1mu2bWCutFlow['MbbCond']+=allweights
-
-                                        if jetcond and SR2jet2:
-                                            CR1mu2bWCutFlow['jetconds']+=allweights
-
-                                            if nEle==0 and nMu==1:
-                                                CR1mu2bWCutFlow['nlep/npho']+=allweights
-
-                                                if myMuos[0].Pt() > 30. and myMuTightID[0]:
-                                                    CR1mu2bWCutFlow['lepconds']+=allweights
-
-
-#TOPCR
 
 
         if EleCRtrigstatus:
-            #CR1e1bCutFlow['trig']+=allweights
             CR1e2bTCutFlow['trig']+=allweights
 
             if WenuRecoil>200.:
-                #CR1e1bCutFlow['recoil']+=allweights
                 CR1e2bTCutFlow['recoil']+=allweights
 
                 if pfMet > 50.:
-                    #CR1e1bCutFlow['realMET']+=allweights
                     CR1e2bTCutFlow['realMET']+=allweights
 
-                    if Wenumass>50. and  Wenumass<160.:
-
-                    #if True:
-                        #CR1e1bCutFlow['mass']+=allweights
+                    if Wenumass>0.:
                         CR1e2bTCutFlow['mass']+=allweights
 
-                        if SR2ca15cond:
-                            CR1e2bTCutFlow['CA15conds']+=allweights
+                        if SRFatjetcond:
+                            CR1e2bTCutFlow['nFATJet']+=allweights
 
-                            if WdPhicond:
-                                #CR1e1bCutFlow['dPhicond']+=allweights
-                                CR1e2bTCutFlow['dPhicond']+=allweights
+                            # if UncleanedFatjet[selFatjet].Pt() >200.0:
+                            #     CR1e2bTCutFlow['FatjetPT']+=allweights
+                            #
+                            #     if SDMass[selFatjet] > 100.0 and SDMass[selFatjet] < 150 :
+                            #         CR1e2bTCutFlow['SDMass']+=allweights
 
-                                if nJets >2:
-                                    CR1e2bTCutFlow['njets']+=allweights
+                            if TopCond:
+                                CR1e2bTCutFlow['nJets']+=allweights
 
-                                    if nBjets==2:
-                                        CR1e2bTCutFlow['nbjets']+=allweights
-                                        if Higgsmass > 100 and Higgsmass < 150:
-                                            CR1e2bTCutFlow['MbbCond']+=allweights
+                                if jetcond:
+                                    CR1e2bTCutFlow['JetCond']+=allweights
 
-                                            if jetcond and SR2jet2:
-                                                CR1e2bTCutFlow['jetconds']+=allweights
+                                    if nEle==1 and nMu==0 and nTauTightElectron==0:
+                                        CR1e2bTCutFlow['nlep']+=allweights
 
-                                                if nEle==1 and nMu==0:
-                                                    CR1e2bTCutFlow['nlep/npho']+=allweights
-
-                                                    if myEles[0].Pt() > 30. and myEleTightID[0]:
-                                                        CR1e2bTCutFlow['lepconds']+=allweights
+                                        if myEles[0].Pt() > 40. and myEleTightID[0]:
+                                            CR1e2bTCutFlow['nlepCond']+=allweights
+                                            if N2DDT <0:
+                                                CR1e2bTCutFlow['N2DDT']+=allweights
 
 
 
   #Cutflow
         if MuCRtrigstatus:
-            # CR1mu1bCutFlow['trig']+=allweights
             CR1mu2bTCutFlow['trig']+=allweights
 
             if WmunuRecoil>200.:
-                #CR1mu1bCutFlow['recoil']+=allweights
                 CR1mu2bTCutFlow['recoil']+=allweights
 
                 if pfMet > 50.:
-                    #CR1mu1bCutFlow['realMET']+=allweights
                     CR1mu2bTCutFlow['realMET']+=allweights
 
-                    if Wmunumass>50. and Wmunumass<160.:
-                    #if True:
-                        #CR1mu1bCutFlow['mass']+=allweights
+                    if Wmunumass>0.:
                         CR1mu2bTCutFlow['mass']+=allweights
 
-                        if SR2ca15cond:
-                            CR1mu2bTCutFlow['CA15conds']+=allweights
+                        if SRFatjetcond:
+                            CR1mu2bTCutFlow['nFATJet']+=allweights
 
+                            # if UncleanedFatjet[selFatjet].Pt() >200.0:
+                            #     CR1mu2bTCutFlow['FatjetPT']+=allweights
+                            #
+                            #     if SDMass[selFatjet] > 100.0 and SDMass[selFatjet] < 150 :
+                            #         CR1mu2bTCutFlow['SDMass']+=allweights
 
-                            if WdPhicond:
-                                #CR1mu1bCutFlow['dPhicond']+=allweights
-                                CR1mu2bTCutFlow['dPhicond']+=allweights
+                            if TopCond:
+                                CR1mu2bTCutFlow['nJets']+=allweights
 
-                                if nJets>2:
-                                    CR1mu2bTCutFlow['njets']+=allweights
+                                if jetcond:
+                                    CR1mu2bTCutFlow['JetCond']+=allweights
 
-                                    if nBjets==2:
-                                        CR1mu2bTCutFlow['nbjets']+=allweights
-                                        if Higgsmass > 100 and Higgsmass < 150:
-                                            CR1mu2bTCutFlow['MbbCond']+=allweights
+                                    if nEle==0 and nMu==1 and nTauTightMuon==0:
+                                        CR1mu2bTCutFlow['nlep']+=allweights
 
-                                            if jetcond and SR2jet2:
-                                                CR1mu2bTCutFlow['jetconds']+=allweights
+                                        if myMuos[0].Pt() > 20. and myMuTightID[0] and myMuIso[0]<0.15:
+                                            CR1mu2bTCutFlow['nlepCond']+=allweights
+                                            if N2DDT <0:
+                                                CR1mu2bTCutFlow['N2DDT']+=allweights
 
-                                                if nEle==0 and nMu==1:
-                                                    CR1mu2bTCutFlow['nlep/npho']+=allweights
-
-                                                    if myMuos[0].Pt() > 30. and myMuTightID[0]:
-                                                        CR1mu2bTCutFlow['lepconds']+=allweights
-
-        if QCD2b_Cut3_trigstatus:
-            CRQCD2bCutFlow['trig']+=allweights
-
-            if QCD2b_Cut9_pfMET:
-                CRQCD2bCutFlow['recoil']+=allweights
-
-                if QCD2b_Cut_CA15:
-                    CRQCD2bCutFlow['CA15conds']+=allweights
-
-                    if QCD2b_Cut7_dPhi_jet_MET:
-                        CRQCD2bCutFlow['dPhicond']+=allweights
-
-                        if QCD2b_Cut1_nJets:
-                            CRQCD2bCutFlow['njets']+=allweights
-
-                            if QCD2b_Cut2_nBjets:
-                                CRQCD2bCutFlow['nbjets']+=allweights
-
-                                if QCD2b_Cut4_jet1:
-                                    if QCD2b_Cut5_jet2:
-                                        if QCD2b_Cut6_jet3:
-                                            CRQCD2bCutFlow['jetconds']+=allweights
-
-                                            if QCD2b_Cut8_nLep:
-                                                CRQCD2bCutFlow['nlep/npho']+=allweights
-                                                CRQCD2bCutFlow['lepconds']+=allweights
- # ---
+ # # ---
         #CR Summary
-        # if isZeeCR1:
-        #     CRSummary['2e1b']+=allweights
-        #     CRSummaryEle['2e1b']+=allweights
-        if isZeeCR2:
-            CRSummary['2e2b']+=allweights
+        if isZeeCR:
             CRSummaryEle['2e2b']+=allweights
-        # if isZmumuCR1:
-        #     CRSummary['2#mu1b']+=allweights
-        #     CRSummaryMu['2#mu1b']+=allweights
-        if isZmumuCR2:
-            CRSummary['2#mu2b']+=allweights
+
+        if isZmumuCR:
             CRSummaryMu['2#mu2b']+=allweights
-        #
-        # if isWenuCR1:
-        #     CRSummary['1e1b']+=allweights
-        #     CRSummaryEle['1e1b']+=allweights
+
         if isWenuCR2W:
-            CRSummary['1e2bW']+=allweights
             CRSummaryEle['1e2bW']+=allweights
+
         if isWenuCR2T:
-            CRSummary['1e2bT']+=allweights
             CRSummaryEle['1e2bT']+=allweights
-        # if isWmunuCR1:
-        #     CRSummary['1#mu1b']+=allweights
-        #     CRSummaryMu['1#mu1b']+=allweights
+
         if isWmunuCR2W:
-            CRSummary['1#mu2bW']+=allweights
             CRSummaryMu['1#mu2bW']+=allweights
+
         if isWmunuCR2T:
-            CRSummary['1#mu2bT']+=allweights
             CRSummaryMu['1#mu2bT']+=allweights
-        # if isTopCR1:
-        #     CRSummary['1#mu1e1b']+=allweights
-        #     CRSummaryMu['1#mu1e1b']+=allweights
-        if isTopCR2:
-            CRSummary['1#mu1e2b']+=allweights
-            CRSummaryMu['1#mu1e2b']+=allweights
 
 
  #--------------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2725,33 +1994,33 @@ def AnalyzeDataSet():
         allquantities.N_b             = nBjets
         allquantities.N_j             = nJets
         allquantities.weight          = allweights
-        allquantities.weight_NoPU     = allweights_noPU
-        allquantities.weight_met_up   = allweights_metTrig_up
-        allquantities.weight_met_down = allweights_metTrig_down
+        # allquantities.weight_NoPU     = allweights_noPU
+        # allquantities.weight_met_up   = allweights_metTrig_up
+        # allquantities.weight_met_down = allweights_metTrig_down
         allquantities.totalevents     = 1
 
         btag_sysnum=0
-        for btag_sysnum in[1,2]:
-            allweights = temp_weight_withOutBtag
-            # if SR1njetcond:
-            #     if sf_resolved1[btag_sysnum]==0.0: sf_resolved1[btag_sysnum]=1.0
-            #     allweights = allweights*sf_resolved1[btag_sysnum]
-            #     if nJets>1:
-            #         if sf_resolved2[btag_sysnum]==0.0: sf_resolved2[btag_sysnum]=1.0
-            #         allweights = allweights *sf_resolved2[btag_sysnum]
-            if SR2njetcond:
-                if sf_resolved1[btag_sysnum]==0.0: sf_resolved1[btag_sysnum]=1.0
-                if sf_resolved2[btag_sysnum]==0.0: sf_resolved2[btag_sysnum]=1.0
-                allweights = allweights * sf_resolved1[btag_sysnum] * sf_resolved2[btag_sysnum]
-                if nJets>2:
-                    if sf_resolved3[btag_sysnum]==0.0: sf_resolved3[btag_sysnum]=1.0
-                    allweights = allweights * sf_resolved3[btag_sysnum]
-#                print 'btag central weight', temp_original_weight
-                if btag_sysnum==2:
-                    allquantities.weight_btag_up = allweights
-#                    print 'btag up weight', allweights
-                if btag_sysnum==1:
-                    allquantities.weight_btag_down = allweights
+#         for btag_sysnum in[1,2]:
+#             allweights = temp_weight_withOutBtag
+#             # if SR1njetcond:
+#             #     if sf_resolved1[btag_sysnum]==0.0: sf_resolved1[btag_sysnum]=1.0
+#             #     allweights = allweights*sf_resolved1[btag_sysnum]
+#             #     if nJets>1:
+#             #         if sf_resolved2[btag_sysnum]==0.0: sf_resolved2[btag_sysnum]=1.0
+#             #         allweights = allweights *sf_resolved2[btag_sysnum]
+#             if TopCond:
+#                 if sf_resolved1[btag_sysnum]==0.0: sf_resolved1[btag_sysnum]=1.0
+#                 # if sf_resolved2[btag_sysnum]==0.0: sf_resolved2[btag_sysnum]=1.0
+#                 allweights = allweights * sf_resolved1[btag_sysnum] * sf_resolved2[btag_sysnum]
+#                 if nJets>2:
+#                     if sf_resolved3[btag_sysnum]==0.0: sf_resolved3[btag_sysnum]=1.0
+#                     allweights = allweights * sf_resolved3[btag_sysnum]
+# #                print 'btag central weight', temp_original_weight
+#                 if btag_sysnum==2:
+#                     allquantities.weight_btag_up = allweights
+# #                    print 'btag up weight', allweights
+#                 if btag_sysnum==1:
+#                     allquantities.weight_btag_down = allweights
 #                    print 'btag down weight', allweights
         allweights = temp_weight_withBtag
         muweights_systUP = muonTrig_SF_systUP * muIDSF_loose_systUP * muIDSF_tight_systUP * muIsoSF_loose_systUP * muIsoSF_tight_systUP * muTracking_SF_systUP
@@ -2770,15 +2039,9 @@ def AnalyzeDataSet():
 #                print 'muweights_systDOWN, eleweights_systDOWN',muweights_systDOWN,eleweights_systDOWN
         allweights = allweights * muweights_systUP * eleweights_systUP
         allquantities.weight_lep_up = allweights
-#        if abs(allweights-temp_weight_withBtag) > 0.001:
-#            print 'lep up value', allweights
         allweights = temp_weight_withBtag
-#        if abs(allweights-temp_weight_withBtag) > 0.001:
-#            print 'lep central weight', allweights
         allweights = allweights * muweights_systDOWN * eleweights_systDOWN
         allquantities.weight_lep_down = allweights
-#        if abs(allweights-temp_weight_withBtag) > 0.001:
-#            print 'lep down value', allweights
 
         nPV = myJetNPV
 
@@ -2786,16 +2049,16 @@ def AnalyzeDataSet():
         allquantities.noPuReweightPV = nPV
 
         if nMu==2 and nEle==0 and MuCRtrigstatus:
-            allquantities.mu_PuReweightPV = nPV
+            allquantities.mu_PuReweightPV = nPV*puweight
             allquantities.mu_noPuReweightPV = nPV
 
         if nEle==2 and nMu==0 and EleCRtrigstatus:
-            allquantities.ele_PuReweightPV = nPV
+            allquantities.ele_PuReweightPV = nPV*puweight
             allquantities.ele_noPuReweightPV = nPV
-
-        if nPho==1 and nEle==0 and nMu==0 and PhotonCRtrigstatus:
-            allquantities.pho_PuReweightPV = nPV
-            allquantities.pho_noPuReweightPV = nPV
+        #
+        # if nPho==1 and nEle==0 and nMu==0 and PhotonCRtrigstatus:
+        #     allquantities.pho_PuReweightPV = nPV
+        #     allquantities.pho_noPuReweightPV = nPV
 
         #print (allquantities.regime, allquantities.met,allquantities.mass )
         allquantities.FillRegionHisto()
@@ -2804,9 +2067,9 @@ def AnalyzeDataSet():
     #print cutStatus
     NEntries_Weight = h_t_weight.Integral()
     NEntries_total  = h_t.Integral()
-    cutStatus['total'] = int(NEntries_total)
-    cutStatusSR1['total'] = int(NEntries_total)
-    cutStatusSR2['total'] = int(NEntries_total)
+    # cutStatus['total'] = int(NEntries_total)
+    # cutStatusSR1['total'] = int(NEntries_total)
+    cutStatusSR['total'] = int(NEntries_total)
 
     for CRreg in regionnames:
         exec("CR"+CRreg+"CutFlow['total']=int(NEntries_total)")
@@ -2823,46 +2086,46 @@ def AnalyzeDataSet():
     cutflowHeader=""
     cutflowvalues=[]
     #cutflownames=['total','preselection','pfmet','njet+nBjet','jet1','jet2/3','lep']
-    for cutflowname in cutflownames:
-        cutflowvalues.append(cutStatus[cutflowname])
-        cutflowTable += str(cutStatus[cutflowname])+" "
-        cutflowHeader += cutflowname+" "
+    # for cutflowname in cutflownames:
+    #     cutflowvalues.append(cutStatus[cutflowname])
+    #     cutflowTable += str(cutStatus[cutflowname])+" "
+    #     cutflowHeader += cutflowname+" "
 
-    cutflowvaluesSR1=[]
+    cutflowvaluesSR=[]
     #cutflownamesSR1=['total','preselection','pfmet','njet+nBjet','jet1','jet2','lep']
-    for cutflowname in cutflownamesSR1:
-        cutflowvaluesSR1.append(cutStatusSR1[cutflowname])
+    # for cutflowname in cutflownamesSR1:
+    #     cutflowvaluesSR1.append(cutStatusSR1[cutflowname])
 
-    cutflowvaluesSR2=[]
+    cutflowvaluesSR=[]
     #cutflownamesSR2=['total','preselection','pfmet','njet+nBjet','jet1','jet2','jet3','lep']
-    for cutflowname in cutflownamesSR2:
-        cutflowvaluesSR2.append(cutStatusSR2[cutflowname])
+    for cutflowname in cutflownamesSR:
+        cutflowvaluesSR.append(cutStatusSR[cutflowname])
 
     # CR counts
     CRTable=""
     CRHeader=""
     CRvalues=[]
-    for CRname in CRs:
-        CRvalues.append(CRStatus[CRname])
-        CRTable += str(CRStatus[CRname])+" "
-        CRHeader += CRname+" "
+    # for CRname in CRs:
+    #     CRvalues.append(CRStatus[CRname])
+    #     CRTable += str(CRStatus[CRname])+" "
+    #     CRHeader += CRname+" "
 
     #Cutflows for SR1 and SR2
     print "\nCutflow:"
-    print cutStatus
+    # print cutStatus
+    # print
+    # print "SR1:"
+    # print cutStatusSR1
     print
-    print "SR1:"
-    print cutStatusSR1
-    print
-    print "SR2:"
-    print cutStatusSR2
+    print "SR:"
+    print cutStatusSR
     #print
     #print "CRs:"
     #print CRStatus
 #    print
 #    print "CR Cutflow:"
 #    print CRCutFlow
-    print
+    # print
 
     CRcutflowvaluesSet=[]
     CRcutnames=['total','preselection']+CRcutnames
@@ -2872,9 +2135,9 @@ def AnalyzeDataSet():
             exec("CFvalues.append(CR"+CRreg+"CutFlow['"+cutname+"'])")
         CRcutflowvaluesSet.append(CFvalues)
 
-    print CRSummary
+    # print CRSummary
 
-    allquantities.WriteHisto((NEntries_total,NEntries_Weight,npass,cutflowvalues,cutflownames,cutflowvaluesSR1,cutflownamesSR1, cutflowvaluesSR2,cutflownamesSR2,CRvalues,CRs,regionnames,CRcutnames,CRcutflowvaluesSet, CRSummary,regNames, CRSummaryMu,regNamesMu, CRSummaryEle,regNamesEle))
+    allquantities.WriteHisto((NEntries_total,NEntries_Weight,npass,cutflowvaluesSR,cutflownamesSR,CRvalues,CRs,regionnames,CRcutnames,CRcutflowvaluesSet,CRSummaryMu,regNamesMu, CRSummaryEle,regNamesEle))
 
     if NEntries > 0:
         eff=round(float(npass/float(NEntries_total)),5)

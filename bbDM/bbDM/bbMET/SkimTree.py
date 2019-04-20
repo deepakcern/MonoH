@@ -590,7 +590,7 @@ def AnalyzeDataSet():
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         filterstatus = False
-        filter1 = False; filter2 = False;filter3 = False;filter4 = False; filter5 = False; filter6 = False
+        filter1 = False; filter2 = False;filter3 = False;filter4 = False; filter5 = False; filter6 = False; filter7=False
         ifilter_=0
         filter1 = CheckFilter(filterName, filterResult, 'Flag_HBHENoiseFilter')
         filter2 = CheckFilter(filterName, filterResult, 'Flag_HBHENoiseIsoFilter')

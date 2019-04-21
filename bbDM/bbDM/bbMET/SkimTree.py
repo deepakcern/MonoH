@@ -676,7 +676,7 @@ def AnalyzeDataSet():
             if thindeepCSVJetLooseID==None:
                 deepCSVJetLooseID=True
             else:
-                deepCSVJetLooseID=bool(passThinJetLooseID[jthinjet])
+                deepCSVJetLooseID=bool(thindeepCSVJetLooseID[jthinjet])
 
             if (j1.Pt() > 30.0)&(abs(j1.Eta())<4.5) and deepCSVJetLooseID: #  &(bool(passThinJetLooseID[jthinjet])==True):
                 thindCSVjetpassindex.append(jthinjet)

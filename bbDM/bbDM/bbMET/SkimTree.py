@@ -604,7 +604,7 @@ def AnalyzeDataSet():
         if not isData:
             filterstatus = True
         if isData:
-            filterstatus =  filter1 & filter2 & filter3 & filter4 & filter5 & filter6 & filter7
+            filterstatus =  filter1 & filter2 & filter3 & filter4 & filter5 & filter6 #& filter7
         if filterstatus == False: continue
 
 

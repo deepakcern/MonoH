@@ -61,6 +61,8 @@ The SkimTree outputs (Skimmed Trees) are saved to the location that was specifie
 Clone this repository in a location from where HTCondor jobs can be submitted (```user@login.uscms.org``` for example). We shall refer to this location as the working directory for this section.
 
 ```
+cmsrel CMSSW_8_0_26_patch1
+cd CMSSW_8_0_26_patch1/src
 git clone https://github.com/deepakcern/MonoH.git
 git checkout monoH_boosted
 cd MonoH/bbDM/bbMET

@@ -50,7 +50,7 @@ python SkimTree.py root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/bbMET
     ```
 7. To monitor status of jobs, use `condor_q username`.
 
-### 2.2.2. Outputs (`Location: /afs/cern.ch/work/d/dekumar/public/monoH/Filelists/2016_Ntuples`)
+### 2.2.2. Outputs (```Location: /afs/cern.ch/work/d/dekumar/public/monoH/Filelists/2016_Ntuples```)
 
 The SkimTree outputs (Skimmed Trees) are saved to the location that was specified in the `runAnalysis.sh` file. These will be used while running BranchReader (next section).
 

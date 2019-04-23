@@ -10,7 +10,8 @@ First step is to generate ntuples.
 
 1.Follow instructions from https://github.com/deepakcern/DMAnaRun2/tree/80X_puppi+deepCSV (only 80X_puppi+deepCSV branch) to setup DelPanj within CMSSW.
 
-# 2. Run SkimTree (Ntuples Location: /afs/cern.ch/work/d/dekumar/public/monoH/Filelists/2016_Ntuples)
+# 2. Run SkimTree 
+####(Ntuples Location: /afs/cern.ch/work/d/dekumar/public/monoH/Filelists/2016_Ntuples)
 
 Clone this repository in a location from where HTCondor jobs can be submitted (```login.uscms.org``` for example). We shall refer to this location as the working directory for this section.
 ```

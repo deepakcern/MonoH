@@ -51,13 +51,16 @@ python SkimTree.py root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/bbMET
     ```
 7. To monitor status of jobs, use `condor_q username`.
 
-### 2.2.2. Outputs [New root files location:/afs/cern.ch/work/d/dekumar/public/monoH/Filelists/NewSkimmed ]
+### 2.2.2. Outputs 
+
 
 The SkimTree outputs (Skimmed Trees) are saved to the location that was specified in the `runAnalysis.sh` file. These will be used while running BranchReader (next section).
 
 **(SkimTree jobs for all data and background may take upto 1 day to finish.)**
 
 # 3. Run BranchReader
+
+#### Note: [New location of input filelists:/afs/cern.ch/work/d/dekumar/public/monoH/Filelists/NewSkimmed ]
 
 Clone this repository in a location from where HTCondor jobs can be submitted (```user@login.uscms.org``` for example). We shall refer to this location as the working directory for this section.
 

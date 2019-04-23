@@ -28,7 +28,7 @@ python SkimTree.py path_to_ntuple_file
 ```
 ##### Example:
 ```bash
-python SkimTree.py root://se01.indiacms.res.in:1094//dpm/indiacms.res.in/home/cms/store/user/zabai/t3store2/bbDM_bkg/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8/WJetsToLNu_HT-100To200_TuneCUETP8M1_13TeV-madgraphMLM-pythia8_MC25ns_LegacyMC_20170328/180202_114154/0001/NCUGlobalTuples_1009.root
+python SkimTree.py root://eoscms.cern.ch//eos/cms/store/group/phys_exotica/bbMET/monoHbb_data12042019/monoH_2016data_20190412/SingleElectron/SingleElectron-Run2016H-03Feb2017_ver3-v1/190412_050220/0000/NCUGlobalTuples_9.root
 ```
 ## 2.2. Running on HTCondor
 

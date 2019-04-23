@@ -18,6 +18,7 @@ cmsrel CMSSW_8_0_26_patch1
 cd CMSSW_8_0_26_patch1/src
 git clone https://github.com/deepakcern/MonoH.git
 git checkout monoH_boosted
+cd monoH/bbDM/bbMET
 ```
 ## 2.1. Running Locally
 

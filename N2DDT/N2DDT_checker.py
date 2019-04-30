@@ -218,11 +218,11 @@ def AnalyzeDataSet():
                     print ("N2 variable:   ", CA15PuppiECF_2_3_10[i]/(CA15PuppiECF_1_2_10[i])**2)
  		    try:
                 	N2=CA15PuppiECF_2_3_10[i]/(CA15PuppiECF_1_2_10[i])**2
-                        N2DDT=N2-0.24
+                        #N2DDT=N2-0.24
                         #h_N2.Fill(N2,Weight)
 			myN2.append(N2)
 		    except Exception as e:
-                        N2DDT=99999
+                        #N2DDT=99999
                         continue
 
 	if len(myN2)!=1: continue

@@ -82,6 +82,8 @@ python bbMETBranchReader.py -a -i path_to_skimmed_tree -D . --csv
 ```bash
 python bbMETBranchReader.py -a -F -i input.txt -D . --csv
 ```
+Note: Initiate your voms-proxy using voms-proxy-init --voms cms --valid 192:00
+
 ## 3.2. Running on HTCondor
 
 ***The number of BranchReader jobs can be adjusted by combining suitable number of input files in the Farmout mode.***

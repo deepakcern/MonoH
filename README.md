@@ -92,7 +92,7 @@ Note: Initiate your voms-proxy using voms-proxy-init --voms cms --valid 192:00
 Proxy_filename = x509up
 Proxy_path = /afs/cern.ch/user/d/dekumar/private/$(Proxy_filename)
 ```
-add open `.bashrc` file and add:
+and open `.bashrc` file and add:
 ```
 alias voms='voms-proxy-init --voms cms --valid 192:00 && cp -v /tmp/x509up_u104803 /afs/cern.ch/user/d/dekumar/private/x509up'
 ```

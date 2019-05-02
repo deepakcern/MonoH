@@ -784,7 +784,7 @@ def AnalyzeDataSet():
             else:
                 N2=(CA15PuppiECF_2_3_10[ca15jet])/((CA15PuppiECF_1_2_10[ca15jet])**2)
                 myCA15_N2.append(N2)
-                myCA15_N2DDT.append(N2-0.113)
+                myCA15_N2DDT.append(N2-0.25)
 
 
 

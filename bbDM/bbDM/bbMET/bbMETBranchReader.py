@@ -428,7 +428,7 @@ def AnalyzeDataSet():
             AK8nthikJets               = skimmedTree.__getattr__('st_AK8nthikJets')
             AK8thikjetP4               = skimmedTree.__getattr__('st_AK8thikjetP4')
             AK8SDmass                  = skimmedTree.__getattr__('st_AK8SDmass')
-            AK8PuppisubjetCSV          = skimmedTree.__getattr__('st_AK8PuppisubjetCSV')
+#            AK8PuppisubjetCSV          = skimmedTree.__getattr__('st_AK8PuppisubjetCSV')
 
             #CA15jets
             CA15njets                 = skimmedTree.__getattr__('st_CA15njets')
@@ -464,19 +464,19 @@ def AnalyzeDataSet():
 
             nPho                       = skimmedTree.__getattr__('st_nPho')
             phoP4                      = skimmedTree.__getattr__('st_phoP4')
-            phoIsPassLoose             = skimmedTree.__getattr__('st_phoIsPassLoose')
+            #phoIsPassLoose             = skimmedTree.__getattr__('st_phoIsPassLoose')
             phoIsPassMedium            = skimmedTree.__getattr__('st_phoIsPassMedium')
             phoIsPassTight             = skimmedTree.__getattr__('st_phoIsPassTight')
 
             nEle                       = skimmedTree.__getattr__('st_nEle')
             eleP4                      = skimmedTree.__getattr__('st_eleP4')
-            eleIsPassLoose             = skimmedTree.__getattr__('st_eleIsPassLoose')
+            #eleIsPassLoose             = skimmedTree.__getattr__('st_eleIsPassLoose')
             eleIsPassMedium            = skimmedTree.__getattr__('st_eleIsPassMedium')
             eleIsPassTight             = skimmedTree.__getattr__('st_eleIsPassTight')
 
             nMu                        = skimmedTree.__getattr__('st_nMu')
             muP4                       = skimmedTree.__getattr__('st_muP4')
-            isLooseMuon                = skimmedTree.__getattr__('st_isLooseMuon')
+            #isLooseMuon                = skimmedTree.__getattr__('st_isLooseMuon')
             isMediumMuon               = skimmedTree.__getattr__('st_isMediumMuon')
             isTightMuon                = skimmedTree.__getattr__('st_isTightMuon')
             muChHadIso                 = skimmedTree.__getattr__('st_muChHadIso')
@@ -588,7 +588,7 @@ def AnalyzeDataSet():
             if abs(eleP4[iele].Eta()) >2.5: continue
 
             myEles.append(eleP4[iele])
-            myEleLooseID.append(eleIsPassLoose[iele])
+            #myEleLooseID.append(eleIsPassLoose[iele])
             myEleTightID.append(eleIsPassTight[iele])
 
         myMuos = []
@@ -600,7 +600,7 @@ def AnalyzeDataSet():
             if abs(muP4[imu].Eta()) > 2.4  : continue
 
             myMuos.append(muP4[imu])
-            myMuLooseID.append(isLooseMuon[imu])
+            #myMuLooseID.append(isLooseMuon[imu])
             myMuTightID.append(isTightMuon[imu])
             myMuIso.append(MuIso[imu])
 
@@ -620,7 +620,7 @@ def AnalyzeDataSet():
             #         break
             # if not isClean: continue
             myPhos.append(phoP4[ipho])
-            myPhoLooseID.append(phoIsPassLoose[ipho])
+            #myPhoLooseID.append(phoIsPassLoose[ipho])
             myPhoTightID.append(phoIsPassTight[ipho])
 
 #        myTaus=[]
@@ -1041,7 +1041,7 @@ def AnalyzeDataSet():
             iLeadLep=sortedindex[0]
             iSecondLep=sortedindex[1]
 
-            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and myEleLooseID[iSecondLep]:
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10.: #and myEleLooseID[iSecondLep]:
 
                 ZpT = math.sqrt( (myEles[iLeadLep].Px()+myEles[iSecondLep].Px())*(myEles[iLeadLep].Px()+myEles[iSecondLep].Px()) + (myEles[iLeadLep].Py()+myEles[iSecondLep].Py())*(myEles[iLeadLep].Py()+myEles[iSecondLep].Py()) )
 
@@ -1086,7 +1086,7 @@ def AnalyzeDataSet():
             iLeadLep=sortedindex[0]
             iSecondLep=sortedindex[1]
 
-            if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
+            if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10.:# and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
 
                 ZpT = math.sqrt( (myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px())*(myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px()) + (myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py())*(myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py()) )
 
@@ -1766,7 +1766,7 @@ def AnalyzeDataSet():
                                             iLeadLep=1
                                             iSecondLep=0
 
-                                        if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and myEleLooseID[iSecondLep]:
+                                        if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10.:# and myEleLooseID[iSecondLep]:
                                             CR2e2bCutFlow['nlepCond']+=allweights
                                             if N2DDT <0:
                                                 CR2e2bCutFlow['N2DDT']+=allweights
@@ -1810,7 +1810,7 @@ def AnalyzeDataSet():
                                             iLeadLep=1
                                             iSecondLep=0
 
-                                        if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10. and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
+                                        if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15 and myMuos[iSecondLep].Pt() > 10.:# and myMuLooseID[iSecondLep] and myMuIso[iSecondLep]<0.25:
                                             CR2mu2bCutFlow['nlepCond']+=allweights
                                             if N2DDT <0:
                                                 CR2mu2bCutFlow['N2DDT']+=allweights

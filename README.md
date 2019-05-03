@@ -97,7 +97,19 @@ and open `.bashrc` file and add:
 alias voms='voms-proxy-init --voms cms --valid 192:00 && cp -v /tmp/x509up_u104803 /afs/cern.ch/user/d/dekumar/private/x509up'
 ```
 
+Remove this line `python bbMETBranchReader.py -a -F -i "$1" -D . -o BROutput.root --deepcsv` in runAnalysis.sh and add these lines:
+```
+export X509_USER_PROXY=$1
+voms-proxy-info -all
+voms-proxy-info -all -file $1
+
+python bbMETBranchReader.py -a -F -i "$2" -D . -o BROutput.root --deepcsv
+```
+Now open `MultiSubmit.py` replace line 26 with  `submittemp.write("arguments = $(Proxy_path) "+tempfile.split('/')[1]+'\n')`
+
 Initiate your voms-proxy using `voms`.
+
+#### Note: you can find lxplus condor files here: /afs/cern.ch/work/d/dekumar/public/monoH/lxplus_condor_monoH/bbDM/bbMET/BR_Condor_Farmout
 
 ### 3.2.1. Running BranchReader Condor Jobs
 

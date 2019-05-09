@@ -91,6 +91,8 @@ Note: Initiate your voms-proxy using voms-proxy-init --voms cms --valid 192:00
 ```
 Proxy_filename = x509up
 Proxy_path = /afs/cern.ch/user/d/dekumar/private/$(Proxy_filename)
+request_cpus = 4
++JobFlavour = "nextweek"
 ```
 and open `.bashrc` file and add:
 ```

@@ -14,6 +14,9 @@ from bbMETQuantities import *
 pileup2016file = TFile('pileUPinfo2016.root')
 pileup2016histo=pileup2016file.Get('hpileUPhist')
 
+
+n2ddtcalFile=TFile('scalefactors/h3_n2ddt.root')
+trans_h2ddt=n2ddtcalFile.Get("h2ddt")
 #Electron Trigger reweights
 eleTrigReweightFile = TFile('scalefactors/electron_Trigger_eleTrig.root')
 eleTrig_hEffEtaPt = eleTrigReweightFile.Get('hEffEtaPt')
@@ -438,7 +441,7 @@ def AnalyzeDataSet():
             CA15Puppi_doublebtag      = skimmedTree.__getattr__('st_CA15Puppi_doublebtag')
             CA15PuppiECF_1_2_10       = skimmedTree.__getattr__('st_CA15PuppiECF_1_2_10')
             CA15PuppiECF_2_3_10       = skimmedTree.__getattr__('st_CA15PuppiECF_2_3_10')
-            # CA15PassIDTight           = skimmedTree.__getattr__('st_CA15PassIDTight')
+            CA15PassIDTight           = skimmedTree.__getattr__('st_CA15PassIDTight')
             # CA15PassIDLoose           = skimmedTree.__getattr__('st_CA15PassIDLoose')
 
             #
@@ -762,6 +765,9 @@ def AnalyzeDataSet():
         myCA15Tagger=[]
         myCA15_N2DDT=[]
         myCA15_N2=[]
+        myjet_ECF_1_2_10=[]
+        myjet_ECF_2_3_10=[]
+	myCA15PassIDTight=[]
 
         #if CA15doubleB:
         for ca15jet in range(CA15njets):
@@ -778,20 +784,9 @@ def AnalyzeDataSet():
             myCA15P4.append(CA15jetP4[ca15jet])
             myCA15Mass.append(CA15SDmass[ca15jet])
             myCA15Tagger.append(CA15Puppi_doublebtag[ca15jet])
-            if (CA15PuppiECF_1_2_10[ca15jet])**2 == 0 :
-                myCA15_N2DDT.append(99999)
-                myCA15_N2.append(-99999)
-            else:
-                N2=(CA15PuppiECF_2_3_10[ca15jet])/((CA15PuppiECF_1_2_10[ca15jet])**2)
-                myCA15_N2.append(N2)
-                myCA15_N2DDT.append(N2-0.25)
-
-
-
-
-
-
-
+            myjet_ECF_1_2_10.append(CA15PuppiECF_1_2_10[ca15jet])
+            myjet_ECF_2_3_10.append(CA15PuppiECF_2_3_10[ca15jet])
+	    myCA15PassIDTight.append(CA15PassIDTight[ca15jet])
 
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -828,36 +823,39 @@ def AnalyzeDataSet():
         FatjetIndex=[]
         myCleanFatjet=[]
 
-        hasca15twobjets=False
-
-        CA15doubleB=True
-
-
 
         #if CA15doubleB:
         for i in range(len(myCA15P4)):
-            if myCA15P4[i].Pt() > 200. and abs(myCA15P4[i].Eta()) < 2.4 and myCA15Mass[i] > 100. and myCA15Mass[i] < 150. and myCA15Tagger[i] > 0.75:
-                        Selca15jetsP4.append(myCA15P4[i])
-                        SelN2DDT.append(myCA15_N2DDT[i])
-                        SelN2.append(myCA15_N2[i])
-                        #FatjetIndex.append(ca15jet)
+            if myCA15P4[i].Pt() > 200. and abs(myCA15P4[i].Eta()) < 2.4 and myCA15Mass[i] > 100. and myCA15Mass[i] < 150. and myCA15Tagger[i] > 0.75 and myCA15PassIDTight[i]:
+		#print "yes"
+                if (myjet_ECF_1_2_10[i])**2==0.0: N2=9999
+                else:
+                    N2=(myjet_ECF_2_3_10[i])/((myjet_ECF_1_2_10[i])**2)
 
+                rh_8   = math.log((myCA15Mass[i]*myCA15Mass[i])/(myCA15P4[i].Pt()*myCA15P4[i].Pt()))
+                jpt_8  = myCA15P4[i].Pt()
+                cur_rho_index = trans_h2ddt.GetXaxis().FindBin(rh_8);
+                cur_pt_index  = trans_h2ddt.GetYaxis().FindBin(jpt_8);
+                if rh_8 > trans_h2ddt.GetXaxis().GetBinUpEdge( trans_h2ddt.GetXaxis().GetNbins() ): cur_rho_index = trans_h2ddt.GetXaxis().GetNbins();
+                if rh_8 < trans_h2ddt.GetXaxis().GetBinLowEdge( 1 ): cur_rho_index = 1;
+                if jpt_8 > trans_h2ddt.GetYaxis().GetBinUpEdge( trans_h2ddt.GetYaxis().GetNbins() ): cur_pt_index = trans_h2ddt.GetYaxis().GetNbins();
+                if jpt_8 < trans_h2ddt.GetYaxis().GetBinLowEdge( 1 ): cur_pt_index = 1;
 
+                n2ddt_ = N2 - trans_h2ddt.GetBinContent(cur_rho_index,cur_pt_index);
 
-        # else:
-        #     for i in range(AK8nFatJets):
-        #         if AK8FatjetP4[i].Pt() > 200 and abs(AK8FatjetP4[i].Eta()) < 2.4 and AK8SDmass[i] > 100 and AK8SDmass[i] < 150 and AK8DoubleBtagger[i] > .6:
-        #             myak8jetP4.append(AK8FatjetP4[i])
-        #             FatjetIndex.append(i)
-
+                Selca15jetsP4.append(myCA15P4[i])
+                SelN2DDT.append(n2ddt_)
+                #SelN2.append(myCA15_N2[i])
+                #FatjetIndex.append(ca15jet)
 
 
         nFatJet=len(Selca15jetsP4)
         N2DDT=9999
         N2DDTCond=False
+        if nFatJet==0: continue
         if nFatJet==1:
             N2DDT = SelN2DDT[0]
-            N2    = SelN2[0]
+            #N2    = SelN2[0]
             N2DDTCond = N2DDT < 0
             # if N2DDTCond:
             #     print "yes"

@@ -158,6 +158,7 @@ def AnalyzeDataSet():
 
     st_AK4deepCSVnJet               = array( 'L', [ 0 ] ) #ROOT.std.vector('int')()
     st_AK4deepCSVjetP4              = ROOT.std.vector('TLorentzVector')()
+    st_AK4deepCSVNNCorrjetP4        = ROOT.std.vector('TLorentzVector')()
     st_AK4deepCSVjetDeepCSV_b       = ROOT.std.vector('float')()
     st_AK4deepCSVjetHadronFlavor    = ROOT.std.vector('int')()
     st_AK4deepCSVjetNHadEF          = ROOT.std.vector('float')()
@@ -299,6 +300,7 @@ def AnalyzeDataSet():
 
     outTree.Branch( 'st_AK4deepCSVnJet',st_AK4deepCSVnJet, 'st_AK4deepCSVnJet/L' )
     outTree.Branch( 'st_AK4deepCSVjetP4',st_AK4deepCSVjetP4 )
+    outTree.Branch('st_AK4deepCSVNNCorrjetP4',st_AK4deepCSVNNCorrjetP4)
     outTree.Branch( 'st_AK4deepCSVjetDeepCSV_b',st_AK4deepCSVjetDeepCSV_b )
     outTree.Branch( 'st_AK4deepCSVjetHadronFlavor',st_AK4deepCSVjetHadronFlavor )
     outTree.Branch( 'st_AK4deepCSVjetNHadEF',st_AK4deepCSVjetNHadEF )
@@ -308,31 +310,27 @@ def AnalyzeDataSet():
 #AK8 JETS BRANCHES
     outTree.Branch( 'st_AK8nthikJets',st_AK8nthikJets,'st_AK8nthikJets/L' )
     outTree.Branch( 'st_AK8thikjetP4',st_AK8thikjetP4)
-    outTree.Branch( 'st_AK8thikjetNhadEF',st_AK8thikjetNhadEF)
-    outTree.Branch( 'st_AK8thikjetChadEF',st_AK8thikjetChadEF)
+    #outTree.Branch( 'st_AK8thikjetNhadEF',st_AK8thikjetNhadEF)
+    #outTree.Branch( 'st_AK8thikjetChadEF',st_AK8thikjetChadEF)
     outTree.Branch( 'st_AK8SDmass',st_AK8SDmass)
-    outTree.Branch( 'st_AK8PuppisubjetCSV',st_AK8PuppisubjetCSV)
+    #outTree.Branch( 'st_AK8PuppisubjetCSV',st_AK8PuppisubjetCSV)
     outTree.Branch( 'st_AK8Puppijet_DoubleSV',st_AK8Puppijet_DoubleSV)
 
-    outTree.Branch( 'st_AK8thikJetLooseID',st_AK8thikJetLooseID)
-    outTree.Branch( 'st_AK8thikjetTightID',st_AK8thikjetTightID)
-
-    #outTree.Branch( 'st_AK8THIKjetNPV',st_AK8THIKjetNPV)
     #outTree.Branch( 'st_AK8thikJetLooseID',st_AK8thikJetLooseID)
-    #outTree.Branch( 'st_AK8thikjetTightID',st_AK8thikjetTightID)
+    outTree.Branch( 'st_AK8thikjetTightID',st_AK8thikjetTightID)
 
 
 #CA15jets
     outTree.Branch( 'st_CA15njets',st_CA15njets,'st_CA15njets/L')
     outTree.Branch( 'st_CA15jetP4',st_CA15jetP4)
-    outTree.Branch( 'st_CA15jetNhadEF',st_CA15jetNhadEF)
-    outTree.Branch( 'st_CA15jetChadEF',st_CA15jetChadEF)
+    #outTree.Branch( 'st_CA15jetNhadEF',st_CA15jetNhadEF)
+    #outTree.Branch( 'st_CA15jetChadEF',st_CA15jetChadEF)
     outTree.Branch( 'st_CA15SDmass',st_CA15SDmass)
-    outTree.Branch( 'st_CA15PuppisubjetCSV',st_CA15PuppisubjetCSV)
+    #outTree.Branch( 'st_CA15PuppisubjetCSV',st_CA15PuppisubjetCSV)
     outTree.Branch( 'st_CA15Puppi_doublebtag',st_CA15Puppi_doublebtag)
     outTree.Branch( 'st_CA15PuppiECF_2_3_10',st_CA15PuppiECF_2_3_10)
     outTree.Branch( 'st_CA15PuppiECF_1_2_10',st_CA15PuppiECF_1_2_10)
-    outTree.Branch( 'st_CA15PassIDLoose',st_CA15PassIDLoose)
+    #outTree.Branch( 'st_CA15PassIDLoose',st_CA15PassIDLoose)
     outTree.Branch( 'st_CA15PassIDTight',st_CA15PassIDTight)
 
 
@@ -342,20 +340,20 @@ def AnalyzeDataSet():
 
     outTree.Branch( 'st_nEle',st_nEle , 'st_nEle/L')
     outTree.Branch( 'st_eleP4',st_eleP4 )
-    outTree.Branch( 'st_eleIsPassLoose', st_eleIsPassLoose)#, 'st_eleIsPassLoose/O' )
+    #outTree.Branch( 'st_eleIsPassLoose', st_eleIsPassLoose)#, 'st_eleIsPassLoose/O' )
     outTree.Branch( 'st_eleIsPassMedium', st_eleIsPassMedium)#, 'st_eleIsPassMedium/O' )
     outTree.Branch( 'st_eleIsPassTight', st_eleIsPassTight)#, 'st_eleIsPassTight/O' )
 
     outTree.Branch( 'st_nPho',st_nPho , 'st_nPho/L')
     outTree.Branch( 'st_phoP4',st_phoP4 )
-    outTree.Branch( 'st_phoIsPassLoose', st_phoIsPassLoose)#, 'st_phoIsPassLoose/O' )
+    #outTree.Branch( 'st_phoIsPassLoose', st_phoIsPassLoose)#, 'st_phoIsPassLoose/O' )
     outTree.Branch( 'st_phoIsPassMedium', st_phoIsPassMedium)#, 'st_phoIsPassMedium/O' )
     outTree.Branch( 'st_phoIsPassTight', st_phoIsPassTight)#, 'st_phoIsPassTight/O' )
 
 
     outTree.Branch( 'st_nMu',st_nMu , 'st_nMu/L')
     outTree.Branch( 'st_muP4',st_muP4 )
-    outTree.Branch( 'st_isLooseMuon', st_isLooseMuon)#, 'st_isLooseMuon/O' )
+    #outTree.Branch( 'st_isLooseMuon', st_isLooseMuon)#, 'st_isLooseMuon/O' )
     outTree.Branch( 'st_isMediumMuon', st_isMediumMuon)#, 'st_isMediumMuon/O' )
     outTree.Branch( 'st_isTightMuon', st_isTightMuon)#, 'st_isTightMuon/O' )
     outTree.Branch( 'st_muChHadIso', st_muChHadIso)#, 'st_muChHadIso/F')
@@ -457,7 +455,8 @@ def AnalyzeDataSet():
         thindeepCSVjetChadEF       = skimmedTree.__getattr__('AK4deepCSVjetCHadEF')
         THINdeepCSVjetNPV          = skimmedTree.__getattr__('AK4deepCSVjetNPV')
 
-
+        thindeepbRegNNCorr           = skimmedTree.__getattr__('AK4deepCSVbRegNNCorr')
+        thindeepbRegNNResolution     = skimmedTree.__getattr__('AK4deepCSVbRegNNResolution')
 
         #AK8jets branches
         AK8nthikJets               = skimmedTree.__getattr__('AK8PuppinJet')
@@ -777,6 +776,7 @@ def AnalyzeDataSet():
         st_THINjetCorrUnc.clear()
 
         st_AK4deepCSVjetP4.clear()
+	st_AK4deepCSVNNCorrjetP4.clear()
         st_AK4deepCSVjetDeepCSV_b.clear()
         st_AK4deepCSVjetHadronFlavor.clear()
         st_AK4deepCSVjetNHadEF.clear()
@@ -786,30 +786,42 @@ def AnalyzeDataSet():
 
         st_CA15jetP4.clear()
         st_CA15SDmass.clear()
-        st_CA15jetNhadEF.clear()
-        st_CA15jetChadEF.clear()
+        #st_CA15jetNhadEF.clear()
+        #st_CA15jetChadEF.clear()
         st_CA15Puppi_doublebtag.clear()
         st_CA15PuppiECF_1_2_10.clear()
         st_CA15PuppiECF_2_3_10.clear()
-        st_CA15PuppisubjetCSV.clear()
+        #st_CA15PuppisubjetCSV.clear()
         st_CA15PassIDTight.clear()
-        st_CA15PassIDLoose.clear()
+        #st_CA15PassIDLoose.clear()
 
 
         st_AK8thikjetP4.clear()
-        st_AK8thikjetNhadEF.clear()
-        st_AK8thikjetChadEF.clear()
+        #st_AK8thikjetNhadEF.clear()
+        #st_AK8thikjetChadEF.clear()
         st_AK8SDmass.clear()
-        st_AK8PuppisubjetCSV.clear()
+        #st_AK8PuppisubjetCSV.clear()
         st_AK8Puppijet_DoubleSV.clear()
-        st_AK8thikJetLooseID.clear()
+        #st_AK8thikJetLooseID.clear()
         st_AK8thikjetTightID.clear()
 
 
 
         st_eleP4.clear()
+        st_eleIsPassMedium.clear()
+        st_eleIsPassTight.clear()
+
+
         st_muP4.clear()
+        st_isTightMuon.clear()
+        st_isMediumMuon.clear()
+
+
         st_phoP4.clear()
+        st_phoIsPassMedium.clear()
+        st_phoIsPassTight.clear()
+
+
         st_muChHadIso.clear()
         st_muGamIso.clear()
         st_muNeHadIso.clear()
@@ -855,42 +867,56 @@ def AnalyzeDataSet():
 #            pass
 
 
+
+            NNCorr=thindeepbRegNNCorr[ithinjet]
+            if NNCorr==0.0:
+                NNCorr=1.0
+
+            pt  = thindeepCSVjetP4[ithinjet].Pt()
+            eta = thindeepCSVjetP4[ithinjet].Eta()
+            phi = thindeepCSVjetP4[ithinjet].Phi()
+            ene = thindeepCSVjetP4[ithinjet].E()
+            CSVjetP4Corr_temp            =  ROOT.TLorentzVector()
+            CSVjetP4Corr_temp.SetPtEtaPhiE(pt*NNCorr,eta,phi,ene*NNCorr)
+            st_AK4deepCSVNNCorrjetP4.push_back(CSVjetP4Corr_temp)
+
+
         st_CA15njets[0]=len(CA15jetspassindex)
         for ica15 in CA15jetspassindex:
             st_CA15jetP4.push_back(CA15jetP4[ica15])
             st_CA15SDmass.push_back(CA15SDmass[ica15])
-            st_CA15jetNhadEF.push_back(CA15jetNhadEF[ica15])
-            st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
+            #st_CA15jetNhadEF.push_back(CA15jetNhadEF[ica15])
+            #st_CA15jetChadEF.push_back(CA15jetChadEF[ica15])
             st_CA15Puppi_doublebtag.push_back(CA15Puppi_doublebtag[ica15])
             st_CA15PuppiECF_2_3_10.push_back(CA15PuppiECF_2_3_10[ica15])
             st_CA15PuppiECF_1_2_10.push_back(CA15PuppiECF_1_2_10[ica15])
             st_CA15PassIDTight.push_back(bool(CA15PassIDTight[ica15]))
-            st_CA15PassIDLoose.push_back(bool(CA15PassIDLoose[ica15]))
-            st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
+            #st_CA15PassIDLoose.push_back(bool(CA15PassIDLoose[ica15]))
+            #st_CA15PuppisubjetCSV.push_back(CA15PuppisubjetCSV[ica15])
 
         st_AK8nthikJets[0]=len(AK8jetspassindex)
         for iak8jet in AK8jetspassindex:
             st_AK8thikjetP4.push_back(AK8thikjetP4[iak8jet])
-            st_AK8thikjetNhadEF.push_back(AK8thikjetNhadEF[iak8jet])
-            st_AK8thikjetChadEF.push_back(AK8thikjetChadEF[iak8jet])
+            #st_AK8thikjetNhadEF.push_back(AK8thikjetNhadEF[iak8jet])
+            #st_AK8thikjetChadEF.push_back(AK8thikjetChadEF[iak8jet])
             st_AK8SDmass.push_back(AK8SDmass[iak8jet])
-            st_AK8PuppisubjetCSV.push_back(AK8PuppisubjetCSV[iak8jet])
+            #st_AK8PuppisubjetCSV.push_back(AK8PuppisubjetCSV[iak8jet])
             st_AK8Puppijet_DoubleSV.push_back(AK8Puppijet_DoubleSV[iak8jet])
-            st_AK8thikJetLooseID.push_back(bool(AK8thikJetLooseID[iak8jet]))
+            #st_AK8thikJetLooseID.push_back(bool(AK8thikJetLooseID[iak8jet]))
             st_AK8thikjetTightID.push_back(bool(AK8thikjetTightID[iak8jet]))
 
 
         st_nEle[0] = len(myEles)
         for iele in myEles:
             st_eleP4.push_back(eleP4[iele])
-            st_eleIsPassLoose.push_back(bool(eleIsPassLoose[iele]))
+            #st_eleIsPassLoose.push_back(bool(eleIsPassLoose[iele]))
             st_eleIsPassMedium.push_back(bool(eleIsPassMedium[iele]))
             st_eleIsPassTight.push_back(bool(eleIsPassTight[iele]))
 
         st_nMu[0] = len(myMuos)
         for imu in myMuos:
             st_muP4.push_back(muP4[imu])
-            st_isLooseMuon.push_back(bool(isLooseMuon[imu]))
+            #st_isLooseMuon.push_back(bool(isLooseMuon[imu]))
             st_isTightMuon.push_back(bool(isTightMuon[imu]))
             st_isMediumMuon.push_back(bool(isMediumMuon[imu]))
             st_muChHadIso.push_back(muChHadIso[imu])
@@ -910,7 +936,7 @@ def AnalyzeDataSet():
         st_nPho[0]=nPho
         for ipho in range(nPho):
             st_phoP4.push_back(phoP4[ipho])
-            st_phoIsPassLoose.push_back(bool(phoIsPassLoose[ipho]))
+            #st_phoIsPassLoose.push_back(bool(phoIsPassLoose[ipho]))
             st_phoIsPassMedium.push_back(bool(phoIsPassMedium[ipho]))
             st_phoIsPassTight.push_back(bool(phoIsPassTight[ipho]))
 

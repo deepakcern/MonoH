@@ -155,7 +155,7 @@ if not options.CSV and not options.DeepCSV:
     print "Please run using --csv or --deepcsv. Exiting."
     sys.exit()
 
-applydPhicut=False
+applydPhicut=True
 
 #print 'options = ',[options.inputfile]
 inputfilename = options.inputfile
@@ -980,7 +980,7 @@ def AnalyzeDataSet():
 
 #do fatjet cleaning w.r.t. jet, lepton
 
-        useFatJet=False
+        useFatJet=True
         if useFatJet:
             myFATJET = myak8jetP4
         else:

@@ -134,19 +134,19 @@ class MonoHbbQuantities:
 
         def getBins(quant):
             if 'eta' in quant:
-                bins='10'
-                low='-3'
-                high='3'
+                bins='15'
+                low='-2.4'
+                high='2.4'
             elif 'dPhi' in quant:
-                bins='16'
+                bins='15'
                 low='0'
                 high='3.2'
             elif 'phi' in quant:
-                bins='32'
-                low='-3.2'
-                high='3.2'
+                bins='15'
+                low='0'
+                high='3'
             elif 'csv' in quant:
-                bins='20'
+                bins='100'
                 low='0.'
                 high='1.'
             elif 'iso' in quant:
@@ -154,22 +154,27 @@ class MonoHbbQuantities:
                 low='0.'
                 high='0.25'
             elif 'Zmass' in quant:
-                bins='8'
+                bins='100'
                 low='70.'
                 high='110.'
             elif 'Wmass' in quant:
-                bins='8'
+                bins='100'
                 low='0.'
                 high='400.'
             elif 'met' in quant:
-                bins='40'
+                bins='2000'
                 low='0.'
                 high='2000.'
 
-            elif 'N2' in quant:
-                bins='40'
-                low='-10.'
-                high='10.'
+            elif 'N2' in quant and not 'N2DDT' in quant:
+                bins='20'
+                low='0.'
+                high='4.2'
+
+	    elif 'N2DDT' in quant:
+		bins='20'
+		low='-0.2'
+		high='2.45'
 
 
             elif 'nca15jet' in quant:
@@ -183,7 +188,7 @@ class MonoHbbQuantities:
                 high='5'
 
             elif  'bb_Mass' in quant:
-                bins='25'
+                bins='500'
                 low='0.0'
                 high='250.'
 
@@ -201,25 +206,38 @@ class MonoHbbQuantities:
                 low='0'
                 high='6'
             elif 'recoil' in quant:
-                bins='40'
+                bins='2000'
                 low='0.'
                 high='2000.'
             elif '_dR_' in quant:
                 bins='20'
                 low='0.'
                 high='6.'
-            elif 'lep1_pT' in quant or 'jet1_pT' in quant:
-                bins='10'
+
+	    elif 'ca15jet_pT' in quant:
+		bins='2000'
+		low='0.'
+		high='2000'
+
+	    elif 'lep1_pT' in quant:
+		bins='2000'
+		low='0.'
+		high='2000'
+
+	    elif 'SD' in quant:
+                bins='15'
+                low='100.'
+                high='150'
+
+
+            elif  'jet1_pT' in quant:
+                bins='15'
                 low='0.'
                 high='1000.'
             elif 'lep2_pT' in quant or 'jet2_pT' in quant:
-                bins='10'
+                bins='15'
                 low='0.'
-                high='1000.'
-            elif 'ca15jet_pT' in quant:
-                bins='10'
-                low='0.'
-                high='1000'
+                high='400.'
             elif 'dr_jet_sr2' in quant or 'dr_jet_sr1' in quant:
                 bins='50'
                 low='0.'

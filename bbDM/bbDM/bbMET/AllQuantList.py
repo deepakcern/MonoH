@@ -50,10 +50,8 @@ def getAll():
     return allquantlist
 
 def getPresel():
-    preselquantlist=['presel_jet1_csv_sr1','presel_jet2_csv_sr1','presel_jet1_csv_sr2','presel_jet2_csv_sr2','presel_jet3_csv_sr2','presel_jet1_deepcsv_sr1','presel_jet2_deepcsv_sr1','presel_jet1_deepcsv_sr2','presel_jet2_deepcsv_sr2','presel_jet3_deepcsv_sr2']
-    preselquantlist.append('presel_jet1_chf_sr1')
+    preselquantlist=['presel_jet1_csv_sr2','presel_jet2_csv_sr2','presel_jet3_csv_sr2','presel_jet1_deepcsv_sr1','presel_jet2_deepcsv_sr1','presel_jet1_deepcsv_sr2','presel_jet2_deepcsv_sr2','presel_jet3_deepcsv_sr2']
     preselquantlist.append('presel_jet1_chf_sr2')
-    preselquantlist.append('presel_jet1_nhf_sr1')
     preselquantlist.append('presel_jet1_nhf_sr2')
 
     return preselquantlist
@@ -64,7 +62,7 @@ def getRegionQuants():
 
     #Z CR
     regions=['2e2b','2mu2b']
-    varlist=['N2DDT','N2','Zmass','ca15jet_pT','ca15jet_SD','ca15jet_eta','lep1_eta','lep2_eta','ZpT','hadrecoil','MET','bb_Mass','lep1_pT','lep2_pT','lep1_iso','lep2_iso','jet1_pT','jet2_pT','jet1_eta','jet2_eta','jet1_csv','jet2_csv','jet1_deepcsv','jet2_deepcsv','njet','ntau','nele','nmu','nUncleanEle','nUncleanMu','nUncleanTau','min_dPhi_jet_Recoil','min_dPhi_CAjet_MET','min_dPhi_jet_MET','min_dPhi_jet_Recoil_n_minus_1','jet1_NHadEF','jet1_CHadEF','jet1_CEmEF','jet1_PhoEF','jet1_EleEF','jet1_MuoEF']#,'lep1_dR_tau','lep2_dR_tau','min_lep_dR_tau','ntaucleaned']
+    varlist=['N2DDT','N2','Zmass','ca15jet_pT','ca15jet_SD','ca15jet_eta','lep1_eta','lep2_eta','ZpT','hadrecoil','MET','bb_Mass','lep1_pT','lep2_pT','lep1_iso','lep2_iso','jet1_pT','jet2_pT','jet1_eta','jet1_csv','jet1_deepcsv','jet2_deepcsv','njet','ntau','nele','nmu','nUncleanEle','nUncleanMu','nUncleanTau','min_dPhi_jet_Recoil','min_dPhi_CAjet_MET','min_dPhi_jet_MET','min_dPhi_jet_Recoil_n_minus_1']#,'jet1_NHadEF','jet1_CHadEF','jet1_CEmEF','jet1_PhoEF','jet1_EleEF','jet1_MuoEF']
 
     for reg in regions:
         for var in varlist:
@@ -72,7 +70,7 @@ def getRegionQuants():
 
     #W / Top CR
     regions=['1e2bT','1mu2bT','1e2bW','1mu2bW']
-    varlist=['N2DDT','N2','ca15jet_SD','Wmass','ca15jet_eta','ca15jet_pT','lep1_pT','lep1_eta','WpT','hadrecoil','MET','bb_Mass','lep1_iso','jet1_pT','jet2_pT','jet1_eta','jet2_eta','jet1_csv','jet2_csv','jet1_deepcsv','jet2_deepcsv','njet','ntau','nele','nmu','nUncleanEle','nUncleanMu','nUncleanTau','min_dR_jet_ele_preclean','min_dR_jet_ele_postclean','njet_n_minus_1','unclean_njet_n_minus_1','min_dPhi_jet_Recoil','min_dPhi_CAjet_MET','min_dPhi_jet_MET','min_dPhi_jet_Recoil_n_minus_1','jet1_NHadEF','jet1_CHadEF','jet1_CEmEF','jet1_PhoEF','jet1_EleEF','jet1_MuoEF']
+    varlist=['N2DDT','N2','ca15jet_SD','Wmass','ca15jet_eta','ca15jet_pT','lep1_pT','lep1_eta','WpT','hadrecoil','MET','bb_Mass','lep1_iso','jet1_pT','jet1_eta','jet1_csv','jet1_deepcsv','njet','ntau','nele','nmu','min_dPhi_jet_Recoil','min_dPhi_CAjet_MET','min_dPhi_jet_MET']#,'min_dPhi_jet_Recoil_n_minus_1','jet1_NHadEF','jet1_CHadEF','jet1_CEmEF','jet1_PhoEF','jet1_EleEF','jet1_MuoEF']
 
     for reg in regions:
         for var in varlist:
@@ -94,7 +92,7 @@ def getRegionQuants():
     for reg in regions:
         for var in varlist:
             regquants.append("reg_"+reg+"_"+var)
-    '''
+    
     #QCD CR
     regions=['QCD2b']#,'QCD2b']
     varlist=['MET','bb_Mass','ca15jet_pT','jet1_pT','jet2_pT','jet1_eta','jet2_eta','jet1_csv','jet2_csv','jet1_deepcsv','jet2_deepcsv','njet','ntau','nele','nmu','nUncleanEle','nUncleanMu','nUncleanTau','min_dPhi_CAjet_MET','min_dPhi_jet_MET']
@@ -102,7 +100,7 @@ def getRegionQuants():
     for reg in regions:
         for var in varlist:
             regquants.append("reg_"+reg+"_"+var)
-
+    '''
     return regquants
 
 def getHistos2D():

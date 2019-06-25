@@ -167,14 +167,14 @@ class MonoHbbQuantities:
                 high='2000.'
 
             elif 'N2' in quant and not 'N2DDT' in quant:
-                bins='20'
-                low='0.'
-                high='4.2'
+                bins='200'
+                low='0.0'
+                high='0.1'
 
 	    elif 'N2DDT' in quant:
-		bins='20'
-		low='-0.2'
-		high='2.45'
+		bins='200'
+		low='-0.5'
+		high='0.5'
 
 
             elif 'nca15jet' in quant:
@@ -225,7 +225,7 @@ class MonoHbbQuantities:
 		high='2000'
 
 	    elif 'SD' in quant:
-                bins='15'
+                bins='500'
                 low='100.'
                 high='150'
 

@@ -214,23 +214,6 @@ def IsoMu20isUnPrescaled(filename):
     else:
         return True
 
-def TheaCorrection_v2(puppipt=200.0,  puppieta=0.0):
-     file = TFile.Open( "scalefactors/puppiCorr.root","READ")
-     puppisd_corrGEN = file.Get("puppiJECcorr_gen")
-     puppisd_corrRECO_cen = file.Get("puppiJECcorr_reco_0eta1v3")
-     puppisd_corrRECO_for = file.Get("puppiJECcorr_reco_1v3eta2v5")
-     genCorr  = 1.
-     recoCorr = 1.
-     totalWeight = 1.
-     genCorr =  puppisd_corrGEN.Eval(puppipt)
-     if(abs(puppieta)  <= 1.3):
-        recoCorr = puppisd_corrRECO_cen.Eval(puppipt)
-     else: recoCorr = puppisd_corrRECO_for.Eval(puppipt)
-
-     totalWeight = genCorr * recoCorr
-     return totalWeight
-
-
 def TheaCorrection(puppipt=170.0,  puppieta=0.0):
     puppisd_corrGEN      = TF1("puppisd_corrGEN","[0]+[1]*pow(x*[2],-[3])");
     puppisd_corrGEN.SetParameters(
@@ -764,28 +747,7 @@ def AnalyzeDataSet():
         for itau in range(nTau):
             if tauP4[itau].Pt()<18. : continue
             if abs(tauP4[itau].Eta())>2.3 : continue
-            foundTau=False
-            if disc_againstElectronLoose!=None and disc_againstMuonLoose!=None:
-                foundTau = True
-                if disc_againstElectronTight[itau] and disc_againstMuonLoose[itau]:
-                    myTausTightElectron.append(tauP4[itau])
-                if disc_againstMuonTight[itau] and disc_againstElectronLoose[itau]:
-                    myTausTightMuon.append(tauP4[itau])
-                if disc_againstMuonLoose[itau] and disc_againstElectronLoose[itau]:
-                    myTausLooseEleMu.append(tauP4[itau])
-            if disc_againstElectronLoose!=None and not foundTau:
-                if disc_againstElectronTight[itau]:
-                    myTausTightElectron.append(tauP4[itau])
-                if disc_againstElectronLoose[itau]:
-                    myTausLooseEleMu.append(tauP4[itau])
-            if disc_againstMuonLoose!=None and not foundTau:
-                if disc_againstMuonTight[itau]:
-                    myTausTightMuon.append(tauP4[itau])
-                if disc_againstMuonLoose[itau]:
-                    myTausLooseEleMu.append(tauP4[itau])
-
-#            if disc_againstElectronLoose!=None: # and len(disc_againstElectronLoose)==nTau:
-		'''
+            if disc_againstElectronLoose!=None: # and len(disc_againstElectronLoose)==nTau:
                 if disc_againstElectronTight[itau] and disc_againstMuonLoose[itau]:
                     myTausTightElectron.append(tauP4[itau])
                 if disc_againstMuonTight[itau] and disc_againstElectronLoose[itau]:
@@ -794,8 +756,7 @@ def AnalyzeDataSet():
                     myTausTightEleMu.append(tauP4[itau])
                 if disc_againstMuonLoose[itau] and disc_againstElectronLoose[itau]:
                     myTausLooseEleMu.append(tauP4[itau])
-		'''
-#
+
             #---Fake tau cleaner----
             isClean=True
             for iele in myEles[:]:
@@ -980,22 +941,6 @@ def AnalyzeDataSet():
         #                 myAK8JetsP4.append(AK8thikjetP4[ak8jet])
         # mynak8=len(myAK8JetsP4)
         #
-	corrAK8SDMass=[]
-	corrCA15SDMass=[]
-	for i in range(AK8nFatJets):
-		puppiPt=AK8FatjetP4[i].Pt()
-		puppiEta=AK8FatjetP4[i].Eta()
-	#	print "SDMass before corr",AK8SDmass[i]
-          	SDMassWeight = TheaCorrection_v2(puppiPt,puppiEta)
-		corrAK8SDMass.append(AK8SDmass[i]*SDMassWeight)
-	#	print "SDMass after corr",AK8SDmass[i]*SDMassWeight
-
-	for i in range(CA15njets):
-		puppiPt=CA15jetP4[i].Pt()
-		puppiEta=CA15jetP4[i].Eta()
-		SDMassWeight = TheaCorrection_v2(puppiPt,puppiEta)
-		corrCA15SDMass.append(CA15SDmass[i]*SDMassWeight)	
-
         CA15cvs=[]
         myca15jetsP4=[]
         myak8jetP4=[]
@@ -1005,13 +950,13 @@ def AnalyzeDataSet():
         doubleB=True
 
         for i in range(AK8nFatJets):
-            if AK8FatjetP4[i].Pt() > 200 and abs(AK8FatjetP4[i].Eta()) < 2.4 and corrAK8SDMass[i] > 100.0 and corrAK8SDMass[i] < 150.0:# and AK8DoubleBtagger[i] > 0.6:
+            if AK8FatjetP4[i].Pt() > 200 and abs(AK8FatjetP4[i].Eta()) < 2.4 and AK8SDmass[i] > 100 and AK8SDmass[i] < 150 and AK8DoubleBtagger[i] > 0.6:
                 myak8jetP4.append(AK8FatjetP4[i])
 
 
         #if doubleB:
         for ca15jet in range(CA15njets):
-            if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4 and corrCA15SDMass[ca15jet] > 100.0 and corrCA15SDMass[ca15jet] < 150.0:# and CA15Puppi_doublebtag[ca15jet] > 0.75:
+            if CA15jetP4[ca15jet].Pt() > 200. and abs(CA15jetP4[ca15jet].Eta()) < 2.4 and CA15SDmass[ca15jet] > 100. and CA15SDmass[ca15jet] < 150. and CA15Puppi_doublebtag[ca15jet] > 0.75:
                 myca15jetsP4.append(CA15jetP4[ca15jet])
 			    #if CA15Puppi_doublebtag[ca15jet] > 0.75:
 				#print "has geater double"
@@ -2125,7 +2070,6 @@ def AnalyzeDataSet():
             metTrig_secondmethodReweight = metTrig_secondmethod.GetBinContent(xbin2)
             metTrig_firstmethodReweight_up = metTrig_firstmethodReweight + (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
             metTrig_firstmethodReweight_down = metTrig_firstmethodReweight - (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        '''
         if ZmumuRecoil > MET_recoil_cut:
             xbin1 = metTrig_firstmethod.GetXaxis().FindBin(ZmumuRecoil)
             xbin2 = metTrig_secondmethod.GetXaxis().FindBin(ZmumuRecoil)
@@ -2168,7 +2112,7 @@ def AnalyzeDataSet():
             metTrig_secondmethodReweight = metTrig_secondmethod.GetBinContent(xbin2)
             metTrig_firstmethodReweight_up = metTrig_firstmethodReweight + (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
             metTrig_firstmethodReweight_down = metTrig_firstmethodReweight - (metTrig_firstmethodReweight-metTrig_secondmethodReweight)
-        '''
+
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         ## Muon reweight
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -2406,7 +2350,7 @@ def AnalyzeDataSet():
 #            print 'Warning:: electron weight is 0, setting it to 1'
             eleweights = 1.0
 
-        allweights = puweight * mcweight * genpTReweighting * eleweights * muweights * metTrig_firstmethodReweight
+        allweights = puweight * mcweight * genpTReweighting * eleweights * metTrig_firstmethodReweight * muweights
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         temp_weight_withOutBtag = allweights

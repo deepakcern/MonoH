@@ -2009,7 +2009,7 @@ def GetWZJtes_genweight(sample,nGenPar, genParId, genMomParId, genParSt,genParP4
             pt__ = pt
             weight = getEWKW (pt__) * getQCDW(pt__)
 
-        return weight
+    return weight
 
     #################
     #ZJets
@@ -2035,7 +2035,7 @@ def GetWZJtes_genweight(sample,nGenPar, genParId, genMomParId, genParSt,genParP4
 
             weight = getEWKZ(pt__)*getQCDZ(pt__)
 
-        return weight
+    return weight
 
 
 def GenWeightProducer(sample,nGenPar, genParId, genMomParId, genParSt,genParP4):
@@ -2112,6 +2112,7 @@ def GenWeightProducer(sample,nGenPar, genParId, genMomParId, genParSt,genParP4):
 
     if(sample=="all"):
         k2 = 1.0
+    else: k2 = 1.0
 
     return k2
 

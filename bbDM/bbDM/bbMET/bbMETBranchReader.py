@@ -651,7 +651,7 @@ def AnalyzeDataSet():
                     myfailedbjets.append(nb)
                     myfailedbJetsP4.append(thinjetP4[nb])
 
-                myJetNPV=thinjetNPV
+            myJetNPV=thinjetNPV
 #            nUncleanJets=nTHINJets
 
         if options.DeepCSV:

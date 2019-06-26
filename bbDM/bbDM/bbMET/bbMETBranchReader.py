@@ -228,7 +228,7 @@ def TheaCorrection(puppipt=200.0,  puppieta=0.0):
      totalWeight = 1.
      genCorr =  puppisd_corrGEN.Eval(puppipt)
      if(abs(puppieta)  <= 1.3):
-	recoCorr = puppisd_corrRECO_cen.Eval(puppipt)
+         recoCorr = puppisd_corrRECO_cen.Eval(puppipt)
      else: recoCorr = puppisd_corrRECO_for.Eval(puppipt)
 
      totalWeight = genCorr * recoCorr
@@ -557,7 +557,7 @@ def AnalyzeDataSet():
         myEleTightID=[]
         for iele in range(nEle):
             if eleP4[iele].Pt() < 10 : continue
-            if abs(eleP4[iele].Eta()) >2.5: continue
+            if (abs(eleP4[iele].Eta()) > 2.5) or (abs(eleP4[iele].Eta()) > 1.44 and abs(eleP4[iele].Eta()) < 1.57): continue   # excluding the transition region
 
             myEles.append(eleP4[iele])
             myEleTightID.append(eleIsPassTight[iele])
@@ -666,6 +666,11 @@ def AnalyzeDataSet():
                     if DeltaR(phoP4[iph],thinjetP4[nb]) < 0.4:
                         isClean=False
                         break
+
+                for fjet in range(CA15njets):
+                    if DeltaR(CA15jetP4[fjet],thinjetP4[nb]) < 1.5:
+                        isClean=False
+
                 if not isClean: continue
 
                 myJetP4.append(thinjetP4[nb])
@@ -775,15 +780,11 @@ def AnalyzeDataSet():
         if nFatJet==1:
             N2DDT = SelN2DDT[0]
             N2DDTCond = N2DDT < 0
-
-
- #----------------------------------------------------------------------------------------------------------------------------------------------------------------
- #----------------------------------------------------------------------------------------------------------------------------------------------------------------
-        ## Sort jets
-
-        if nFatJet==0: continue
-        if nFatJet==1:
             Fatjet1_pT=Selca15jetsP4[0].Pt()
+            if Fatjet1_pT < 350.0 :
+                DoubeSF = 0.91
+            else: DoubeSF = 1.0
+
             Fatjet1_eta=Selca15jetsP4[0].Eta()
             CA15SD=corrSD[0]
             #min_dPhi_Fatjet_MET=DeltaPhi(Selca15jetsP4[0].Phi(),pfMetPhi)
@@ -915,6 +916,9 @@ def AnalyzeDataSet():
 
         ZeePhicond=True
         ZmumuPhicond=True
+        ZCRCond=False
+        if ((nfailBjets==1 and nJets==1 ) or nJets==0):
+            ZCRCond=True
 
         if applydPhicut and nJets == 1:
             if DeltaPhi(ZeePhi,myJetP4[ifirstjet].Phi()) < 0.4: ZeePhicond=False
@@ -933,16 +937,16 @@ def AnalyzeDataSet():
             iLeadLep=sortedindex[0]
             iSecondLep=sortedindex[1]
 
-            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10.: #and myEleLooseID[iSecondLep]:
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and (abs(eleP4[iLeadLep].Eta()) > 2.4) and myEles[iSecondLep].Pt() > 10.: #and myEleLooseID[iSecondLep]:
 
                 # ZpT = math.sqrt( (myEles[iLeadLep].Px()+myEles[iSecondLep].Px())*(myEles[iLeadLep].Px()+myEles[iSecondLep].Px()) + (myEles[iLeadLep].Py()+myEles[iSecondLep].Py())*(myEles[iLeadLep].Py()+myEles[iSecondLep].Py()) )
 
 
-                if SRnjetcond and ZeePhicond and SRFatjetcond:
+                if SRnjetcond and ZeePhicond and SRFatjetcond and ZCRCond:
                     allquantities.reg_2e2b_N2DDT = N2DDT
                     allquantities.reg_2e2b_N2    = N2
 
-                if SRnjetcond and ZeePhicond and SRFatjetcond and (N2DDT <0):
+                if SRnjetcond and ZeePhicond and SRFatjetcond and ZCRCond and (N2DDT <0):
 
                     allquantities.reg_2e2b_Zmass = ZeeMass
                     # allquantities.reg_2e2b_ZpT=ZpT
@@ -977,27 +981,23 @@ def AnalyzeDataSet():
 
                 # ZpT = math.sqrt( (myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px())*(myMuos[iLeadLep].Px()+myMuos[iSecondLep].Px()) + (myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py())*(myMuos[iLeadLep].Py()+myMuos[iSecondLep].Py()) )
 
-                if SRnjetcond and ZmumuPhicond and SRFatjetcond:
+                if SRnjetcond and ZmumuPhicond and SRFatjetcond and ZCRCond:
                     allquantities.reg_2mu2b_N2DDT = N2DDT
                     allquantities.reg_2mu2b_N2    = N2
 
-                if  SRnjetcond and ZmumuPhicond and SRFatjetcond and (N2DDT < 0):
+                if  SRnjetcond and ZmumuPhicond and SRFatjetcond and ZCRCond and (N2DDT < 0):
 
                     allquantities.reg_2mu2b_Zmass = ZmumuMass
                     # allquantities.reg_2mu2b_ZpT=ZpT
-
                     allquantities.reg_2mu2b_hadrecoil = ZmumuRecoil
                     allquantities.reg_2mu2b_MET = pfMet
                     allquantities.reg_2mu2b_ca15jet_pT = Fatjet1_pT
                     allquantities.reg_2mu2b_ca15jet_eta = Fatjet1_eta
                     allquantities.reg_2mu2b_ca15jet_SD = CA15SD
-
                     allquantities.reg_2mu2b_lep1_pT=myMuos[iLeadLep].Pt()
                     allquantities.reg_2mu2b_lep2_pT=myMuos[iSecondLep].Pt()
-
                     allquantities.reg_2mu2b_lep1_eta=myMuos[iLeadLep].Eta()
                     allquantities.reg_2mu2b_lep2_eta=myMuos[iSecondLep].Eta()
-
                     isZmumuCR = True
 
 
@@ -1020,11 +1020,11 @@ def AnalyzeDataSet():
 
 
         #1e, 1 b-tagged
-        if nEle==1 and nMu==0 and mynTau==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and Wenumass > 0. and pfMet > 50.:
+        if nEle==1 and nMu==0 and mynTau==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and pfMet > 50.:
 
             iLeadLep=0
 
-            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep]:
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and (abs(myEles[iLeadLep].Eta()) > 2.4):
 
                 # WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
 
@@ -1043,20 +1043,18 @@ def AnalyzeDataSet():
                     allquantities.reg_1e2bW_ca15jet_pT = Fatjet1_pT
                     allquantities.reg_1e2bW_ca15jet_eta = Fatjet1_eta
                     allquantities.reg_1e2bW_ca15jet_SD = CA15SD
-
                     allquantities.reg_1e2bW_lep1_pT   = myEles[iLeadLep].Pt()
                     allquantities.reg_1e2bW_lep1_eta  = myEles[iLeadLep].Eta()
-
                     allquantities.reg_1e2bW_njet = nJets
                     if nJets==1:
-                        allquantities.reg_1e2bW_min_dPhi_jet_Recoil =DeltaPhi(WmunuPhi,myJetP4[ifirstjet].Phi()) #min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                        allquantities.reg_1e2bW_min_dPhi_jet_Recoil =DeltaPhi(WenuPhi,myJetP4[ifirstjet].Phi()) #min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                         # allquantities.reg_1e2bW_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                     # allquantities.reg_1e2bW_nmu = nMu
                     isWenuCR2W = True
 
 
         #1mu, 1 b-tagged
-        if nMu==1 and nEle==0 and mynTau==0  and MuCRtrigstatus and WmunuRecoil>200. and jetcond and Wmunumass > 0. and pfMet > 50.:
+        if nMu==1 and nEle==0 and mynTau==0  and MuCRtrigstatus and WmunuRecoil>200. and jetcond and pfMet > 50.:
             iLeadLep=0
 
             if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
@@ -1077,17 +1075,13 @@ def AnalyzeDataSet():
                     allquantities.reg_1mu2bW_ca15jet_pT = Fatjet1_pT
                     allquantities.reg_1mu2bW_ca15jet_eta = Fatjet1_eta
                     allquantities.reg_1mu2bW_ca15jet_SD = CA15SD
-
-
                     allquantities.reg_1mu2bW_lep1_pT=myMuos[iLeadLep].Pt()
                     allquantities.reg_1mu2bW_lep1_eta=myMuos[iLeadLep].Eta()
-
-
                     allquantities.reg_1mu2bW_lep1_iso=myMuIso[iLeadLep]
                     allquantities.reg_1mu2bW_njet = nJets
                     if nJets==1:
-                        allquantities.reg_1mu2bW_min_dPhi_jet_Recoil = min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-                        allquantities.reg_1mu2bW_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                        allquantities.reg_1mu2bW_min_dPhi_jet_Recoil = DeltaPhi(WmunuPhi,myJetP4[ifirstjet].Phi()) #min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
+                        #allquantities.reg_1mu2bW_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                     # allquantities.reg_1mu2bW_nmu = nMu
                     isWmunuCR2W = True
 
@@ -1109,11 +1103,11 @@ def AnalyzeDataSet():
 
 
         #1e, 1 b-tagged
-        if nEle==1 and nMu==0 and mynTau==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and  Wenumass > 0. and pfMet > 50.:
+        if nEle==1 and nMu==0 and mynTau==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and pfMet > 50.:
 
             iLeadLep=0
 
-            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep]:
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and (abs(myEles[iLeadLep].Eta()) > 2.4):
 
                 # WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
 
@@ -1141,12 +1135,11 @@ def AnalyzeDataSet():
                     if nJets==1:
                         allquantities.reg_1e2bT_min_dPhi_jet_Recoil = DeltaPhi(WenuPhi,myJetP4[ifirstjet].Phi()) #min( [DeltaPhi(WenuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                         #allquantities.reg_1e2bT_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-
                     isWenuCR2T = True
 
 
         #1mu, 1 b-tagged
-        if nMu==1 and nEle==0 and mynTau==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and Wmunumass > 0. and pfMet > 50.:
+        if nMu==1 and nEle==0 and mynTau==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and pfMet > 50.:
             iLeadLep=0
 
             if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
@@ -1178,7 +1171,6 @@ def AnalyzeDataSet():
                     if nJets==1:
                         allquantities.reg_1mu2bT_min_dPhi_jet_Recoil = DeltaPhi(WmunuPhi,mybJetsP4[0].Phi()) < 0.4 #min( [DeltaPhi(WmunuPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
                         # allquantities.reg_1mu2bT_min_dPhi_jet_MET = min( [DeltaPhi(pfMetPhi,myJetP4[nb].Phi()) for nb in range(nJets)] )
-
                     isWmunuCR2T = True
 
 
@@ -1475,7 +1467,7 @@ def AnalyzeDataSet():
         if eleweights == 0.0:
             eleweights = 1.0
 
-        allweights = puweight * mcweight * genWeight * eleweights * metTrig_firstmethodReweight * muweights
+        allweights = puweight * mcweight * genWeight * eleweights * metTrig_firstmethodReweight * muweights * DoubeSF
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         # temp_weight_withOutBtag = allweights
@@ -1593,7 +1585,7 @@ def AnalyzeDataSet():
                         if SRFatjetcond:
                             CR2e2bCutFlow['nFATJet']+=allweights
 
-                            if (nJets==0 or nJets ==1):
+                            if ZCRCond:
                                 CR2e2bCutFlow['nJets']+=allweights
 
                                 if jetcond:
@@ -1608,7 +1600,7 @@ def AnalyzeDataSet():
                                             iLeadLep=1
                                             iSecondLep=0
 
-                                        if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10.:# and myEleLooseID[iSecondLep]:
+                                        if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and (abs(myEles[iLeadLep].Eta()) > 2.4):# and myEleLooseID[iSecondLep]:
                                             CR2e2bCutFlow['nlepCond']+=allweights
                                             if N2DDT <0:
                                                 CR2e2bCutFlow['N2DDT']+=allweights
@@ -1630,7 +1622,8 @@ def AnalyzeDataSet():
 
                         if SRFatjetcond:
                             CR2mu2bCutFlow['nFATJet']+=allweights
-                            if WCond:
+
+                            if ZCRCond:
                                 CR2mu2bCutFlow['nJets']+=allweights
 
                                 if jetcond:
@@ -1674,7 +1667,7 @@ def AnalyzeDataSet():
                                     if nEle==1 and nMu==0 and mynTau==0:# and nPho==0:
                                         CR1e2bWCutFlow['nlep']+=allweights
 
-                                        if myEles[0].Pt() > 40. and myEleTightID[0]:
+                                        if myEles[0].Pt() > 40. and myEleTightID[0] and (abs(myEles[iLeadLep].Eta()) > 2.4):
                                             CR1e2bWCutFlow['nlepCond']+=allweights
                                             if N2DDT <0:
                                                 CR1e2bWCutFlow['N2DDT']+=allweights
@@ -1696,7 +1689,7 @@ def AnalyzeDataSet():
                         if SRFatjetcond:
                             CR1mu2bWCutFlow['nFATJet']+=allweights
 
-                            if (nJets==0 or nJets ==1):
+                            if WCond:
                                 CR1mu2bWCutFlow['nJets']+=allweights
 
                                 if jetcond:
@@ -1737,7 +1730,7 @@ def AnalyzeDataSet():
                                     if nEle==1 and nMu==0 and mynTau==0:# and nPho==0:
                                         CR1e2bTCutFlow['nlep']+=allweights
 
-                                        if myEles[0].Pt() > 40. and myEleTightID[0]:
+                                        if myEles[0].Pt() > 40. and myEleTightID[0] and (abs(myEles[iLeadLep].Eta()) > 2.4):
                                             CR1e2bTCutFlow['nlepCond']+=allweights
                                             if N2DDT <0:
                                                 CR1e2bTCutFlow['N2DDT']+=allweights

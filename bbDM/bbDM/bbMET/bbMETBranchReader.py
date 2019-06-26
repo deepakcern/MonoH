@@ -632,6 +632,11 @@ def AnalyzeDataSet():
                     if DeltaR(phoP4[iph],thinjetP4[nb]) < 0.4:
                         isClean=False
                         break
+
+                for fjet in range(CA15njets):
+                    if DeltaR(CA15jetP4[fjet],thinjetP4[nb]) < 1.5:
+                        isClean=False
+
                 if not isClean: continue
 
                 myJetP4.append(thinjetP4[nb])
@@ -849,7 +854,8 @@ def AnalyzeDataSet():
         if (nJets == 0 or nJets == 1):
             SRnjetcond    =    True
 
-        MET_Jet_dPhiCond            =  min_dPhi_jet_MET > 0.4
+        MET_Jet_dPhiCond            =  True
+        if nJets==1: MET_Jet_dPhiCond = min_dPhi_jet_MET > 0.4
         SR_Cut7_dPhi_jet_MET        =   MET_Jet_dPhiCond
         SR_Cut_nFATJet              =   SRFatjetcond
         SR_Cut1_nJets               =   SRnjetcond
@@ -1186,6 +1192,7 @@ def AnalyzeDataSet():
 #       ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         genpTReweighting = 1.0
         genWeight = 1.0
+        EWKQCDKfactor = 1.0
         if isData==1:
             genpTReweighting  =  1.0
             genWeight         =  1.0

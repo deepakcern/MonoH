@@ -199,6 +199,7 @@ def AnalyzeDataSet():
     st_eleIsPassLoose      = ROOT.std.vector('bool')()
     st_eleIsPassMedium     = ROOT.std.vector('bool')()
     st_eleIsPassTight      = ROOT.std.vector('bool')()
+   # st_eleIsPassVeto       = ROOT.std.vector('bool')()
 
     st_nPho                = array( 'L', [ 0 ] ) #ROOT.std.vector('int')()
     st_phoP4               = ROOT.std.vector('TLorentzVector')()
@@ -229,6 +230,7 @@ def AnalyzeDataSet():
     st_disc_againstMuonLoose        =    ROOT.std.vector('bool')()
 #    st_disc_againstMuonMedium       =    ROOT.std.vector('bool')()
     st_disc_againstMuonTight        =    ROOT.std.vector('bool')()
+    #st_disc_LooseIsolationMVA    =    ROOT.std.vector('bool')()
 
 
     mcweight = array( 'f', [ 0 ] )
@@ -340,6 +342,7 @@ def AnalyzeDataSet():
 
     outTree.Branch( 'st_nEle',st_nEle , 'st_nEle/L')
     outTree.Branch( 'st_eleP4',st_eleP4 )
+#    outTree.Branch('st_eleIsPassVeto',st_eleIsPassVeto)
     #outTree.Branch( 'st_eleIsPassLoose', st_eleIsPassLoose)#, 'st_eleIsPassLoose/O' )
     outTree.Branch( 'st_eleIsPassMedium', st_eleIsPassMedium)#, 'st_eleIsPassMedium/O' )
     outTree.Branch( 'st_eleIsPassTight', st_eleIsPassTight)#, 'st_eleIsPassTight/O' )
@@ -373,6 +376,7 @@ def AnalyzeDataSet():
     outTree.Branch( 'st_disc_againstMuonLoose', st_disc_againstMuonLoose)
 #    outTree.Branch( 'st_disc_againstMuonMedium', st_disc_againstMuonMedium)
     outTree.Branch( 'st_disc_againstMuonTight', st_disc_againstMuonTight)
+    #outTree.Branch('st_disc_LooseIsolationMVA',st_disc_LooseIsolationMVA)
 
     outTree.Branch( 'st_pu_nTrueInt', st_pu_nTrueInt, 'st_pu_nTrueInt/F')
     outTree.Branch( 'st_pu_nPUVert', st_pu_nPUVert, 'st_pu_nPUVert/F')
@@ -426,7 +430,7 @@ def AnalyzeDataSet():
         trigResult                 = skimmedTree.__getattr__('hlt_trigResult')
         filterName                 = skimmedTree.__getattr__('hlt_filterName')
         filterResult               = skimmedTree.__getattr__('hlt_filterResult')
-
+        BadPFMuonFilter            = skimmedTree.__getattr__('hlt_filterbadPFMuon')
 
         pfMet                      = skimmedTree.__getattr__('pfMetCorrPt')
         pfMetPhi                   = skimmedTree.__getattr__('pfMetCorrPhi')
@@ -508,10 +512,12 @@ def AnalyzeDataSet():
 
         nEle                       = skimmedTree.__getattr__('nEle')
         eleP4                      = skimmedTree.__getattr__('eleP4')
+        eleIsPassVeto              = skimmedTree.__getattr__('eleIsPassVeto')
         eleIsPassLoose             = skimmedTree.__getattr__('eleIsPassLoose')
         eleIsPassMedium            = skimmedTree.__getattr__('eleIsPassMedium')
         eleIsPassTight             = skimmedTree.__getattr__('eleIsPassTight')
         eleCharge                  = skimmedTree.__getattr__('eleCharge')
+
 
         nMu                        = skimmedTree.__getattr__('nMu')
         muP4                       = skimmedTree.__getattr__('muP4')
@@ -534,6 +540,7 @@ def AnalyzeDataSet():
         disc_againstElectronTight  = skimmedTree.__getattr__('disc_againstElectronTightMVA5')
         disc_againstMuonLoose      = skimmedTree.__getattr__('disc_againstMuonLoose3')
         disc_againstMuonTight      = skimmedTree.__getattr__('disc_againstMuonTight3')
+        LooseIsolationMVA          = skimmedTree.__getattr__('disc_byVLooseIsolationMVArun2v1DBnewDMwLT')
 
         isData                     = skimmedTree.__getattr__('isData')
         mcWeight                   = skimmedTree.__getattr__('mcWeight')
@@ -598,7 +605,7 @@ def AnalyzeDataSet():
         filter5 = CheckFilter(filterName, filterResult, 'Flag_eeBadScFilter')
         filter6 = CheckFilter(filterName, filterResult, 'Flag_goodVertices')
 
-        filter7 = CheckFilter(filterName, filterResult, 'Flag_BadPFMuonFilter')
+        filter7 = BadPFMuonFilter#CheckFilter(filterName, filterResult, 'Flag_BadPFMuonFilter')
 
         if not isData:
             filterstatus = True
@@ -709,7 +716,7 @@ def AnalyzeDataSet():
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         myEles=[]
         for iele in range(nEle):
-            if (eleP4[iele].Pt() > 10. ) & (abs(eleP4[iele].Eta()) <2.5) & (bool(eleIsPassLoose[iele]) == True) :
+            if (eleP4[iele].Pt() > 10. ) & (abs(eleP4[iele].Eta()) <2.5) & (bool(eleIsPassVeto[iele]) == True) :
 
 #                # Clean eles against jets: if ele in jet coll, remove ele. Currently only for CSV coll
 #                isClean=True
@@ -741,7 +748,7 @@ def AnalyzeDataSet():
         # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
         myTaus=[]
         for itau in range(nTau):
-            if (tauP4[itau].Pt()>18.) & (abs(tauP4[itau].Eta())<2.3) & (bool(isDecayModeFinding[itau]) == True) & (bool(passLooseTauIso[itau]) == True):
+            if (tauP4[itau].Pt()>18.) & (abs(tauP4[itau].Eta())<2.3) & (bool(isDecayModeFinding[itau]) == True) & (bool(LooseIsolationMVA[itau]) == True):
                 myTaus.append(itau)
 
 # ----------------------------------------------------------------------------------------------------------------------------------------------------------------
@@ -810,6 +817,7 @@ def AnalyzeDataSet():
         st_eleP4.clear()
         st_eleIsPassMedium.clear()
         st_eleIsPassTight.clear()
+       # st_eleIsPassVeto.clear()
 
 
         st_muP4.clear()
@@ -833,6 +841,7 @@ def AnalyzeDataSet():
         st_disc_againstMuonLoose.clear()
 #        st_disc_againstMuonMedium.clear()
         st_disc_againstMuonTight.clear()
+        #st_disc_LooseIsolationMVA.clear()
 
         st_genParId.clear()
         st_genMomParId.clear()
@@ -912,6 +921,7 @@ def AnalyzeDataSet():
             #st_eleIsPassLoose.push_back(bool(eleIsPassLoose[iele]))
             st_eleIsPassMedium.push_back(bool(eleIsPassMedium[iele]))
             st_eleIsPassTight.push_back(bool(eleIsPassTight[iele]))
+           # st_eleIsPassVeto.push_back(bool(eleIsPassVeto[iele]))
 
         st_nMu[0] = len(myMuos)
         for imu in myMuos:
@@ -932,6 +942,7 @@ def AnalyzeDataSet():
             st_disc_againstElectronTight.push_back(bool(disc_againstElectronTight[itau]))
             st_disc_againstMuonLoose.push_back(bool(disc_againstMuonLoose[itau]))
             st_disc_againstMuonTight.push_back(bool(disc_againstMuonTight[itau]))
+            #st_disc_LooseIsolationMVA.push_back(bool(disc_LooseIsolationMVA[itau]))
 
         st_nPho[0]=nPho
         for ipho in range(nPho):

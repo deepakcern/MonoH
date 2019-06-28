@@ -632,11 +632,11 @@ def AnalyzeDataSet():
                     if DeltaR(phoP4[iph],thinjetP4[nb]) < 0.4:
                         isClean=False
                         break
-
+                '''
                 for fjet in range(CA15njets):
                     if DeltaR(CA15jetP4[fjet],thinjetP4[nb]) < 1.5:
                         isClean=False
-
+                '''
                 if not isClean: continue
 
                 myJetP4.append(thinjetP4[nb])

@@ -23,7 +23,10 @@ Here are the plots(old slides):
 
 I realised that there are few selections which I should update:
 - In 2016 they used vetoID for electron veto
-- According to 2016 AN, tau ID was same as in my code, they are using following things to select tau:
+- According to 2016 AN, tau ID was same as in my code, they are using following things[with some pT and eta selection] to select tau:
   - New DecayModeFinding
   - byVLooseIsolationMVArun2v1DBnewDMwLT
+  
+In my code I was using following 
+byLooseIsolationMVA3oldDMwLT
 

@@ -68,5 +68,5 @@ further in my framework I was using following selections to select tau properly 
 **Not sure about these variables needs to confirm with Raman**
 
 #### updates in the code:
-
-##### Note: I did a mistake in this iteration, I should not do many changes in one time, then it becomes very hard to know which change is dominating in the final output. I will do this in future.
+Note: 
+I did a mistake in this iteration,I made many changes in this iteration, I should not do many changes in one time, then it becomes very hard to know which change is dominating in the final output. I will do this in future.

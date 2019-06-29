@@ -1,6 +1,7 @@
 # change log for the monoH boosted category
 
 ## 1. base code:
+
 we will keep log from here
 
 [https://github.com/deepakcern/MonoH/blob/e2c92323b87e5f1b1419742ab38a3e227ccd9b50/bbDM/bbDM/bbMET/bbMETBranchReader.py](https://github.com/deepakcern/MonoH/blob/e2c92323b87e5f1b1419742ab38a3e227ccd9b50/bbDM/bbDM/bbMET/bbMETBranchReader.py)
@@ -13,9 +14,12 @@ plots from base code(middle plots):
 #### Note: In above plots we used SDMass Corr from Raman's code
 
 ## 2. Next Change:
+
+---
 #### BugFound: ??
 #### What is bug: ??
 #### Fixed in this iteration: ??
+---
 
 Here I have updated code for SDMaa corr. This time I used benedik's root file for SDMass corr.
 
@@ -24,10 +28,11 @@ Here are the plots(old slides):
 
 
 ## 3. Next change:
+
+---
 #### BugFound: *Yes*
 #### What is bug: *I was cleaning FatJet against lepton with DeltaR < 0.4 but it has to be DeltaR < 1.5
 #### Fixed in this iteration: *Yes*
-
 ---
 
 I realised that there are few selections which I should update:

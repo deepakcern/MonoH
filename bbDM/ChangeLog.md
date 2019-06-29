@@ -54,7 +54,7 @@ You cannot color plain text in a GitHub README.md file. You can however add colo
 To do this just add tags such as these samples to your README.md file:
 
 ```json
-   // code for coloring
+   ergergergb 5yt45y 
 ```
 ```html
    // code for coloring

@@ -48,3 +48,21 @@ further in my framework I was using these tau selections to tau properly against
 + this will be highlighted in green
 - this will be highlighted in red
 ```
+
+You cannot color plain text in a GitHub README.md file. You can however add color to code samples with the tags below.
+
+To do this just add tags such as these samples to your README.md file:
+
+```json
+   // code for coloring
+```
+```html
+   // code for coloring
+```
+```js
+   // code for coloring
+```
+```css
+   // code for coloring
+```
+// etc.

@@ -35,11 +35,10 @@ Here are the plots(old slides):
 #### What is bug: *I was cleaning FatJet against lepton with DeltaR < 0.4 but it has to be DeltaR < 1.5*
 #### Fixed in this iteration: *Yes*
 ---
-
-################################################
+#######################################################################################################################
 
 ---
-I realised that there are few selections which I should update:
+I realised that there are few selections which I need to update in my code:
 
 1. **In 2016 they used vetoID for electron veto**
 2. **According to 2016 AN, tau ID was same as in my code, they are using following things[with pT > 18 GeV and eta < 2.3 selection] to select tau**:

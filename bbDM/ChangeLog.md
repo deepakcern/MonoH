@@ -25,8 +25,8 @@ I realised that there are few selections which I should update:
 
 1. **In 2016 they used vetoID for electron veto**
 2. **According to 2016 AN, tau ID was same as in my code, they are using following things[with pT > 18 GeV and eta < 2.3 selection] to select tau**:
-  - **New DecayModeFinding**
-  - **byVLooseIsolationMVArun2v1DBnewDMwLT**
+  + - **New DecayModeFinding**
+  + - **byVLooseIsolationMVArun2v1DBnewDMwLT**
   
 In my framework I was using following things [with pT > 18 GeV and eta < 2.3] to select tau:
 - New DecayModeFinding

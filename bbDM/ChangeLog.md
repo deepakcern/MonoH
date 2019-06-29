@@ -20,6 +20,7 @@ plots from base code(middle plots):
 #### What is bug: ??
 #### Fixed in this iteration: ??
 ---
+### Other updates:
 
 Here I have updated code for SDMaa corr. This time I used benedik's root file for SDMass corr.
 
@@ -47,6 +48,9 @@ In my framework I was using following things [with pT > 18 GeV and eta < 2.3] to
 - New DecayModeFinding
 - byLooseIsolationMVA3oldDMwLT
 
+3. In 2016 monoH paper, it is written that AK4 Jets are cleaned against CA15Jets, but it is not written in AN and also not mentioned in the preapproval slides.
+
+4. In 2016 monoH paper, it is mentioned to remove electron in transition region but not written in AN.
 
 ---
 further in my framework I was using following selections to select tau properly against leptons [not sure it was used in 2016Analysis or not], these selections I was using in monoH resolved same as bbDM so didn't removed in monoH boosted category:

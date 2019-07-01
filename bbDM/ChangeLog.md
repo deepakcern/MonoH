@@ -24,7 +24,7 @@ plots from base code(middle plots):
 ---
 ### Other updates in the code:
 
-Here I have updated code for SDMaa corr. This time I used benedik's root file for SDMass corr.
+Here I have updated code for SDMaa corr. This time I used Benedik's root file for SDMass corr.
 
 #### Plots:
 Here are the plots(old slides):

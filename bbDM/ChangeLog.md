@@ -92,7 +92,7 @@ Here are the plots from this iteration: [http://dekumar.web.cern.ch/dekumar/My_S
 #### Conclusion:
 - We have very less events now [specially in electron region]
 - Something is wrong in lepton veto condition
-- need to cross check agian
+- need to cross check again
 ---
 
 ## 4. Next change:

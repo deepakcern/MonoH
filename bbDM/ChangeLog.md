@@ -71,7 +71,7 @@ further in my framework I was using following selections to select tau properly 
 Note: 
 I did a mistake in this iteration,I made many changes in this iteration, I should not do many changes in one time, then it becomes very hard to know which change is dominating in the final output. I will do this in future.
 
-There few changes in this iteration:
+There are few changes in this iteration:
 
 - Updated electron looseID to electronVetoID
 - Updated tau selection for tau veto. Removed disc_againstElectron/Muon variables only kept **New DecayModeFinding** and **byVLooseIsolationMVArun2v1DBnewDMwLT** for tau veto

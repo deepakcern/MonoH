@@ -38,9 +38,9 @@ Here are the plots(old slides):
 ## 3. Next change:
 
 ---
-#### BugFound: *Yes*
-#### What is bug: *I was cleaning FatJet against lepton with DeltaR < 0.4 but it has to be DeltaR < 1.5*
-#### Fixed in this iteration: *Yes*
+#### BugFound ?: *Yes*
+#### What is bug ?: *I was cleaning FatJet against lepton with DeltaR < 0.4 but it has to be DeltaR < 1.5*
+#### Fixed in this iteration ?: *Yes*
 ---
 #####################################################################################
 

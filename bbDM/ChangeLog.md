@@ -11,6 +11,8 @@ plots from base code(middle plots):
 
 [https://drive.google.com/file/d/1IgtXQXbxUBmRXoGS4cvcMYrUSMm-YYdJ/view](https://drive.google.com/file/d/1IgtXQXbxUBmRXoGS4cvcMYrUSMm-YYdJ/view)
 
+
+
 #### Note: In above plots we used SDMass Corr from Raman's code
 
 ## 2. Next Change:
@@ -28,6 +30,10 @@ Here I have updated code for SDMaa corr. This time I used benedik's root file fo
 Here are the plots(old slides):
 [http://dekumar.web.cern.ch/dekumar/My_Slides/Updates/monoH_Boosted_category_18062019.pdf](http://dekumar.web.cern.ch/dekumar/My_Slides/Updates/monoH_Boosted_category_18062019.pdf)
 
+#### Conclusion:
+- In this iteration SDMass plots are not good in all CRs, they are not matching with 2016 Analysis.
+- Top CR has more stats than 2016
+- Not looking ZCR for now
 
 ## 3. Next change:
 

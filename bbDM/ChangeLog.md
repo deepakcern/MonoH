@@ -84,6 +84,7 @@ There are few changes in this iteration:
 - Updated tau selection for tau veto. Removed disc_againstElectron/Muon variables only kept **New DecayModeFinding** and **byVLooseIsolationMVArun2v1DBnewDMwLT** for tau veto
 - Updated EWK and QCD K-factor as monoH2016
 - Cleaned AK4Jets against CA15jet [given in monoH 2016 paper]
+- removed electron in transition region
 
 #### Plots:
 Here are the plots from this iteration: [http://dekumar.web.cern.ch/dekumar/My_Slides/Updates/monoH_boosted_changeNo3.pdf](http://dekumar.web.cern.ch/dekumar/My_Slides/Updates/monoH_boosted_changeNo3.pdf)

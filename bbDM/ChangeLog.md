@@ -74,4 +74,6 @@ I did a mistake in this iteration,I made many changes in this iteration, I shoul
 There few changes in this iteration:
 
 - Updated electron looseID to electronVetoID
-- Updated 
+- Updated tau selection for tau veto. Removed disc_againstElectron/Muon variables only kept **New DecayModeFinding** and **byVLooseIsolationMVArun2v1DBnewDMwLT** for tau veto
+- Updated EWK and QCD K-factor as monoH2016
+- Cleaned AK4Jets against CA15jet [given in monoH 2016 paper]

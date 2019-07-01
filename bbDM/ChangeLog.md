@@ -106,3 +106,11 @@ https://github.com/deepakcern/MonoH/blob/9853137d9f254fd0216214744214e00895a9951
 #### Fixed in this iteration: ??
 ---
 ### Other updates in the code:
+Tau disc variables were causing events reduction so in this iteration I have added again tau disc varible:
+**Why?**: because in monoH 2016 paper it is written that they put tau[hadronic] veto not all the taus so we need to keep tau descriminator against lepton:
+
+#### Code:
+https://github.com/deepakcern/MonoH/blob/3dc2b7f0b558c858295ea4d2aa86a3a04c6b3189/bbDM/bbDM/bbMET/bbMETBranchReader.py
+
+#### Plots:
+N/A

@@ -22,7 +22,7 @@ plots from base code(middle plots):
 #### What is bug: ??
 #### Fixed in this iteration: ??
 ---
-### Other updates in the code:
+### Other updates in the code[w.r.t previous version]:
 
 Here I have updated code for SDMaa corr. This time I used Benedik's root file for SDMass corr.
 
@@ -74,7 +74,7 @@ further in my framework I was using following selections to select tau properly 
 **Not sure about these variables needs to confirm with Raman**
 
 ---
-### updates in the code:
+### Other updates in the code[w.r.t previous version]:
 Note: 
 I did a mistake in this iteration,I made many changes in this iteration, I should not do many changes in one time, then it becomes very hard to know which change is dominating in the final output. Be carefull in future.
 
@@ -105,7 +105,7 @@ https://github.com/deepakcern/MonoH/blob/9853137d9f254fd0216214744214e00895a9951
 #### What is bug: ??
 #### Fixed in this iteration: ??
 ---
-### Other updates in the code:
+### Other updates in the code[w.r.t previous version]:
 Tau disc variables were causing events reduction so in this iteration I have added again tau disc varible:
 **Why?**: because in monoH 2016 paper it is written that they put tau[hadronic] veto not all the taus so we need to keep tau descriminator against lepton:
 

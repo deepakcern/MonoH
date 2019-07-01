@@ -60,7 +60,6 @@ In my framework I was using following things [with pT > 18 GeV and eta < 2.3] to
 
 further in my framework I was using following selections to select tau properly against leptons [not sure it was used in 2016Analysis or not], these selections I was using in monoH resolved same as bbDM so didn't removed in monoH boosted category:
 - disc_againstElectronLooseMVA5
-- disc_againstElectronMediumMVA5
 - disc_againstElectronTightMVA5
 - disc_againstMuonLoose3 
 - disc_againstMuonTight3

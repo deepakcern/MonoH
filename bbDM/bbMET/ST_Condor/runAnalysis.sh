@@ -8,7 +8,7 @@ export VO_CMS_SW_DIR=/cvmfs/cms.cern.ch
 source $VO_CMS_SW_DIR/cmsset_default.sh
 
 # Download sandbox
-wget --no-check-certificate "http://stash.osgconnect.net/+spmondal/sandbox-CMSSW_8_0_26_patch1-939efad.tar.bz2"
+wget --no-check-certificate "http://stash.osgconnect.net/+deepakk/sandbox-CMSSW_8_0_26_patch1-939efad.tar.bz2"
 
 # Setup framework from sandbox
 cmssw_setup sandbox-CMSSW_8_0_26_patch1-939efad.tar.bz2

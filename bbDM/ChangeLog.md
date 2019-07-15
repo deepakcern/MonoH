@@ -148,3 +148,5 @@ In this iteration I changed AK4Jet cleaning ordering.
 First we select CA15 jet with all selections [pT, eta, double B tagger]
 
 Then we do AK4Jet cleaning against CA15Jet
+
+Here I also applied photon veto and remoded eta < 2.4 for tight electron now it is 2.5 for all electron.

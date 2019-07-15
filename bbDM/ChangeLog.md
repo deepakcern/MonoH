@@ -130,3 +130,5 @@ We used tau veto against loose lepton in all CR. Ititially it was tight
 #### Code: https://github.com/deepakcern/MonoH/blob/dbe2287c6f9b33b4b426e34b32a632119cae3fe4/bbDM/bbDM/bbMET/bbMETBranchReader.py
 
 #### Plots: http://dekumar.web.cern.ch/dekumar/figs/boosted_category_fixed_eta_08072019/
+
+#### Slides comparing with step2 : http://dekumar.web.cern.ch/dekumar/My_Slides/Updates/Boosted_category_08072019.pdf

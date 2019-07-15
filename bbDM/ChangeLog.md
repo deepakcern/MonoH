@@ -153,3 +153,5 @@ Here I also applied photon veto and remoded eta < 2.4 for tight electron now it 
 
 
 #### Code: https://github.com/deepakcern/MonoH/blob/c06de916069a350cb24502428d49cfaceb4f5ea3/bbDM/bbDM/bbMET/bbMETBranchReader.py
+
+#### Plotshttp://dekumar.web.cern.ch/dekumar/My_Slides/Updates/boosted_reordering_phoVeto.pdf:

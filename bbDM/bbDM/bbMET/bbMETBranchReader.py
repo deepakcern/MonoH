@@ -454,7 +454,7 @@ def AnalyzeDataSet():
             tauP4                      = skimmedTree.__getattr__('st_HPSTau_4Momentum')
             # isDecayModeFinding         = skimmedTree.__getattr__('st_disc_decayModeFinding')
             # passLooseTauIso            = skimmedTree.__getattr__('st_disc_byLooseIsolationMVA3oldDMwLT')
-            
+
             disc_againstElectronLoose  = skimmedTree.__getattr__('st_disc_againstElectronLoose')
             disc_againstElectronMedium = skimmedTree.__getattr__('st_disc_againstElectronMedium')
             disc_againstElectronTight  = skimmedTree.__getattr__('st_disc_againstElectronTight')
@@ -604,12 +604,12 @@ def AnalyzeDataSet():
                 if disc_againstMuonTight[itau] and disc_againstElectronLoose[itau]:
                     myTausTightMuon.append(tauP4[itau])
                 if disc_againstMuonLoose[itau] and disc_againstElectronLoose[itau]:
-                    myTausLooseEleMu.append(tauP4[itau])                
+                    myTausLooseEleMu.append(tauP4[itau])
             if disc_againstElectronLoose!=None and not foundTau:
                 if disc_againstElectronTight[itau]:
                     myTausTightElectron.append(tauP4[itau])
                 if disc_againstElectronLoose[itau]:
-                    myTausLooseEleMu.append(tauP4[itau])    
+                    myTausLooseEleMu.append(tauP4[itau])
             if disc_againstMuonLoose!=None and not foundTau:
                 if disc_againstMuonTight[itau]:
                     myTausTightMuon.append(tauP4[itau])
@@ -639,7 +639,9 @@ def AnalyzeDataSet():
         myfailedbJetsP4=[]
 
 
-        if options.CSV:
+
+        '''
+        if options.CSV or options.DeepCSV:
             for nb in range(nTHINJets):
             #---Fake jet cleaner, wrt electrons and muons----
                 isClean=True
@@ -651,7 +653,7 @@ def AnalyzeDataSet():
                     if DeltaR(imu,thinjetP4[nb]) < 0.4:
                         isClean=False
                         break
-
+                
                 for iph in range(nPho):
                     if DeltaR(phoP4[iph],thinjetP4[nb]) < 0.4:
                         isClean=False
@@ -676,43 +678,7 @@ def AnalyzeDataSet():
                     myfailedbJetsP4.append(thinjetP4[nb])
 
             myJetNPV=thinjetNPV
-#            nUncleanJets=nTHINJets
-
-        if options.DeepCSV:
-            for nb in range(nTHINJets):
-            #---Fake jet cleaner, wrt electrons and muons----
-                isClean=True
-                for iele in myEles[:]:
-                    if DeltaR(iele,thinjetP4[nb]) < 0.4:
-                        isClean=False
-                        break
-                for imu in myMuos[:]:
-                    if DeltaR(imu,thinjetP4[nb]) < 0.4:
-                        isClean=False
-                        break
-
-                for iph in range(nPho):
-                    if DeltaR(phoP4[iph],thinjetP4[nb]) < 0.4:
-                        isClean=False
-                        break
-		
-                for fjet in range(CA15njets):
-                    if DeltaR(CA15jetP4[fjet],thinjetP4[nb]) < 1.5:
-                        isClean=False
-                
-                if not isClean: continue
-
-                myJetP4.append(thinjetP4[nb])
-                myJetCSV.append(thinJetCSV[nb])
-                myJetCSV.append(thinJetCSV[nb])
-
-                if thinJetCSV[nb] > CSVLWP and abs(thinjetP4[nb].Eta())<2.4:
-                    mybjets.append(nb)
-                    mybJetsP4.append(thinjetP4[nb])
-
-                if thinJetCSV[nb] <= CSVLWP and abs(thinjetP4[nb].Eta())<2.4:
-                    myfailedbjets.append(nb)
-                    myfailedbJetsP4.append(thinjetP4[nb])
+        '''
 
 
 ############################### Fatjet collection========================
@@ -767,8 +733,8 @@ def AnalyzeDataSet():
         #print ('nTauTightElectron:  ', nTauTightElectron, 'nTauTightMuon  :   ', nTauTightMuon, '  nTauLooseEleMu  :  ', nTauLooseEleMu  , 'nTau', nTau)
 
 
-        nBjets=len(mybjets)
-        nfailBjets=len(myfailedbjets)
+        # nBjets=len(mybjets)
+        # nfailBjets=len(myfailedbjets)
         nJets=len(myJetP4)
 ##################################
         #Fatjet collections
@@ -809,6 +775,76 @@ def AnalyzeDataSet():
                 Selca15jetsP4.append(myCA15P4[i])
                 SelN2DDT.append(n2ddt_)
                 corrSD.append(myCA15Mass[i])
+
+
+
+        if options.CSV or options.DeepCSV:
+            for nb in range(nTHINJets):
+            #---Fake jet cleaner, wrt electrons and muons----
+                isClean=True
+                for iele in myEles[:]:
+                    if DeltaR(iele,thinjetP4[nb]) < 0.4:
+                        isClean=False
+                        break
+                for imu in myMuos[:]:
+                    if DeltaR(imu,thinjetP4[nb]) < 0.4:
+                        isClean=False
+                        break
+
+                for iph in range(nPho):
+                    if DeltaR(phoP4[iph],thinjetP4[nb]) < 0.4:
+                        isClean=False
+                        break
+                
+                for fjet in range(len(Selca15jetsP4)):
+                    if DeltaR(Selca15jetsP4[fjet],thinjetP4[nb]) < 1.5:
+                        isClean=False
+                
+                if not isClean: continue
+
+                myJetP4.append(thinjetP4[nb])
+                myJetCSV.append(thinJetCSV[nb])
+                myJetHadronFlavor.append(THINjetHadronFlavor[nb])
+
+                if thinJetCSV[nb] > CSVLWP and abs(thinjetP4[nb].Eta())<2.4:
+                    mybjets.append(nb)
+                    mybJetsP4.append(thinjetP4[nb])
+
+                if thinJetCSV[nb] <= CSVLWP and abs(thinjetP4[nb].Eta())<2.4:
+                    myfailedbjets.append(nb)
+                    myfailedbJetsP4.append(thinjetP4[nb])
+
+            myJetNPV=thinjetNPV
+            nBjets=len(mybjets)
+            nfailBjets=len(myfailedbjets)
+            nJets=len(myJetP4)
+
+
+
+        '''
+        cleanBjets=[]
+        cleanfBjets=[]
+        for bj in range(len(mybJetsP4)):
+            jclean=True
+            for fj in range(len(Selca15jetsP4)):
+                if DeltaR(mybJetsP4[bj],Selca15jetsP4[fj]) < 1.5:
+                    jclean=False
+
+            if not jclean: continue
+            cleanBjets.append(mybJetsP4[bj])
+
+        for nbj in range(len(myfailedbJetsP4)):
+            jclean=True
+            for fj in range(len(Selca15jetsP4)):
+                if DeltaR(myfailedbJetsP4[nbj],Selca15jetsP4[fj]) < 1.5:
+                    jclean=False
+
+            if not jclean: continue
+            cleanfBjets.append(myfailedbJetsP4[nbj])
+
+        nBjets=len(cleanBjets)
+        nfailBjets=len(cleanfBjets)
+        '''
 
 
         nFatJet=len(Selca15jetsP4)
@@ -874,7 +910,7 @@ def AnalyzeDataSet():
 
         ######################## SR Condition ############################
 
-        if nEle+nMu+nTauLooseEleMu==0:
+        if nEle+nMu+nTauLooseEleMu+nPho==0:
             SRlepcond=True
         else:
             SRlepcond=False
@@ -957,7 +993,7 @@ def AnalyzeDataSet():
         ZeePhicond=True
         ZmumuPhicond=True
         ZCRCond=False
-        if ((nfailBjets==1 and nJets==1 ) or nJets==0):
+        if ((nJets==1 and nBjets==0 ) or nJets==0):
             ZCRCond=True
 
         if applydPhicut and nJets == 1:
@@ -966,7 +1002,7 @@ def AnalyzeDataSet():
 
          #2e, 1 b-tagged
 
-        if nEle==2 and nMu==0 and nTauLooseEleMu==0 and EleCRtrigstatus and ZeeMass>60. and ZeeMass<120. and ZeeRecoil>200. and jetcond and pfMet > 0.:
+        if nEle==2 and nMu==0 and nTauLooseEleMu==0 and nPho==0 and EleCRtrigstatus and ZeeMass>60. and ZeeMass<120. and ZeeRecoil>200. and jetcond and pfMet > 0.:
 #            CRCutFlow['nlepcond']+=1
             alllepPT=[lep.Pt() for lep in myEles]
             lepindex=[i for i in range(len(myEles))]
@@ -977,7 +1013,7 @@ def AnalyzeDataSet():
             iLeadLep=sortedindex[0]
             iSecondLep=sortedindex[1]
 
-            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and (abs(eleP4[iLeadLep].Eta()) > 2.4) and myEles[iSecondLep].Pt() > 10.: #and myEleLooseID[iSecondLep]:
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10.: #and myEleLooseID[iSecondLep]:
 
                 # ZpT = math.sqrt( (myEles[iLeadLep].Px()+myEles[iSecondLep].Px())*(myEles[iLeadLep].Px()+myEles[iSecondLep].Px()) + (myEles[iLeadLep].Py()+myEles[iSecondLep].Py())*(myEles[iLeadLep].Py()+myEles[iSecondLep].Py()) )
 
@@ -1005,7 +1041,7 @@ def AnalyzeDataSet():
 
 
         #2mu, 1 b-tagged
-        if nMu==2 and nEle==0 and nTauLooseEleMu==0 and MuCRtrigstatus and ZmumuMass>60. and ZmumuMass<120. and ZmumuRecoil>200. and jetcond and pfMet > 0.:
+        if nMu==2 and nEle==0 and nTauLooseEleMu==0 and nPho==0  and MuCRtrigstatus and ZmumuMass>60. and ZmumuMass<120. and ZmumuRecoil>200. and jetcond and pfMet > 0.:
 
 #            CRCutFlow['nlepcond']+=1
             alllepPT=[lep.Pt() for lep in myMuos]
@@ -1051,7 +1087,7 @@ def AnalyzeDataSet():
         WmuPhicond=True
 
         WCond=False
-        if ((nfailBjets==1 and nJets==1 ) or nJets==0):
+        if ((nJets==1 and nBjets==0 ) or nJets==0):
             WCond=True
 
         if applydPhicut and nJets==1:
@@ -1061,12 +1097,11 @@ def AnalyzeDataSet():
 
         #1e, 1 b-tagged
         #print ('nTauTightElectron:   ', nTauTightElectron, 'nTauTightMuon ', nTauTightMuon, 'nEle:   ', nEle, 'nMu  :  ', nMu)
-        if nEle==1 and nMu==0 and nTauLooseEleMu==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and pfMet > 50.:
-            print ('ECR:  step1')
+        if nEle==1 and nMu==0 and nTauLooseEleMu==0 and nPho==0  and EleCRtrigstatus and WenuRecoil>200. and jetcond and pfMet > 50.:
             iLeadLep=0
 
-            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and (abs(myEles[iLeadLep].Eta()) < 2.4):
-		print ('ECR:  step2')
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep]: #and (abs(myEles[iLeadLep].Eta()) < 2.4):
+
                 # WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
 
 
@@ -1075,10 +1110,9 @@ def AnalyzeDataSet():
                     allquantities.reg_1e2bW_N2    = N2
 
                 if  WePhicond and SRFatjetcond and WCond and (N2DDT<0):
-		    print ('ECR:  step3')
                     allquantities.reg_1e2bW_Wmass = Wenumass
                     # allquantities.reg_1e2bW_WpT=WpT
-
+#                    print 'entered in Wenu'
                     allquantities.reg_1e2bW_hadrecoil = WenuRecoil
                     allquantities.reg_1e2bW_MET = pfMet
                     allquantities.reg_1e2bW_ca15jet_pT = Fatjet1_pT
@@ -1095,7 +1129,7 @@ def AnalyzeDataSet():
 
 
         #1mu, 1 b-tagged
-        if nMu==1 and nEle==0 and nTauLooseEleMu==0  and MuCRtrigstatus and WmunuRecoil>200. and jetcond and pfMet > 50.:
+        if nMu==1 and nEle==0 and nTauLooseEleMu==0  and nPho==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and pfMet > 50.:
             iLeadLep=0
 
             if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
@@ -1144,11 +1178,11 @@ def AnalyzeDataSet():
 
 
         #1e, 1 b-tagged
-        if nEle==1 and nMu==0 and nTauLooseEleMu==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and pfMet > 50.:
+        if nEle==1 and nMu==0 and nTauLooseEleMu==0 and nPho==0 and EleCRtrigstatus and WenuRecoil>200. and jetcond and pfMet > 50.:
 
             iLeadLep=0
 
-            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and (abs(myEles[iLeadLep].Eta()) < 2.4):
+            if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep]:# and (abs(myEles[iLeadLep].Eta()) < 2.4):
 
                 # WpT = math.sqrt( ( pfMet*math.cos(pfMetPhi) + myEles[iLeadLep].Px())**2 + ( pfMet*math.sin(pfMetPhi) + myEles[iLeadLep].Py())**2)
 
@@ -1180,7 +1214,7 @@ def AnalyzeDataSet():
 
 
         #1mu, 1 b-tagged
-        if nMu==1 and nEle==0 and nTauLooseEleMu==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and pfMet > 50.:
+        if nMu==1 and nEle==0 and nTauLooseEleMu==0 and nPho==0 and MuCRtrigstatus and WmunuRecoil>200. and jetcond and pfMet > 50.:
             iLeadLep=0
 
             if myMuos[iLeadLep].Pt() > 20. and myMuTightID[iLeadLep] and myMuIso[iLeadLep]<0.15:
@@ -1191,6 +1225,7 @@ def AnalyzeDataSet():
                     allquantities.reg_1mu2bT_N2    = N2
 
                 if  TopdPhicond2 and SRFatjetcond and TopCond and (N2DDT<0):
+#                    print ('nPho in top mu', nPho, ' .....', len(phoP4))
 
                     allquantities.reg_1mu2bT_Wmass = Wmunumass
                     # allquantities.reg_1mu2bT_WpT=WpT
@@ -1633,7 +1668,7 @@ def AnalyzeDataSet():
                                 if jetcond:
                                     CR2e2bCutFlow['JetCond']+=allweights
 
-                                    if nEle==2 and nMu==0 and nTauLooseEleMu==0:# and nPho==0:
+                                    if nEle==2 and nMu==0 and nTauLooseEleMu==0 and nPho==0:
                                         CR2e2bCutFlow['nlep']+=allweights
                                         if myEles[0].Pt()>myEles[1].Pt():
                                             iLeadLep=0
@@ -1642,7 +1677,7 @@ def AnalyzeDataSet():
                                             iLeadLep=1
                                             iSecondLep=0
 
-                                        if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10. and (abs(myEles[iLeadLep].Eta()) < 2.4):# and myEleLooseID[iSecondLep]:
+                                        if myEles[iLeadLep].Pt() > 40. and myEleTightID[iLeadLep] and myEles[iSecondLep].Pt() > 10.:# and (abs(myEles[iLeadLep].Eta()) < 2.4):# and myEleLooseID[iSecondLep]:
                                             CR2e2bCutFlow['nlepCond']+=allweights
                                             if N2DDT <0:
                                                 CR2e2bCutFlow['N2DDT']+=allweights
@@ -1671,7 +1706,7 @@ def AnalyzeDataSet():
                                 if jetcond:
                                     CR2mu2bCutFlow['JetCond']+=allweights
 
-                                    if nMu==2 and nEle==0 and nTauLooseEleMu==0:# and nPho==0:
+                                    if nMu==2 and nEle==0 and nTauLooseEleMu==0 and nPho==0:
                                         CR2mu2bCutFlow['nlep']+=allweights
                                         if myMuos[0].Pt()>myMuos[1].Pt():
                                             iLeadLep=0
@@ -1706,10 +1741,10 @@ def AnalyzeDataSet():
                                 if jetcond:
                                     CR1e2bWCutFlow['JetCond']+=allweights
 
-                                    if nEle==1 and nMu==0 and nTauLooseEleMu==0:# and nPho==0:
+                                    if nEle==1 and nMu==0 and nTauLooseEleMu==0 and nPho==0:
                                         CR1e2bWCutFlow['nlep']+=allweights
 
-                                        if myEles[0].Pt() > 40. and myEleTightID[0] and (abs(myEles[iLeadLep].Eta()) < 2.4):
+                                        if myEles[0].Pt() > 40. and myEleTightID[0]:# and (abs(myEles[iLeadLep].Eta()) < 2.4):
                                             CR1e2bWCutFlow['nlepCond']+=allweights
                                             if N2DDT <0:
                                                 CR1e2bWCutFlow['N2DDT']+=allweights
@@ -1738,7 +1773,7 @@ def AnalyzeDataSet():
                                     CR1mu2bWCutFlow['JetCond']+=allweights
 
 
-                                    if nEle==0 and nMu==1 and nTauLooseEleMu==0:# and nPho==0:
+                                    if nEle==0 and nMu==1 and nTauLooseEleMu==0 and nPho==0:
                                         CR1mu2bWCutFlow['nlep']+=allweights
 
                                         if myMuos[0].Pt() > 30. and myMuTightID[0] and myMuIso[0]<0.15:
@@ -1769,10 +1804,10 @@ def AnalyzeDataSet():
                                 if jetcond:
                                     CR1e2bTCutFlow['JetCond']+=allweights
 
-                                    if nEle==1 and nMu==0 and nTauLooseEleMu==0:# and nPho==0:
+                                    if nEle==1 and nMu==0 and nTauLooseEleMu==0 and nPho==0:
                                         CR1e2bTCutFlow['nlep']+=allweights
 
-                                        if myEles[0].Pt() > 40. and myEleTightID[0] and (abs(myEles[iLeadLep].Eta()) < 2.4):
+                                        if myEles[0].Pt() > 40. and myEleTightID[0]:# and (abs(myEles[iLeadLep].Eta()) < 2.4):
                                             CR1e2bTCutFlow['nlepCond']+=allweights
                                             if N2DDT <0:
                                                 CR1e2bTCutFlow['N2DDT']+=allweights

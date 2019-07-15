@@ -132,3 +132,19 @@ We used tau veto against loose lepton in all CR. Ititially it was tight
 #### Plots: http://dekumar.web.cern.ch/dekumar/figs/boosted_category_fixed_eta_08072019/
 
 #### Slides comparing with step2 : http://dekumar.web.cern.ch/dekumar/My_Slides/Updates/Boosted_category_08072019.pdf
+
+
+## 6. Next change:
+---
+#### BugFound: ??
+#### What is bug: ??
+#### Fixed in this iteration: ??
+---
+
+### Other updates in the code[w.r.t previous version]:
+
+In this iteration I changed AK4Jet cleaning ordering.
+
+First we select CA15 jet with all selections [pT, eta, double B tagger]
+
+Then we do AK4Jet cleaning against CA15Jet

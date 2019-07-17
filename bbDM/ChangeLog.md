@@ -15,7 +15,7 @@ plots from base code(middle plots):
 
 #### Note: In above plots we used SDMass Corr from Raman's code
 
-## 2. Next Change:
+## 2. Change:
 
 ---
 #### BugFound: ??
@@ -35,7 +35,7 @@ Here are the plots(old slides):
 - Top CR has more stats than 2016
 - Not looking ZCR for now
 
-## 3. Next change:
+## 3. Change:
 
 ---
 #### BugFound ?: *Yes*
@@ -98,7 +98,7 @@ https://github.com/deepakcern/MonoH/blob/9853137d9f254fd0216214744214e00895a9951
 - need to cross check again
 ---
 
-## 4. Next change:
+## 4. Change:
 
 ---
 #### BugFound: ??
@@ -116,7 +116,7 @@ https://github.com/deepakcern/MonoH/blob/3dc2b7f0b558c858295ea4d2aa86a3a04c6b318
 N/A
 
 
-## 5. Next change:
+## 5. Change:
 
 ---
 #### BugFound: Yes
@@ -134,7 +134,7 @@ We used tau veto against loose lepton in all CR. Ititially it was tight
 #### Slides comparing with step2 : http://dekumar.web.cern.ch/dekumar/My_Slides/Updates/Boosted_category_08072019.pdf
 
 
-## 6. Next change:
+## 6. Change:
 ---
 #### BugFound: ??
 #### What is bug: ??

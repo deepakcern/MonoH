@@ -167,12 +167,12 @@ class MonoHbbQuantities:
                 high='2000.'
 
             elif 'N2' in quant and not 'N2DDT' in quant:
-                bins='200'
+                bins='2000'
                 low='0.0'
-                high='0.1'
+                high='1'
 
 	    elif 'N2DDT' in quant:
-		bins='200'
+		bins='2000'
 		low='-0.5'
 		high='0.5'
 

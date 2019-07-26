@@ -155,3 +155,16 @@ Here I also applied photon veto and remoded eta < 2.4 for tight electron now it 
 #### Code: https://github.com/deepakcern/MonoH/blob/c06de916069a350cb24502428d49cfaceb4f5ea3/bbDM/bbDM/bbMET/bbMETBranchReader.py
 
 #### Plots: http://dekumar.web.cern.ch/dekumar/My_Slides/Updates/boosted_reordering_phoVeto.pdf
+
+
+## 7. Change:
+
+---
+#### BugFound: ??
+#### What is bug: ??
+#### Fixed in this iteration: ??
+---
+
+### Other updates in the code[w.r.t previous version]:
+Used loose ID for electron
+removed njet=0 in WCR [need to check this cond]
